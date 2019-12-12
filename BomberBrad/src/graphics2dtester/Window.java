@@ -10,10 +10,10 @@ import javax.swing.JFrame;
 import javax.swing.SwingUtilities;
 
 
-public class Graphics2DTester extends JFrame {
+public class Window extends JFrame {
 
     //constructor
-    public Graphics2DTester() {
+    public Window() {
         //create the User interface
         initUI();
     }
@@ -40,7 +40,7 @@ public class Graphics2DTester extends JFrame {
             @Override
             public void run() {
                 //instantiate the main window
-                Graphics2DTester windowFrame = new Graphics2DTester();
+                Window windowFrame = new Window();
                 //make sure it can be seen
                 windowFrame.setVisible(true);
             }
