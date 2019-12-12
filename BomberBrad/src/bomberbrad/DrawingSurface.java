@@ -7,7 +7,7 @@
     included in the same file (Graphics2DTester.java)
  */
 
-package graphics2dtester;
+package bomberbrad;
 
 import java.awt.Color;
 import java.awt.Graphics;
