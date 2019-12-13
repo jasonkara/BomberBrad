@@ -43,4 +43,18 @@ public class DrawingSurface extends JPanel{
         super.paintComponent(g);//does the necessary work to prepare the panel for drawing
         doDrawing(g);
     }
+    private Tile[][] levelRandomizer(int difficulty) {
+        int enemies = 5;
+        int breakableBlocks = 10;
+        Tile[][] board = new Tile[14][10];
+        for (int i = 0; i < 14; i ++) {
+            board[i][0] = new Tile(i,0,new Block(i,0,null,false));
+            board[i][9] = new Tile(i,9,new Block(i,9,null,false));
+        }
+        for (int i = 0; i < 10; i ++) {
+            board[0][i] = new Tile(0,i,new Block(0,i,null,false));
+            board[9][i] = new Tile(9,i,new Block(9,i,null,false));
+        }
+        
+    }
 }
