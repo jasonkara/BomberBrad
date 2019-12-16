@@ -42,12 +42,23 @@ public class DrawingSurface extends JPanel{
             @Override
             public boolean dispatchKeyEvent(KeyEvent k) {
                 if (k.getID() == KeyEvent.KEY_PRESSED) {
-                    if (k.getKeyCode() == KeyEvent.VK_W) {
-                        updateMenuSelectedYPos(-1);
-                    } else if (k.getKeyCode() == KeyEvent.VK_S) {
-                        updateMenuSelectedYPos(1);
-                    } else if (k.getKeyCode() == KeyEvent.VK_ENTER) {
-                        getSelected();
+                    if (windowState == 0) { // keyboard inputs for main menu
+                        if (k.getKeyCode() == KeyEvent.VK_W) {
+                            updateMenuSelectedYPos(-1);
+                        } else if (k.getKeyCode() == KeyEvent.VK_S) {
+                            updateMenuSelectedYPos(1);
+                        } else if (k.getKeyCode() == KeyEvent.VK_ENTER) {
+                            getSelected();
+                        }
+                    } else if (windowState == 1) { // main game
+                        
+                    } else if (windowState == 2) { // high scores
+                        
+                    } else if (windowState == 3) { // credits
+                        
+                    }
+                    if (k.getKeyCode() == KeyEvent.VK_ESCAPE) {
+                        windowState = 0;
                     }
                 }
                 return false;
@@ -57,24 +68,41 @@ public class DrawingSurface extends JPanel{
         timer.start();
     }
 
-     private void doDrawing(Graphics g) {        
+    private void doDrawing(Graphics g) {        
         Graphics2D g2d = (Graphics2D) g;
         g2d.setColor(Color.BLACK);
         g2d.fillRect(0,0,896,712);
         g2d.setColor(Color.WHITE);
         g2d.setFont(new Font("Arial", Font.BOLD, 24));
-        g2d.drawString("Start Game", 340, 400);
-        g2d.drawString("High Scores", 340, 450);
-        g2d.drawString("Credits", 340, 500);
-        g2d.drawString("Exit", 340, 550);
-        g2d.setFont(new Font("Arial", Font.BOLD, 16));
-        g2d.drawString("© 2019 DKP Studios", 340, 650);
-        g2d.fillPolygon(new int[] {320, 320, 330}, new int[] {selectedYPos, selectedYPos + 20, selectedYPos + 10}, 3);
+        BufferedImage menuImg = null;
         try {
-            BufferedImage menuImg = ImageIO.read(getClass().getResource("/bomberbrad/menulogo.png"));
-            g2d.drawImage(menuImg,100,50,796,478,0,0,227,139,null);
+            menuImg = ImageIO.read(getClass().getResource("/bomberbrad/menulogo.png"));
         } catch (IOException e) {
             g2d.drawString("Error: " + e, 10, 10);
+        }
+        if (windowState == 0) { // main menu
+            g2d.drawString("Start Game", 340, 400);
+            g2d.drawString("High Scores", 340, 450);
+            g2d.drawString("Credits", 340, 500);
+            g2d.drawString("Exit", 340, 550);
+            g2d.setFont(new Font("Arial", Font.BOLD, 16));
+            g2d.drawString("© 2019 DKP Studios", 340, 650);
+            g2d.fillPolygon(new int[] {320, 320, 330}, new int[] {selectedYPos, selectedYPos + 20, selectedYPos + 10}, 3);
+            g2d.drawImage(menuImg,80,100,816,252,0,0,368,76,null);
+        } else if (windowState == 1) { // main game
+            g2d.drawString("Main Game", 10, 50);
+        } else if (windowState == 2) { // high scores
+            g2d.setFont(new Font("Arial", Font.BOLD, 32));
+            g2d.drawString("High Scores", 350, 100);
+            g2d.setFont(new Font("Monospaced", Font.BOLD, 24));
+            g2d.drawString("No.  Name   Score", 300, 200);
+        } else if (windowState == 3) { // credits
+            g2d.drawImage(menuImg,120,75,488,151,0,0,368,76,null);
+            g2d.drawString("was created by:", 520, 122);
+            g2d.drawString("RILEY DECONKEY - Systems Anaylst", 200, 300);
+            g2d.drawString("JASON KARAPOSTOLAKIS - Technical Writer", 200, 400);
+            g2d.drawString("REEGAL PANCHAL - Project Manager", 200, 500);
+            g2d.drawString("Special thanks to TOMMY JOHNSTON", 200, 600);
         }
     }
      
@@ -94,7 +122,7 @@ public class DrawingSurface extends JPanel{
          } else if (selectedYPos == 481) {
              windowState = 3; // go to credits
          } else {
-             // exit
+             System.exit(0);
          }
      }
      
