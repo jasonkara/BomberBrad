@@ -76,6 +76,13 @@ public class Block {
     public void setBreakable(boolean breakable) {
         this.breakable = breakable;
     }
+    public boolean equals(Block b) {
+        if (b.isBreakable() == this.isBreakable()) {
+            return true;
+        } else {
+            return false;
+        }
+    }
     
     
     

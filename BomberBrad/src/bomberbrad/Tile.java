@@ -60,6 +60,9 @@ public class Tile {
     public void setOnTile(Object onTile) {
         this.onTile = onTile;
     }
+    public String toString() {
+        return "x: " + xPos + "y: " + yPos + "Object on tile";
+    }
 
     
 }
