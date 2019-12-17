@@ -16,8 +16,8 @@ import java.util.ArrayList;
  */
 public class Onil extends Enemy {
     
-    public Onil(int xPos, int yPos, int direction, ArrayList<BufferedImage> sprites){
-        super( xPos,  yPos,  1,  direction, 4, sprites);
+    public Onil(int xPos, int yPos, int direction){
+        super( xPos,  yPos,  1,  direction, 4, null);
     }
     
     public void draw(Graphics2D g2d){

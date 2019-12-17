@@ -12,8 +12,8 @@ import java.util.ArrayList;
  */
 public class Ballom extends Enemy {
     
-    public Ballom(int xPos, int yPos, int direction, ArrayList<BufferedImage> sprites){
-        super( xPos,  yPos,  1,  direction, 2, sprites);
+    public Ballom(int xPos, int yPos, int direction){
+        super( xPos,  yPos,  1,  direction, 2, null);
     }
     
     

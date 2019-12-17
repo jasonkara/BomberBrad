@@ -16,8 +16,8 @@ import java.util.ArrayList;
  */
 public class Dahl extends Enemy {
     
-    public Dahl(int xPos, int yPos, int direction, ArrayList<BufferedImage> sprites){
-       super( xPos,  yPos,  1,  direction, 4, sprites);
+    public Dahl(int xPos, int yPos, int direction){
+       super( xPos,  yPos,  1,  direction, 4, null);
     }
     
     @Override
