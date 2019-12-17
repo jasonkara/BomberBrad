@@ -21,11 +21,11 @@ public class Window extends JFrame {
     //create the custom JFrame
     private void initUI() {        
         //set title of the JFrame
-        setTitle("Simple Java 2D example");
+        setTitle("BomberBrad - © 2019 DKP Studios");
         //add a custom JPanel to draw on
         add(new DrawingSurface());
         //set the size of the window
-        setSize(300, 200);
+        setSize(896,712);
         //tell the JFrame what to do when closed
         //this is important if our application has multiple windows
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -43,6 +43,7 @@ public class Window extends JFrame {
                 Window windowFrame = new Window();
                 //make sure it can be seen
                 windowFrame.setVisible(true);
+                windowFrame.setResizable(false);
             }
         });
     }
