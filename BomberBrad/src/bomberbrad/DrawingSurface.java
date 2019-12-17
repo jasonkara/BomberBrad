@@ -64,6 +64,8 @@ public class DrawingSurface extends JPanel{
                 return false;
             }
         });
+        Tile[][] board = levelRandomizer(2);
+        printBoard(board);
         Timer timer = new Timer(30, al);
         timer.start();
     }
@@ -104,8 +106,7 @@ public class DrawingSurface extends JPanel{
             g2d.drawString("REEGAL PANCHAL - Project Manager", 200, 500);
             g2d.drawString("Special thanks to TOMMY JOHNSTON", 200, 600);
         }
-        Tile[][] board = levelRandomizer(2);
-        printBoard(board);
+        
     }
      
      private void updateMenuSelectedYPos(int i) {
