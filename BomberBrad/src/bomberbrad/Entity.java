@@ -17,11 +17,11 @@ public abstract class Entity {
     protected int yPos;
     protected int health;
     protected int direction;
-    protected double speed;
+    protected int speed;
     ArrayList<BufferedImage> sprites;
 
     
-    public Entity(int xPos, int yPos, int health, int direction, double speed, ArrayList<BufferedImage> sprites){
+    public Entity(int xPos, int yPos, int health, int direction, int speed, ArrayList<BufferedImage> sprites){
         this.xPos = xPos;
         this.yPos = yPos;
         this.health = health;
@@ -66,7 +66,7 @@ public abstract class Entity {
      * Getter for the speed
      * @return the speed
      */
-    public double getSpeed(){
+    public int getSpeed(){
         return speed;
     }   
     
@@ -115,7 +115,7 @@ public abstract class Entity {
      * setter for the speed
      * @param speed the speed
      */
-    public void setSpeed(double speed) {
+    public void setSpeed(int speed) {
         this.speed = speed;
     }
 
