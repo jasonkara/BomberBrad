@@ -26,13 +26,36 @@ public abstract class Enemy extends Entity {
         return r;
     }
     
-    Enemy(int xPos, int yPos, int health, int direction, double speed, ArrayList<BufferedImage> sprites){
+    Enemy(int xPos, int yPos, int health, int direction, int speed, ArrayList<BufferedImage> sprites){
         super( xPos,  yPos,  health,  direction,  speed, sprites);
     }
 
     //abstract action that will made
     //the decision making for enemies
-    abstract public void action(Tile[][] map);
+    public void action(Tile[][] map){
+        int futureX = xPos;
+        int futureY = yPos;
+        
+        switch(direction){
+            case 1:
+                futureY-=speed;
+                break;
+            case 2:
+                futureX+=speed;
+                break;
+            case 3:
+                futureY+=speed;
+                break;
+            default:
+                futureX-=speed;
+        }
+        if(map[futureX / 16][futureY / 16].getOnTile() != null){
+            direction = rndNum(1,4);
+        }else{
+            move();
+        }
+        
+    }
     
     public void move(){
         switch(direction){
@@ -49,4 +72,6 @@ public abstract class Enemy extends Entity {
                 xPos -= speed;
         }
     }
+    
+    
 }
