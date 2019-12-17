@@ -1,7 +1,6 @@
-/*
- * B Cutten
- * Sept 2014
- * A test of the Graphics 2D in Java, code from http://zetcode.com/gfx/java2d/
+/**
+ * DKP Studios (Jason)
+ * JFrame window that contains DrawingSurface JPanel
  */
 
 package bomberbrad;
@@ -25,7 +24,7 @@ public class Window extends JFrame {
         //add a custom JPanel to draw on
         add(new DrawingSurface());
         //set the size of the window
-        setSize(896,712);
+        setSize(960,776);
         //tell the JFrame what to do when closed
         //this is important if our application has multiple windows
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
