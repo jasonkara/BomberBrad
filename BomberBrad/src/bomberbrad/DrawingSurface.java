@@ -79,15 +79,21 @@ public class DrawingSurface extends JPanel{
         randomY = (int)(Math.random() * 10) + 1;
         }
         if (board[randomX][randomY].getOnTile() == null) {
-            board[randomX][randomY].setOnTile(new Block(randomX,randomY,null,true));   
-            if (powerups > 0) {
-                isPowerUp = (int)(Math.random() * 5) + 1;
-                if (isPowerUp < 3) {
-                    ((Block)board[randomX][randomY].getOnTile()).setPowerType("powerUp");
-                    powerups --;
-                }
-            } 
+            board[randomX][randomY].setOnTile(new Block(randomX,randomY,null,true));  
          breakableBlocks --;
+        }
+        
+        }
+        while (powerups > 0) {
+            randomX = (int)(Math.random() * 14) + 1;
+        if (randomX < 3) {
+            randomY = (int)(Math.random() * 8) + 3;
+        } else {
+        randomY = (int)(Math.random() * 10) + 1;
+        }
+        if (board[randomX][randomY].getOnTile() == null) {
+            board[randomX][randomY].setOnTile(new Block(randomX,randomY,"powerUp",true));  
+         powerups --;
         }
         }
         while (enemies > 0) {
