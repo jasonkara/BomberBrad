@@ -19,7 +19,7 @@ public abstract class Enemy extends Entity {
      * @param high
      * @return 
      */
-    protected int rndNum(int low, int high){
+    public static int rndNum(int low, int high){
         int r;
         r= (int)(Math.random() * (high - low + 1) + 1);
         

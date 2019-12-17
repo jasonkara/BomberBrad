@@ -20,6 +20,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
+import java.util.ArrayList;
 import javax.imageio.ImageIO;
 import javax.swing.JPanel;
 import javax.swing.Timer;
@@ -28,6 +29,7 @@ public class DrawingSurface extends JPanel{
     
     int windowState;
     int selectedYPos;
+    ArrayList<Enemy> enemiesList = new ArrayList();
     
     public DrawingSurface() {
         
@@ -140,64 +142,98 @@ public class DrawingSurface extends JPanel{
         int breakableBlocks = 25;
         int powerups = 5;
         Tile[][] board = new Tile[15][11];
+        //Creating blank tiles
         for (int i = 0; i < 15; i ++) {
              for (int o = 0; o < 11; o ++) {
                  board[i][o] = new Tile(i,o,null);
              }
         }
+        //Creating top and bottom borders
         for (int i = 0; i < 15; i ++) {
             board[i][0] = new Tile(i,0,new Block(i,0,null,false));
             board[i][10] = new Tile(i,10,new Block(i,10,null,false));
         }
+        //Creating left and right borders
         for (int i = 0; i < 11; i ++) {
             board[0][i] = new Tile(0,i,new Block(0,i,null,false));
             board[14][i] = new Tile(14,i,new Block(14,i,null,false));
         }
+        //creating spaced blocks unbreakable blocks
         for (int i = 2; i < 15; i += 2) {
              for (int o = 2; o < 11; o += 2) {
                  board[i][o] = new Tile(i,o,new Block(i,o,null,false));
              }
         }
-        int randomX;
-        int randomY;
-        int isPowerUp;
+        //creating random vairble to choose random positions
+        int random;
+        //creating arraylist of possible positions for breakable blocks, 
+        ArrayList<Tile> possible = new ArrayList();
+        //filling arraylist with possible tiles
+        for (int i = 0; i < 11; i ++) {
+             for (int o = 0; o < 15; o ++) {
+                 if (board[o][i].getOnTile() == null) {
+                     if (!((i == 1 && o == 1) || (i == 2 && o == 1) || (i == 1 && o == 2))) {
+                     possible.add(board[o][i]);
+                     }
+                 }
+             }
+        }
+        //generating breakable blocks
         while (breakableBlocks > 0) {
-        randomX = (int)(Math.random() * 14) + 1;
-        if (randomX < 3) {
-            randomY = (int)(Math.random() * 8) + 3;
-        } else {
-        randomY = (int)(Math.random() * 10) + 1;
-        }
-        if (board[randomX][randomY].getOnTile() == null) {
-            board[randomX][randomY].setOnTile(new Block(randomX,randomY,null,true));  
-         breakableBlocks --;
-        }
-        
+         //Choosing random position in the arraylist  
+        random = (int)(Math.random() * possible.size());
+        //placing breakable block at chosen position
+        (possible.get(random)).setOnTile(new Block(possible.get(random).getxPos(),possible.get(random).getyPos(),null,true));
+        //removing place from list
+        possible.remove(random);
+        //subtracting from number of remaining blocks to be placed
+        breakableBlocks --;
         }
         while (powerups > 0) {
-            randomX = (int)(Math.random() * 14) + 1;
-        if (randomX < 3) {
-            randomY = (int)(Math.random() * 8) + 3;
-        } else {
-        randomY = (int)(Math.random() * 10) + 1;
+        random = (int)(Math.random() * possible.size());
+        (possible.get(random)).setOnTile(new Block(possible.get(random).getxPos(),possible.get(random).getyPos(),"powerUP",true));
+        powerups --;
+        possible.remove(random);
         }
-        if (board[randomX][randomY].getOnTile() == null) {
-            board[randomX][randomY].setOnTile(new Block(randomX,randomY,"powerUp",true));  
-         powerups --;
-        }
-        }
+        random = (int)(Math.random() * possible.size());
+        (possible.get(random)).setOnTile(new Block(possible.get(random).getxPos(),possible.get(random).getyPos(),"Exit",true));
+        possible.remove(random);
+        
         while (enemies > 0) {
-            enemies --;
+            
+            random = (int)(Math.random() * possible.size());
+            if (difficulty == 1) {
+                enemiesList.add(new Ballom(possible.get(random).getxPos() * 16,possible.get(random).getyPos() * 16,1,Enemy.rndNum(1,4),2,null));
+                enemies --;
+            } else if (difficulty == 2) {
+                enemiesList.add(new Onil(possible.get(random).getxPos() * 16,possible.get(random).getyPos() * 16,1,Enemy.rndNum(1,4),2,null));
+                enemies --;
+            } else if (difficulty == 3) {
+                enemiesList.add(new Dahl(possible.get(random).getxPos() * 16,possible.get(random).getyPos() * 16,1,Enemy.rndNum(1,4),2,null));
+                enemies --;
+            }
+            
         }
+        System.out.println(enemiesList);
+        System.out.println(enemiesList.size());
         return board;
     }
     private void printBoard(Tile[][] board) {
         String print = "";
         Block unbreak = new Block(0,0,null,false);
         Block breaka = new Block(0,0,null,true);
+        boolean foundGuy = false;
         for (int i = 0; i < 11; i ++) {
              for (int o = 0; o < 15; o ++) {
-                 if (board[o][i].getOnTile() == null) {
+                 for (int p = 0; p < enemiesList.size(); p ++) {
+                     if (o == enemiesList.get(p).getXPos() / 16 && i == enemiesList.get(p).getYPos() / 16) {
+                         foundGuy = true;
+                         }
+                 }
+                 if (foundGuy) {
+                     print += "E\t";
+                 }
+                 else if (board[o][i].getOnTile() == null) {
                      print += "T\t";
                  }
                  else if (((Block)(board[o][i].getOnTile())).equals(unbreak)) {
@@ -208,11 +244,13 @@ public class DrawingSurface extends JPanel{
                  else if (((Block)(board[o][i].getOnTile())).equals(breaka)) {
                      if (((Block)(board[o][i].getOnTile())).getPowerType() == null) {
                      print += "BB\t";
+                     } else if (((Block)(board[o][i].getOnTile())).getPowerType().equals("Exit")){
+                         print  += "EX\t";
                      } else {
                      print += "PU\t";
                      }
                  }
-                 
+                 foundGuy = false;
              }
              print += "\n";
         }
