@@ -6,7 +6,7 @@ public class Tile {
     //Class variables
     private int xPos;
     private int yPos;
-    Block onTile;
+    private Block onTile;
     /**
      * Constructor
      * @param xPos xPosition of the tile
