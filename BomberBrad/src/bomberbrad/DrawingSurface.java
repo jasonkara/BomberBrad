@@ -104,6 +104,8 @@ public class DrawingSurface extends JPanel{
             g2d.drawString("REEGAL PANCHAL - Project Manager", 200, 500);
             g2d.drawString("Special thanks to TOMMY JOHNSTON", 200, 600);
         }
+        Tile[][] board = levelRandomizer(2);
+        printBoard(board);
     }
      
      private void updateMenuSelectedYPos(int i) {
@@ -132,4 +134,88 @@ public class DrawingSurface extends JPanel{
         super.paintComponent(g);
         doDrawing(g);
     }
+    private Tile[][] levelRandomizer(int difficulty) {
+        int enemies = 5;
+        int breakableBlocks = 25;
+        int powerups = 5;
+        Tile[][] board = new Tile[15][11];
+        for (int i = 0; i < 15; i ++) {
+             for (int o = 0; o < 11; o ++) {
+                 board[i][o] = new Tile(i,o,null);
+             }
+        }
+        for (int i = 0; i < 15; i ++) {
+            board[i][0] = new Tile(i,0,new Block(i,0,null,false));
+            board[i][10] = new Tile(i,10,new Block(i,10,null,false));
+        }
+        for (int i = 0; i < 11; i ++) {
+            board[0][i] = new Tile(0,i,new Block(0,i,null,false));
+            board[14][i] = new Tile(14,i,new Block(14,i,null,false));
+        }
+        for (int i = 2; i < 15; i += 2) {
+             for (int o = 2; o < 11; o += 2) {
+                 board[i][o] = new Tile(i,o,new Block(i,o,null,false));
+             }
+        }
+        int randomX;
+        int randomY;
+        int isPowerUp;
+        while (breakableBlocks > 0) {
+        randomX = (int)(Math.random() * 14) + 1;
+        if (randomX < 3) {
+            randomY = (int)(Math.random() * 8) + 3;
+        } else {
+        randomY = (int)(Math.random() * 10) + 1;
+        }
+        if (board[randomX][randomY].getOnTile() == null) {
+            board[randomX][randomY].setOnTile(new Block(randomX,randomY,null,true));  
+         breakableBlocks --;
+        }
+        
+        }
+        while (powerups > 0) {
+            randomX = (int)(Math.random() * 14) + 1;
+        if (randomX < 3) {
+            randomY = (int)(Math.random() * 8) + 3;
+        } else {
+        randomY = (int)(Math.random() * 10) + 1;
+        }
+        if (board[randomX][randomY].getOnTile() == null) {
+            board[randomX][randomY].setOnTile(new Block(randomX,randomY,"powerUp",true));  
+         powerups --;
+        }
+        }
+        while (enemies > 0) {
+            enemies --;
+        }
+        return board;
+    }
+    private void printBoard(Tile[][] board) {
+        String print = "";
+        Block unbreak = new Block(0,0,null,false);
+        Block breaka = new Block(0,0,null,true);
+        for (int i = 0; i < 11; i ++) {
+             for (int o = 0; o < 15; o ++) {
+                 if (board[o][i].getOnTile() == null) {
+                     print += "T\t";
+                 }
+                 else if (((Block)(board[o][i].getOnTile())).equals(unbreak)) {
+                     if (((Block)(board[o][i].getOnTile())).getPowerType() == null) {
+                     print += "UB\t";
+                     }
+                 }
+                 else if (((Block)(board[o][i].getOnTile())).equals(breaka)) {
+                     if (((Block)(board[o][i].getOnTile())).getPowerType() == null) {
+                     print += "BB\t";
+                     } else {
+                     print += "PU\t";
+                     }
+                 }
+                 
+             }
+             print += "\n";
+        }
+        System.out.println(print);
+    }
+    
 }

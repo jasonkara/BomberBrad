@@ -30,6 +30,7 @@ public class Window extends JFrame {
         //this is important if our application has multiple windows
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
+        
     }
 
     public static void main(String[] args) {
