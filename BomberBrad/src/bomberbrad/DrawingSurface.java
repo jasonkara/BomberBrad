@@ -138,6 +138,23 @@ public class DrawingSurface extends JPanel{
         super.paintComponent(g);
         doDrawing(g);
     }
+    
+    private boolean intersecting(Entity e1, Entity e2) {
+        int x1 = Math.min(e1.getXPos(), e2.getXPos()), y1 = Math.min(e1.getYPos(), e2.getYPos()), x2 = Math.max(e1.getXPos(), e2.getXPos()), y2 = Math.max(e1.getYPos(), e2.getYPos());
+        boolean xOverlap, yOverlap;
+        xOverlap = (Math.abs(x1 - x2) < 12);
+        yOverlap = (Math.abs(y1 - y2) < 12);
+        return (xOverlap && yOverlap);
+    }
+    
+    private boolean overlapping(Tile t, Entity e) {
+        int tX = t.getxPos() * 16, tY = t.getyPos() * 16, eX = e.getXPos(), eY = e.getYPos();
+        boolean xOverlap = false, yOverlap = false;
+        xOverlap = ((tX <= eX && tX + 16 > eX) || (tX > eX && eX + 12 > tX));
+        yOverlap = ((tY <= eY && tY + 16 > eY) || (tY > eY && eY + 12 > tY));
+        return (xOverlap && yOverlap);
+    }
+    
     private Tile[][] levelRandomizer(int difficulty) {
         int enemies = 5;
         int breakableBlocks = 25;
