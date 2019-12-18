@@ -6,14 +6,14 @@ public class Tile {
     //Class variables
     private int xPos;
     private int yPos;
-    private Block onTile;
+    private Object onTile;
     /**
      * Constructor
      * @param xPos xPosition of the tile
      * @param yPos yPosition of the tile
      * @param onTile Object that is on the tile
      */
-    public Tile(int xPos, int yPos, Block onTile) {
+    public Tile(int xPos, int yPos, Object onTile) {
         this.xPos = xPos;
         this.yPos = yPos;
         this.onTile = onTile;
@@ -50,18 +50,18 @@ public class Tile {
      * Accessor method for the object on the tile
      * @return the object on the tile
      */
-    public Block getOnTile() {
+    public Object getOnTile() {
         return onTile;
     }
     /**
      * Mutator method for the object on the tile
      * @param onTile the new object to be placed on the tile
      */
-    public void setOnTile(Block onTile) {
+    public void setOnTile(Object onTile) {
         this.onTile = onTile;
     }
     public String toString() {
-        return "x: " + xPos + "y: " + yPos + "Object on tile";
+        return "x: " + xPos + "y: " + yPos + "Object on tile" + onTile.toString();
     }
 
     
