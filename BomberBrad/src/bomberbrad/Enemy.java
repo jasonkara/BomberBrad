@@ -33,23 +33,26 @@ public abstract class Enemy extends Entity {
     //abstract action that will made
     //the decision making for enemies
     public void action(Tile[][] map){
-        int futureX = xPos;
-        int futureY = yPos;
+        int xMod = 0;
+        int yMod = 0;
         
         switch(direction){
             case 1:
-                futureY-=speed;
+                yMod-=speed;
                 break;
             case 2:
-                futureX+=speed;
+                xMod+=speed;
                 break;
             case 3:
-                futureY+=speed;
+                yMod+=speed;
                 break;
             default:
-                futureX-=speed;
+                xMod-=speed;
         }
-        if(map[futureX / 16][futureY / 16].getOnTile() != null){
+        if(map[(xPos + xMod) / 16][(yPos + yMod) / 16].getOnTile() != null//top left
+                && map[(xPos + 12+ xMod) / 16][(yPos + yMod) / 16].getOnTile() != null//top right
+                && map[(xPos + xMod) / 16][(yPos + 12 + yMod) / 16].getOnTile() != null//bottom left
+                && map[(xPos + 12 + xMod) / 16][(yPos + 12 + yMod) / 16].getOnTile() != null){//bottom right
             direction = rndNum(1,4);
         }else{
             move();
