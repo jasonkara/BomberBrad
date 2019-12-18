@@ -157,7 +157,7 @@ public class DrawingSurface extends JPanel{
             board[0][i] = new Tile(0,i,new Block(0,i,null,false));
             board[14][i] = new Tile(14,i,new Block(14,i,null,false));
         }
-        //creating spaced blocks unbreakable blocks
+        //creating spaced unbreakable blocks
         for (int i = 2; i < 15; i += 2) {
              for (int o = 2; o < 11; o += 2) {
                  board[i][o] = new Tile(i,o,new Block(i,o,null,false));
@@ -202,13 +202,13 @@ public class DrawingSurface extends JPanel{
             
             random = (int)(Math.random() * possible.size());
             if (difficulty == 1) {
-                enemiesList.add(new Ballom(possible.get(random).getxPos() * 16,possible.get(random).getyPos() * 16,1,Enemy.rndNum(1,4),2,null));
+                enemiesList.add(new Ballom(possible.get(random).getxPos() * 16,possible.get(random).getyPos() * 16,Enemy.rndNum(1,4)));
                 enemies --;
             } else if (difficulty == 2) {
-                enemiesList.add(new Onil(possible.get(random).getxPos() * 16,possible.get(random).getyPos() * 16,1,Enemy.rndNum(1,4),2,null));
+                enemiesList.add(new Onil(possible.get(random).getxPos() * 16,possible.get(random).getyPos() * 16,Enemy.rndNum(1,4)));
                 enemies --;
             } else if (difficulty == 3) {
-                enemiesList.add(new Dahl(possible.get(random).getxPos() * 16,possible.get(random).getyPos() * 16,1,Enemy.rndNum(1,4),2,null));
+                enemiesList.add(new Dahl(possible.get(random).getxPos() * 16,possible.get(random).getyPos() * 16,Enemy.rndNum(1,4)));
                 enemies --;
             }
             
