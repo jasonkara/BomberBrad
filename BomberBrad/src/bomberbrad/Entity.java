@@ -7,6 +7,7 @@
 
 package bomberbrad;
 
+import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 
@@ -134,7 +135,7 @@ public abstract class Entity {
      */
     abstract public void move();
     
-    
+    abstract public void draw(Graphics2D g2d);
 
     
     
