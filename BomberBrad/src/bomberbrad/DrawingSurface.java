@@ -39,8 +39,8 @@ public class DrawingSurface extends JPanel{
         KeyboardFocusManager.getCurrentKeyboardFocusManager().addKeyEventDispatcher(new KeyEventDispatcher() {
             @Override
             public boolean dispatchKeyEvent(KeyEvent k) {
-                if (k.getID() == KeyEvent.KEY_PRESSED) {
-                    if (windowState == 0) { // keyboard inputs for main menu
+                if (windowState == 0) { // keyboard inputs for main menu
+                    if (k.getID() == KeyEvent.KEY_PRESSED) { // stuff that happens when a key is pressed
                         if (k.getKeyCode() == KeyEvent.VK_W) {
                             updateMenuSelectedYPos(-1);
                         } else if (k.getKeyCode() == KeyEvent.VK_S) {
@@ -48,16 +48,18 @@ public class DrawingSurface extends JPanel{
                         } else if (k.getKeyCode() == KeyEvent.VK_ENTER) {
                             getSelected();
                         }
-                    } else if (windowState == 1) { // main game
-                        
-                    } else if (windowState == 2) { // high scores
-                        
-                    } else if (windowState == 3) { // credits
-                        
+                    } else if (k.getID() == KeyEvent.KEY_RELEASED) { // stuff that happens when a key is released
+                        // nothing for the main menu - this is just a template for stuff later
                     }
-                    if (k.getKeyCode() == KeyEvent.VK_ESCAPE) {
-                        windowState = 0;
-                    }
+                } else if (windowState == 1) { // main game
+
+                } else if (windowState == 2) { // high scores
+
+                } else if (windowState == 3) { // credits
+
+                }
+                if (k.getKeyCode() == KeyEvent.VK_ESCAPE) { // key inputs that can happen at any time -
+                    windowState = 0; // ESC returns to main menu
                 }
                 return false;
             }
