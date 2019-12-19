@@ -26,6 +26,8 @@ public class DrawingSurface extends JPanel{
     int windowState;
     int selectedYPos;
     ArrayList<Enemy> enemiesList = new ArrayList();
+    Player player = new Player(16,16,1);
+    boolean moveDown = false, moveUp = false, moveLeft = false, moveRight = false;
     Tile[][] board;
     
     public DrawingSurface() {
@@ -49,15 +51,31 @@ public class DrawingSurface extends JPanel{
                         } else if (k.getKeyCode() == KeyEvent.VK_ENTER) {
                             getSelected();
                         }
-                    } else if (k.getID() == KeyEvent.KEY_RELEASED) { // stuff that happens when a key is released
-                        // nothing for the main menu - this is just a template for stuff later
                     }
                 } else if (windowState == 1) { // main game
-
-                } else if (windowState == 2) { // high scores
-
-                } else if (windowState == 3) { // credits
-
+                    if (k.getID() == KeyEvent.KEY_PRESSED) { // stuff that happens when a key is pressed
+                        if (k.getKeyCode() == KeyEvent.VK_W) {
+                            moveUp = true;
+                        } else if (k.getKeyCode() == KeyEvent.VK_S) {
+                            moveDown = true;
+                        } else if (k.getKeyCode() == KeyEvent.VK_A) {
+                            moveLeft = true;
+                        } else if (k.getKeyCode() == KeyEvent.VK_D) {
+                            moveRight = true;
+                        } else if (k.getKeyCode() == KeyEvent.VK_SPACE) {
+                            // place bomb;
+                        }
+                    } else if (k.getID() == KeyEvent.KEY_RELEASED) { // stuff that happens when a key is released
+                        if (k.getKeyCode() == KeyEvent.VK_W) {
+                            moveUp = false;
+                        } else if (k.getKeyCode() == KeyEvent.VK_S) {
+                            moveDown = false;
+                        } else if (k.getKeyCode() == KeyEvent.VK_A) {
+                            moveLeft = false;
+                        } else if (k.getKeyCode() == KeyEvent.VK_D) {
+                            moveRight = false;
+                        }
+                    }
                 }
                 if (k.getKeyCode() == KeyEvent.VK_ESCAPE) { // key inputs that can happen at any time -
                     windowState = 0; // ESC returns to main menu
@@ -94,6 +112,18 @@ public class DrawingSurface extends JPanel{
             g2d.drawImage(menuImg,112,100,848,252,0,0,368,76,null);
         } else if (windowState == 1) { // main game
             g2d.drawString("Main Game", 10, 50);
+            if (moveUp || moveDown || moveLeft || moveRight) {
+                if (moveDown) {
+                    player.setDirection(1);
+                } else if (moveRight) {
+                    player.setDirection(2);
+                } else if (moveLeft) {
+                    player.setDirection(4);
+                } else {
+                    player.setDirection(3);
+                }
+                player.move();
+            }
             for (int i = 0; i < 11; i ++) {
              for (int o = 0; o < 15; o ++) {
                  board[o][i].draw(g2d);
@@ -103,7 +133,6 @@ public class DrawingSurface extends JPanel{
                 e.action(board);
                 e.draw(g2d);
             }
-        
         } else if (windowState == 2) { // high scores
             g2d.setFont(new Font("Arial", Font.BOLD, 32));
             g2d.drawString("High Scores", 380, 100);
@@ -113,7 +142,7 @@ public class DrawingSurface extends JPanel{
         } else if (windowState == 3) { // credits
             g2d.drawImage(menuImg,150,75,518,151,0,0,368,76,null);
             g2d.drawString("was created by:", 550, 122);
-            g2d.drawString("RILEY DECONKEY - Systems Anaylst", 200, 300);
+            g2d.drawString("RILEY DECONKEY - Systems Analyst", 200, 300);
             g2d.drawString("JASON KARAPOSTOLAKIS - Technical Writer", 200, 400);
             g2d.drawString("REEGAL PANCHAL - Project Manager", 200, 500);
             g2d.drawString("Special thanks to TOMMY JOHNSTON", 200, 600);
