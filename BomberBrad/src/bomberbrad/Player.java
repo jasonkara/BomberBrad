@@ -1,38 +1,16 @@
-/**
- * DKP Industries (Reegal)
- * Enemy class that is extended from entity and will extend to all the enemy types
- * December 13th
- */
 
 package bomberbrad;
 
+import java.awt.Color;
 import java.awt.Graphics2D;
-import java.awt.image.BufferedImage;
-import java.util.ArrayList;
 
 
-
-public abstract class Enemy extends Entity {
+public class Player extends Entity{
     
-    /**
-     * Random number generator
-     * @param low 
-     * @param high
-     * @return 
-     */
-    public static int rndNum(int low, int high){
-        int r;
-        r= (int)(Math.random() * (high - low + 1) + 1);
-        
-        return r;
+    Player(int xPos, int yPos, int direction){
+        super( xPos,  yPos,  1,  direction,  2, null);
     }
     
-    Enemy(int xPos, int yPos, int health, int direction, int speed, ArrayList<BufferedImage> sprites){
-        super( xPos,  yPos,  health,  direction,  speed, sprites);
-    }
-
-    //abstract action that will made
-    //the decision making for enemies
     public void action(Tile[][] map){
         int xMod = 0;
         int yMod = 0;
@@ -54,7 +32,7 @@ public abstract class Enemy extends Entity {
                 && map[(xPos + 12+ xMod) / 16][(yPos + yMod) / 16].getOnTile() != null//top right
                 && map[(xPos + xMod) / 16][(yPos + 12 + yMod) / 16].getOnTile() != null//bottom left
                 && map[(xPos + 12 + xMod) / 16][(yPos + 12 + yMod) / 16].getOnTile() != null){//bottom right
-            direction = rndNum(1,4);
+
         }else{
             move();
         }
@@ -77,7 +55,9 @@ public abstract class Enemy extends Entity {
         }
     }
     
-    abstract public void draw(Graphics2D g2d);
-    
+    public void draw(Graphics2D g2d){
+        g2d.setColor(Color.DARK_GRAY);
+        g2d.drawRect(xPos*4,yPos*4,(xPos+12)*4,(yPos+12)*4);
+    }
     
 }

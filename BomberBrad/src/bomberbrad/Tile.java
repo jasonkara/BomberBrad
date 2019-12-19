@@ -2,6 +2,9 @@
 //12/13/2019
 //Class to represent one tile of the game
 package bomberbrad;
+
+import java.util.ArrayList;
+
 public class Tile {
     //Class variables
     private int xPos;
@@ -63,6 +66,8 @@ public class Tile {
     public String toString() {
         return "x: " + xPos + "y: " + yPos + "Object on tile" + onTile.toString();
     }
-
     
+    public ArrayList destroy(int direction){
+        return null;
+    }
 }
