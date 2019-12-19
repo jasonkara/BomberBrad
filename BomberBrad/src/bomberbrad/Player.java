@@ -56,8 +56,8 @@ public class Player extends Entity{
     }
     
     public void draw(Graphics2D g2d){
-        g2d.setColor(Color.DARK_GRAY);
-        g2d.drawRect(xPos*4,yPos*4,(xPos+12)*4,(yPos+12)*4);
+        g2d.setColor(Color.RED);
+        g2d.drawRect(xPos*4,yPos*4,48,48);
     }
     
 }

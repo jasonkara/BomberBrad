@@ -3,20 +3,22 @@
 //Class to represent one tile of the game
 package bomberbrad;
 
+import java.awt.Color;
+import java.awt.Graphics2D;
 import java.util.ArrayList;
 
 public class Tile {
     //Class variables
     private int xPos;
     private int yPos;
-    private Object onTile;
+    private tileObject onTile;
     /**
      * Constructor
      * @param xPos xPosition of the tile
      * @param yPos yPosition of the tile
      * @param onTile Object that is on the tile
      */
-    public Tile(int xPos, int yPos, Object onTile) {
+    public Tile(int xPos, int yPos, tileObject onTile) {
         this.xPos = xPos;
         this.yPos = yPos;
         this.onTile = onTile;
@@ -53,14 +55,14 @@ public class Tile {
      * Accessor method for the object on the tile
      * @return the object on the tile
      */
-    public Object getOnTile() {
+    public tileObject getOnTile() {
         return onTile;
     }
     /**
      * Mutator method for the object on the tile
      * @param onTile the new object to be placed on the tile
      */
-    public void setOnTile(Object onTile) {
+    public void setOnTile(tileObject onTile) {
         this.onTile = onTile;
     }
     public String toString() {
@@ -69,5 +71,13 @@ public class Tile {
     
     public ArrayList destroy(int direction){
         return null;
+    }
+    public void draw (Graphics2D g2d) {
+        if (onTile != null) {
+            onTile.draw(g2d);
+        } else {
+        g2d.setColor(Color.WHITE);
+        g2d.fillRect(xPos*64,yPos*64,64,64);
+        }
     }
 }
