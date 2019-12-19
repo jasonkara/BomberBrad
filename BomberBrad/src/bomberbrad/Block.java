@@ -3,9 +3,10 @@
 //Class to represent the breakable blocks
 package bomberbrad;
 
-public class Block {
-    private int xPos;
-    private int yPos;
+import java.awt.Color;
+import java.awt.Graphics2D;
+
+public class Block extends tileObject{
     private String powerType;
     private boolean breakable;
     /**
@@ -15,39 +16,11 @@ public class Block {
      * @param powerType type of the power beneath the breakable block
      */
     public Block(int xPos, int yPos, String powerType, boolean breakable) {
-        this.xPos = xPos;
-        this.yPos = yPos;
+        super(xPos,yPos);
         this.powerType = powerType;
         this.breakable = breakable;
     }
-    /**
-     * Accessor method for the x position of the block
-     * @return the x position of the block
-     */
-    public int getxPos() {
-        return xPos;
-    }
-    /**
-     * Mutator method for the x position of the block
-     * @param xPos the new x position of the block
-     */
-    public void setxPos(int xPos) {
-        this.xPos = xPos;
-    }
-    /**
-     * Accessor method for the y position of the block
-     * @return 
-     */
-    public int getyPos() {
-        return yPos;
-    }
-    /**
-     * Mutator method for the y position of the block
-     * @param yPos 
-     */
-    public void setyPos(int yPos) {
-        this.yPos = yPos;
-    }
+   
     /**
      * Accessor method for the power up type
      * @return the type of power up beneath the block
@@ -82,6 +55,15 @@ public class Block {
         } else {
             return false;
         }
+    }
+    public void draw(Graphics2D g2d) {
+        if (breakable) {
+            g2d.setColor(Color.DARK_GRAY);
+        }
+        else {
+            g2d.setColor(Color.LIGHT_GRAY);
+        }
+        g2d.fillRect(xPos*64,yPos*64,64,64);
     }
     
     

@@ -51,6 +51,7 @@ public abstract class Enemy extends Entity {
                 xMod-=speed;
         }
         if(map[(xPos + xMod) / 16][(yPos + yMod) / 16].getOnTile() != null//top left
+                
                 && map[(xPos + 12+ xMod) / 16][(yPos + yMod) / 16].getOnTile() != null//top right
                 && map[(xPos + xMod) / 16][(yPos + 12 + yMod) / 16].getOnTile() != null//bottom left
                 && map[(xPos + 12 + xMod) / 16][(yPos + 12 + yMod) / 16].getOnTile() != null){//bottom right
@@ -64,13 +65,13 @@ public abstract class Enemy extends Entity {
     public void move(){
         switch(direction){
             case 1:
-                yPos += speed;
+                yPos -= speed;
                 break;
             case 2:
                 xPos += speed;
                 break;
             case 3:
-                yPos -= speed;
+                yPos += speed;
                 break;
             default:
                 xPos -= speed;

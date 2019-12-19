@@ -3,12 +3,11 @@
 //Class to represent the bombs that the player places
 package bomberbrad;
 
-import static com.sun.org.apache.bcel.internal.Repository.instanceOf;
+import java.awt.Color;
+import java.awt.Graphics2D;
 import java.util.ArrayList;
 
-public class Bomb {
-    private int xPos;
-    private int yPos;
+public class Bomb extends tileObject{
     private int counter;
     /**
      * Constructor
@@ -16,37 +15,8 @@ public class Bomb {
      * @param yPos y position of the bomb
      */
     public Bomb(int xPos, int yPos) {
-        this.xPos = xPos;
-        this.yPos = yPos;
+        super(xPos,yPos);
         counter = 0;
-    }
-    /**
-     * Accessor method for x position
-     * @return the x position of the bomb
-     */
-    public int getxPos() {
-        return xPos;
-    }
-    /**
-     * Mutator method for x position
-     * @param xPos the new x position of the bomb
-     */
-    public void setxPos(int xPos) {
-        this.xPos = xPos;
-    }
-    /**
-     * Accessor method for y position
-     * @return y position of the bomb
-     */
-    public int getyPos() {
-        return yPos;
-    }
-    /**
-     * Mutator method for y position
-     * @param yPos the new y position of the bomb
-     */
-    public void setyPos(int yPos) {
-        this.yPos = yPos;
     }
     /**
      * Accessor method for the counter keeping track of when the bomb will explode
@@ -56,7 +26,7 @@ public class Bomb {
         return counter;
     }
     /**
-     * Accessor method for the counter keeping track of when the bomb will explode
+     * Mutator method for the counter keeping track of when the bomb will explode
      * @param counter the new value for the counter keeping track of when the bomb should explode
      */
     public void setCounter(int counter) {
@@ -142,6 +112,10 @@ public class Bomb {
         }
         
         return toKill;
+    }
+    public void draw(Graphics2D g2d) {
+        g2d.setColor(Color.BLACK);
+        g2d.drawRect(xPos*64,yPos*64,64,64);
     }
     
 }

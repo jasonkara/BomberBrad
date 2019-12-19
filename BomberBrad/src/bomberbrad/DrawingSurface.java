@@ -28,6 +28,7 @@ public class DrawingSurface extends JPanel{
     ArrayList<Enemy> enemiesList = new ArrayList();
     Player player = new Player(16,16,1);
     boolean moveDown = false, moveUp = false, moveLeft = false, moveRight = false;
+    Tile[][] board;
     
     public DrawingSurface() {
         
@@ -82,9 +83,9 @@ public class DrawingSurface extends JPanel{
                 return false;
             }
         });
-        Tile[][] board = levelRandomizer(2);
+        board = levelRandomizer(2);
         printBoard(board);
-        Timer timer = new Timer(30, al);
+        Timer timer = new Timer(250, al);
         timer.start();
     }
 
@@ -122,6 +123,15 @@ public class DrawingSurface extends JPanel{
                     player.setDirection(3);
                 }
                 player.move();
+            }
+            for (int i = 0; i < 11; i ++) {
+             for (int o = 0; o < 15; o ++) {
+                 board[o][i].draw(g2d);
+             }
+             }
+            for (Enemy e: enemiesList) {
+                e.action(board);
+                e.draw(g2d);
             }
         } else if (windowState == 2) { // high scores
             g2d.setFont(new Font("Arial", Font.BOLD, 32));
