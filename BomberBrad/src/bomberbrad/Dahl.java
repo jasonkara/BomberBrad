@@ -20,44 +20,19 @@ public class Dahl extends Enemy {
        super( xPos,  yPos,  1,  direction, 4, null);
     }
     
-    @Override
-    public void action(Tile[][] map){
-        int xMod = 0;
-        int yMod = 0;
-        
-        switch(direction){
-            case 1:
-                yMod-=speed;
-                break;
-            case 2:
-                xMod+=speed;
-                break;
-            case 3:
-                yMod+=speed;
-                break;
-            default:
-                xMod-=speed;
-        }
-        if(map[(xPos + xMod) / 16][(yPos + yMod) / 16].getOnTile() != null//top left
-                && map[(xPos + 12+ xMod) / 16][(yPos + yMod) / 16].getOnTile() != null//top right
-                && map[(xPos + xMod) / 16][(yPos + 12 + yMod) / 16].getOnTile() != null//bottom left
-                && map[(xPos + 12 + xMod) / 16][(yPos + 12 + yMod) / 16].getOnTile() != null){//bottom right
-            int j = rndNum(0,1);
+    public void changeDirection(){
+        int j = rndNum(0,1);
             
-            if(direction % 2 == 0){
-                direction = (j * 2) + 2;
-            }else{
-                direction = (j * 2) + 1;
-            }
+        if(direction % 2 == 0){
+            direction = (j * 2) + 2;
         }else{
-            move();
+            direction = (j * 2) + 1;
         }
-        
     }
     
     public void draw(Graphics2D g2d){
         g2d.setColor(Color.yellow);
-        g2d.fillRect(xPos*4,yPos*4,48,48);
+        g2d.fillRect(xPos*4,yPos*4,64,64);
     }
     
     

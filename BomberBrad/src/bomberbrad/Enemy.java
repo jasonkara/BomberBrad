@@ -34,32 +34,51 @@ public abstract class Enemy extends Entity {
     //abstract action that will made
     //the decision making for enemies
     public void action(Tile[][] map){
-        int xMod = 0;
-        int yMod = 0;
+        
         
         switch(direction){
             case 1:
-                yMod-=speed;
+                if(map[xPos/16][(yPos-speed)/16].getOnTile() != null
+                && map[(xPos + 15)/16][(yPos-speed)/16].getOnTile() != null){
+                    changeDirection();
+                }else{
+                    move();
+                }
+                
                 break;
             case 2:
-                xMod+=speed;
+                if(map[(xPos+15 + speed)/16][(yPos)/16].getOnTile() != null
+                && map[(xPos + 15 + speed)/16][(yPos+15)/16].getOnTile() != null){
+                    changeDirection();
+                }else{
+                    move();
+                }
+                
                 break;
             case 3:
-                yMod+=speed;
+                if(map[xPos/16][(yPos+15+speed)/16].getOnTile() != null
+                && map[(xPos + 15)/16][(yPos+15+speed)/16].getOnTile() != null){
+                    changeDirection();
+                }else{
+                    move();
+                }
+                
                 break;
             default:
-                xMod-=speed;
-        }
-        if(map[(xPos + xMod) / 16][(yPos + yMod) / 16].getOnTile() != null//top left
+                if(map[(xPos - speed)/16][(yPos)/16].getOnTile() != null
+                && map[(xPos - speed)/16][(yPos+15)/16].getOnTile() != null){
+                    changeDirection();
+                }else{
+                    move();
+                }
                 
-                && map[(xPos + 12+ xMod) / 16][(yPos + yMod) / 16].getOnTile() != null//top right
-                && map[(xPos + xMod) / 16][(yPos + 12 + yMod) / 16].getOnTile() != null//bottom left
-                && map[(xPos + 12 + xMod) / 16][(yPos + 12 + yMod) / 16].getOnTile() != null){//bottom right
-            direction = rndNum(1,4);
-        }else{
-            move();
         }
         
+        
+    }
+    
+    public void changeDirection(){
+        changeDirection();
     }
     
     public void move(){
