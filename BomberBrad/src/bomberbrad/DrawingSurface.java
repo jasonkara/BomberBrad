@@ -83,7 +83,7 @@ public class DrawingSurface extends JPanel{
                 return false;
             }
         });
-        board = levelRandomizer(2);
+        board = levelRandomizer(1);
         printBoard(board);
         Timer timer = new Timer(250, al);
         timer.start();
