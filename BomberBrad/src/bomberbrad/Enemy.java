@@ -78,7 +78,7 @@ public abstract class Enemy extends Entity {
     }
     
     public void changeDirection(){
-        changeDirection();
+        direction = rndNum(1,4);
     }
     
     public void move(){
