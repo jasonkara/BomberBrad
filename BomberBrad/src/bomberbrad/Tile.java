@@ -12,6 +12,7 @@ public class Tile {
     private int xPos;
     private int yPos;
     private tileObject onTile;
+    private Explosion ex;
     /**
      * Constructor
      * @param xPos xPosition of the tile
@@ -22,6 +23,7 @@ public class Tile {
         this.xPos = xPos;
         this.yPos = yPos;
         this.onTile = onTile;
+        ex = null;
     }
     /**
      * Accessor method for x position
@@ -65,6 +67,15 @@ public class Tile {
     public void setOnTile(tileObject onTile) {
         this.onTile = onTile;
     }
+
+    public Explosion getEx() {
+        return ex;
+    }
+
+    public void setEx(Explosion ex) {
+        this.ex = ex;
+    }
+    
     public String toString() {
         return "x: " + xPos + "y: " + yPos + "Object on tile" + onTile.toString();
     }
@@ -72,12 +83,18 @@ public class Tile {
     public ArrayList destroy(int direction){
         return null;
     }
-    public void draw (Graphics2D g2d) {
+    public void draw (Tile[][] board, Graphics2D g2d) {
+        if (ex != null) {
+            ex.draw(board,g2d);
+        }
         if (onTile != null) {
             onTile.draw(g2d);
         } else {
         g2d.setColor(Color.WHITE);
         g2d.fillRect(xPos*64,yPos*64,64,64);
+        }
+        if (ex != null) {
+            ex.draw(board,g2d);
         }
     }
 }

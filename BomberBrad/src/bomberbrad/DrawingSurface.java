@@ -126,7 +126,7 @@ public class DrawingSurface extends JPanel{
             }
             for (int i = 0; i < 11; i ++) {
              for (int o = 0; o < 15; o ++) {
-                 board[o][i].draw(g2d);
+                 board[o][i].draw(board, g2d);
              }
              }
             for (Enemy e: enemiesList) {
