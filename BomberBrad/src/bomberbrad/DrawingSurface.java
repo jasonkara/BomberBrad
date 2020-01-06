@@ -276,6 +276,11 @@ public class DrawingSurface extends JPanel{
         System.out.println(enemiesList.size());
         return board;
     }
+    
+    public void restartLevel(){
+        //i
+    }
+    
     private void printBoard(Tile[][] board) {
         String print = "";
         Block unbreak = new Block(0,0,null,false);

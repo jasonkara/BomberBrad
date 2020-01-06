@@ -80,8 +80,14 @@ public class Tile {
         return "x: " + xPos + "y: " + yPos + "Object on tile" + onTile.toString();
     }
     
-    public ArrayList destroy(int direction){
-        return null;
+    public void destroy(Tile[][] board){
+        if(onTile instanceof Block){
+            ((Block)onTile).startBreak();
+        }else if(onTile instanceof PowerUp){
+            onTile = null;
+        }else{
+            DrawingSurface.restartLevel();
+        }
     }
     public void draw (Tile[][] board, Graphics2D g2d) {
         if (ex != null) {

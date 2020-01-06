@@ -38,7 +38,7 @@ public class Bomb extends tileObject{
                 if(map[xPos][yPos - l].getOnTile() instanceof Bomb){
                     map[xPos][yPos - l].setEx(new Explosion(xPos, yPos - l, 1));
                 }else{
-                    map[xPos][yPos - l].destroy();
+                    map[xPos][yPos - l].destroy(map);
                 }
                 break;
             }else{
@@ -51,7 +51,7 @@ public class Bomb extends tileObject{
                 if(map[xPos + l][yPos].getOnTile() instanceof Bomb){
                     map[xPos + l][yPos].setEx(new Explosion(xPos + l, yPos, 2));
                 }else{
-                    map[xPos + 1][yPos].destroy();
+                    map[xPos + 1][yPos].destroy(map);
                 }
                 break;
             }else{
@@ -64,7 +64,7 @@ public class Bomb extends tileObject{
                 if(map[xPos][yPos + l].getOnTile() instanceof Bomb){
                     map[xPos][yPos + l].setEx(new Explosion(xPos, yPos + l, 3));
                 }else{
-                    map[xPos][yPos + l].destroy();
+                    map[xPos][yPos + l].destroy(map);
                 }
                 break;
             }else{
@@ -77,7 +77,7 @@ public class Bomb extends tileObject{
                 if(map[xPos - l][yPos].getOnTile() instanceof Bomb){
                     map[xPos - l][yPos].setEx(new Explosion(xPos - l, yPos, 4));
                 }else{
-                    map[xPos - 1][yPos].destroy();
+                    map[xPos - 1][yPos].destroy(map);
                 }
                 break;
             }else{

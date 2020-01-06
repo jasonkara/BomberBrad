@@ -66,6 +66,10 @@ public class Block extends tileObject{
         g2d.fillRect(xPos*64,yPos*64,64,64);
     }
     
+    public void startBreak(){
+        
+    }
+    
     public String toString(){
         return "Block\n"
                 + "Breakable: " + breakable;
