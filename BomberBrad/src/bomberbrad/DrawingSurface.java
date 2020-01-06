@@ -15,9 +15,13 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.image.BufferedImage;
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import javax.imageio.ImageIO;
+import javax.sound.sampled.AudioInputStream;
+import javax.sound.sampled.AudioSystem;
+import javax.sound.sampled.Clip;
 import javax.swing.JPanel;
 import javax.swing.Timer;
 
@@ -29,6 +33,8 @@ public class DrawingSurface extends JPanel{
     Player player = new Player(16,16,1);
     boolean moveDown = false, moveUp = false, moveLeft = false, moveRight = false;
     Tile[][] board;
+    Clip clip;
+    AudioInputStream[] audio = new AudioInputStream[3];
     
     public DrawingSurface() {
         
@@ -56,6 +62,7 @@ public class DrawingSurface extends JPanel{
                     if (k.getID() == KeyEvent.KEY_PRESSED) { // stuff that happens when a key is pressed
                         if (k.getKeyCode() == KeyEvent.VK_W) {
                             moveUp = true;
+                            playAudio("exp");
                         } else if (k.getKeyCode() == KeyEvent.VK_S) {
                             moveDown = true;
                         } else if (k.getKeyCode() == KeyEvent.VK_A) {
@@ -79,6 +86,8 @@ public class DrawingSurface extends JPanel{
                 }
                 if (k.getKeyCode() == KeyEvent.VK_ESCAPE) { // key inputs that can happen at any time -
                     windowState = 0; // ESC returns to main menu
+                    clip.stop();
+                    playAudio("title");
                 }
                 return false;
             }
@@ -87,6 +96,7 @@ public class DrawingSurface extends JPanel{
         printBoard(board);
         Timer timer = new Timer(250, al);
         timer.start();
+        playAudio("title");
     }
 
     private void doDrawing(Graphics g) {        
@@ -151,6 +161,17 @@ public class DrawingSurface extends JPanel{
         }
         
     }
+    
+    private void playAudio(String sound) {
+        try {
+            AudioInputStream instream = AudioSystem.getAudioInputStream(new File("src\\bomberbrad\\audio\\" + sound + ".wav").getAbsoluteFile());
+            clip = AudioSystem.getClip();
+            clip.open(instream);
+        } catch (Exception e) {
+            System.out.println("error: " + e);
+        }
+        clip.start();
+    }
      
      private void updateMenuSelectedYPos(int i) {
          if (i == -1 && selectedYPos >= 431) {
@@ -163,6 +184,8 @@ public class DrawingSurface extends JPanel{
      private void getSelected() {
          if (selectedYPos == 381) {
              windowState = 1; // go to main game
+             clip.stop();
+             playAudio("stage");
          } else if (selectedYPos == 431) {
              windowState = 2; // go to high scores
          } else if (selectedYPos == 481) {
