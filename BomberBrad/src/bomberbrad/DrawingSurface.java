@@ -249,12 +249,12 @@ public class DrawingSurface extends JPanel{
         }
         while (powerups > 0) {
         random = (int)(Math.random() * possible.size());
-        (possible.get(random)).setOnTile(new Block(possible.get(random).getxPos(),possible.get(random).getyPos(),"powerUP",true));
+        (possible.get(random)).setOnTile(new Block(possible.get(random).getxPos(),possible.get(random).getyPos(),new PowerUp(possible.get(random).getxPos(),possible.get(random).getyPos(),2),true));
         powerups --;
         possible.remove(random);
         }
         random = (int)(Math.random() * possible.size());
-        (possible.get(random)).setOnTile(new Block(possible.get(random).getxPos(),possible.get(random).getyPos(),"Exit",true));
+        (possible.get(random)).setOnTile(new Block(possible.get(random).getxPos(),possible.get(random).getyPos(),new Exit(possible.get(random).getxPos(),possible.get(random).getyPos()),true));
         possible.remove(random);
         
         while (enemies > 0) {
@@ -300,14 +300,14 @@ public class DrawingSurface extends JPanel{
                      print += "T\t";
                  }
                  else if (((Block)(board[o][i].getOnTile())).equals(unbreak)) {
-                     if (((Block)(board[o][i].getOnTile())).getPowerType() == null) {
+                     if (((Block)(board[o][i].getOnTile())).getPU() == null) {
                      print += "UB\t";
                      }
                  }
                  else if (((Block)(board[o][i].getOnTile())).equals(breaka)) {
-                     if (((Block)(board[o][i].getOnTile())).getPowerType() == null) {
+                     if (((Block)(board[o][i].getOnTile())).getPU() == null) {
                      print += "BB\t";
-                     } else if (((Block)(board[o][i].getOnTile())).getPowerType().equals("Exit")){
+                     } else if ((board[o][i].getOnTile()) instanceof Exit){
                          print  += "EX\t";
                      } else {
                      print += "PU\t";
@@ -318,6 +318,9 @@ public class DrawingSurface extends JPanel{
              print += "\n";
         }
         System.out.println(print);
+    }
+    public void updateGameScreen(Tile[][] board) {
+        
     }
     
 }

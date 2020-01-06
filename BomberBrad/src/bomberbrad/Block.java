@@ -7,34 +7,28 @@ import java.awt.Color;
 import java.awt.Graphics2D;
 
 public class Block extends tileObject{
-    private String powerType;
+    private tileObject PU;
     private boolean breakable;
     /**
      * Constructor
      * @param xPos x position of the breakable block
      * @param yPos y position of the breakable block
-     * @param powerType type of the power beneath the breakable block
+     * @param PU powerup or exit on the block
      */
-    public Block(int xPos, int yPos, String powerType, boolean breakable) {
+    public Block(int xPos, int yPos, tileObject PU, boolean breakable) {
         super(xPos,yPos);
-        this.powerType = powerType;
+        this.PU = PU;
         this.breakable = breakable;
     }
+
+    public tileObject getPU() {
+        return PU;
+    }
+
+    public void setPU(tileObject PU) {
+        this.PU = PU;
+    }
    
-    /**
-     * Accessor method for the power up type
-     * @return the type of power up beneath the block
-     */
-    public String getPowerType() {
-        return powerType;
-    }
-    /**
-     * Mutator method for the power up beneath the block
-     * @param powerType the new power up to be placed beneath th block
-     */
-    public void setPowerType(String powerType) {
-        this.powerType = powerType;
-    }
     /**
      * Accessor method to tell if the block is breakable
      * @return boolean representing if the block is breakable
