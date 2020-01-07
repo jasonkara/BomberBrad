@@ -29,9 +29,11 @@ public class DrawingSurface extends JPanel{
     
     int windowState;
     int selectedYPos;
+    int frameCounter;
     ArrayList<Enemy> enemiesList = new ArrayList();
     Player player = new Player(16,16,1);
     boolean moveDown = false, moveUp = false, moveLeft = false, moveRight = false;
+    boolean playingLevel = false;
     Tile[][] board;
     Clip clip;
     AudioInputStream[] audio = new AudioInputStream[3];
@@ -62,7 +64,7 @@ public class DrawingSurface extends JPanel{
                     if (k.getID() == KeyEvent.KEY_PRESSED) { // stuff that happens when a key is pressed
                         if (k.getKeyCode() == KeyEvent.VK_W) {
                             moveUp = true;
-                            playAudio("exp");
+                            playAudio("explosion");
                         } else if (k.getKeyCode() == KeyEvent.VK_S) {
                             moveDown = true;
                         } else if (k.getKeyCode() == KeyEvent.VK_A) {
@@ -84,10 +86,12 @@ public class DrawingSurface extends JPanel{
                         }
                     }
                 }
-                if (k.getKeyCode() == KeyEvent.VK_ESCAPE) { // key inputs that can happen at any time -
+                if (k.getKeyCode() == KeyEvent.VK_ESCAPE && windowState != 0) { // following input can happen at any time except main menu
+                    if (windowState == 1) {
+                        clip.stop();
+                        playAudio("title"); // plays the title music again only if coming from main game
+                    }
                     windowState = 0; // ESC returns to main menu
-                    clip.stop();
-                    playAudio("title");
                 }
                 return false;
             }
@@ -121,27 +125,44 @@ public class DrawingSurface extends JPanel{
             g2d.fillPolygon(new int[] {350, 350, 360}, new int[] {selectedYPos, selectedYPos + 20, selectedYPos + 10}, 3);
             g2d.drawImage(menuImg,112,100,848,252,0,0,368,76,null);
         } else if (windowState == 1) { // main game
-            g2d.drawString("Main Game", 10, 50);
-            if (moveUp || moveDown || moveLeft || moveRight) {
-                if (moveDown) {
-                    player.setDirection(1);
-                } else if (moveRight) {
-                    player.setDirection(2);
-                } else if (moveLeft) {
-                    player.setDirection(4);
-                } else {
-                    player.setDirection(3);
+            if (playingLevel) {
+                if (moveUp || moveDown || moveLeft || moveRight) {
+                    if (moveDown) {
+                        player.setDirection(1);
+                    } else if (moveRight) {
+                        player.setDirection(2);
+                    } else if (moveLeft) {
+                        player.setDirection(4);
+                    } else {
+                        player.setDirection(3);
+                    }
+                    player.move();
                 }
-                player.move();
-            }
-            for (int i = 0; i < 11; i ++) {
-             for (int o = 0; o < 15; o ++) {
-                 board[o][i].draw(g2d);
-             }
-             }
-            for (Enemy e: enemiesList) {
-                e.action(board);
-                e.draw(g2d);
+                for (int i = 0; i < 11; i ++) {
+                 for (int o = 0; o < 15; o ++) {
+                     board[o][i].draw(g2d);
+                 }
+                 }
+                for (Enemy e: enemiesList) {
+                    e.action(board);
+                    e.draw(g2d);
+                }
+            } else {
+                if (frameCounter == 0) {
+                    g2d.setColor(Color.BLACK);
+                    g2d.fillRect(0, 0, 960, 776);
+                    g2d.setColor(Color.WHITE);
+                    g2d.drawString("Level 1", 370, 300);
+                    frameCounter = 1;
+                    clip.stop();
+                    playAudio("stagestart");
+                } else {
+                    while (clip.getMicrosecondLength() != clip.getMicrosecondPosition()) {}
+                    clip.stop();
+                    playAudio("stage");
+                    clip.loop(clip.LOOP_CONTINUOUSLY);
+                    playingLevel = true;
+                }
             }
         } else if (windowState == 2) { // high scores
             g2d.setFont(new Font("Arial", Font.BOLD, 32));
@@ -160,6 +181,20 @@ public class DrawingSurface extends JPanel{
             g2d.drawString("© 2019 DKP Studios", 370, 650);
         }
         
+    }
+    
+    private void startLevel(Graphics2D g2d) {
+        g2d.setColor(Color.BLACK);
+        g2d.fillRect(0, 0, 960, 776);
+        g2d.setColor(Color.WHITE);
+        g2d.drawString("Level 1", 370, 300);
+        clip.stop();
+        playAudio("stagestart");
+        while (clip.getMicrosecondLength() != clip.getMicrosecondPosition()) {}
+        clip.stop();
+        playAudio("stage");
+        clip.loop(clip.LOOP_CONTINUOUSLY);
+        playingLevel = true;
     }
     
     private void playAudio(String sound) {
@@ -184,8 +219,8 @@ public class DrawingSurface extends JPanel{
      private void getSelected() {
          if (selectedYPos == 381) {
              windowState = 1; // go to main game
-             clip.stop();
-             playAudio("stage");
+             playingLevel = false;
+             frameCounter = 0;
          } else if (selectedYPos == 431) {
              windowState = 2; // go to high scores
          } else if (selectedYPos == 481) {
