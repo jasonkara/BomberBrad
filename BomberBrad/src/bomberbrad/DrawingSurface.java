@@ -20,16 +20,24 @@ import java.util.ArrayList;
 import javax.imageio.ImageIO;
 import javax.swing.JPanel;
 import javax.swing.Timer;
+import java.io.File;
+import javax.sound.sampled.AudioInputStream;
+import javax.sound.sampled.AudioSystem;
+import javax.sound.sampled.Clip;
 
 public class DrawingSurface extends JPanel{
     
     int windowState;
     int selectedYPos;
+    int frameCounter;
     ArrayList<Enemy> enemiesList = new ArrayList();
     Player player = new Player(16,16,1);
     boolean moveDown = false, moveUp = false, moveLeft = false, moveRight = false;
+    boolean playingLevel = false;
     Tile[][] board;
     int difficulty;
+    Clip clip;
+    AudioInputStream[] audio = new AudioInputStream[3];
     
     public DrawingSurface() {
         
@@ -78,7 +86,11 @@ public class DrawingSurface extends JPanel{
                         }
                     }
                 }
-                if (k.getKeyCode() == KeyEvent.VK_ESCAPE) { // key inputs that can happen at any time -
+                if (k.getKeyCode() == KeyEvent.VK_ESCAPE && windowState != 0) { // following input can happen at any time except main menu
+                    if (windowState == 1) {
+                        clip.stop();
+                        playAudio("title"); // plays the title music again only if coming from main game
+                    }
                     windowState = 0; // ESC returns to main menu
                 }
                 return false;
@@ -88,6 +100,7 @@ public class DrawingSurface extends JPanel{
         //printBoard(board);
         Timer timer = new Timer(250, al);
         timer.start();
+        playAudio("title");
     }
 
     private void doDrawing(Graphics g) {        
@@ -112,7 +125,25 @@ public class DrawingSurface extends JPanel{
             g2d.fillPolygon(new int[] {350, 350, 360}, new int[] {selectedYPos, selectedYPos + 20, selectedYPos + 10}, 3);
             g2d.drawImage(menuImg,112,100,848,252,0,0,368,76,null);
         } else if (windowState == 1) { // main game
-            mainGame(g2d);
+            if (playingLevel) {
+              mainGame(g2d);
+            } else {
+                if (frameCounter == 0) {
+                    g2d.setColor(Color.BLACK);
+                    g2d.fillRect(0, 0, 960, 776);
+                    g2d.setColor(Color.WHITE);
+                    g2d.drawString("Level 1", 370, 300);
+                    frameCounter = 1;
+                    clip.stop();
+                    playAudio("stagestart");
+                } else {
+                    while (clip.getMicrosecondLength() != clip.getMicrosecondPosition()) {}
+                    clip.stop();
+                    playAudio("stage");
+                    clip.loop(clip.LOOP_CONTINUOUSLY);
+                    playingLevel = true;
+                }
+            }
         } else if (windowState == 2) { // high scores
             g2d.setFont(new Font("Arial", Font.BOLD, 32));
             g2d.drawString("High Scores", 380, 100);
@@ -131,6 +162,17 @@ public class DrawingSurface extends JPanel{
         }
         
     }
+    
+    private void playAudio(String sound) {
+        try {
+            AudioInputStream instream = AudioSystem.getAudioInputStream(new File("src\\bomberbrad\\audio\\" + sound + ".wav").getAbsoluteFile());
+            clip = AudioSystem.getClip();
+            clip.open(instream);
+        } catch (Exception e) {
+            System.out.println("error: " + e);
+        }
+        clip.start();
+    }
      
      private void updateMenuSelectedYPos(int i) {
          if (i == -1 && selectedYPos >= 431) {
@@ -145,7 +187,8 @@ public class DrawingSurface extends JPanel{
              windowState = 1; // go to main game
              difficulty = 1;
              restartLevel();
-             
+             playingLevel = false;
+             frameCounter = 0;
          } else if (selectedYPos == 431) {
              windowState = 2; // go to high scores
          } else if (selectedYPos == 481) {
