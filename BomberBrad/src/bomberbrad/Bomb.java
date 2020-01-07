@@ -32,86 +32,60 @@ public class Bomb extends tileObject{
     public void setCounter(int counter) {
         this.counter = counter;
     }
-    public ArrayList explode(int l, Tile[][] map, int direction) {
-        ArrayList<Tile> toKill = new ArrayList();
-        
-        if(direction != 1){
-            for (int i = 0; i < l; i++) {//downwards
-            if (yPos >= map[0].length){
-                break; 
-            }else if(map[xPos][yPos + l].getOnTile() != null){
-                if(map[xPos][yPos + l].getOnTile() instanceof Block){
-                    if(((Block)map[xPos][yPos + l].getOnTile()).isBreakable()){
-                        map[xPos][yPos + l].destroy(3);
-                    }
-                    break;
-                }else if(map[xPos][yPos + l].getOnTile() instanceof Bomb){
-                    toKill.addAll(map[xPos][yPos + l].destroy(3));
+    public void explode(int l, Tile[][] map) {
+        for (int i = 0; i < l; i++) {//upwards
+            if(map[xPos][yPos - l].getOnTile() != null){
+                if(map[xPos][yPos - l].getOnTile() instanceof Bomb){
+                    map[xPos][yPos - l].setEx(new Explosion(xPos, yPos - l, 1));
+                }else{
+                    map[xPos][yPos - l].destroy(map);
                 }
-                toKill.add(map[xPos][yPos + l]);
+                break;
+            }else{
+                map[xPos][yPos - l].setEx(new Explosion(xPos, yPos - l, 1));
             }
-            
-        }
         }
         
-        if(direction != 2){
-            for (int i = 0; i < l; i++) {//to the left
-            if (xPos - l < 0){
-                break; 
-            }else if(map[xPos - l][yPos].getOnTile() != null){
-                if(map[xPos - l][yPos].getOnTile() instanceof Block){
-                    if(((Block)map[xPos - l][yPos].getOnTile()).isBreakable()){
-                        map[xPos - l][yPos].destroy(4);
-                    }
-                    break;
-                }else if(map[xPos - l][yPos].getOnTile() instanceof Bomb){
-                    toKill.addAll(map[xPos - l][yPos].destroy(4));
+        for (int i = 0; i < l; i++) {//rightly
+            if(map[xPos + l][yPos].getOnTile() != null){
+                if(map[xPos + l][yPos].getOnTile() instanceof Bomb){
+                    map[xPos + l][yPos].setEx(new Explosion(xPos + l, yPos, 2));
+                }else{
+                    map[xPos + 1][yPos].destroy(map);
                 }
-                toKill.add(map[xPos - l][yPos]);
-            }
-            
+                break;
+            }else{
+                map[xPos + 1][yPos].setEx(new Explosion(xPos + l, yPos, 2));
             }
         }
         
-        if(direction != 3){
-            for (int i = 0; i < l; i++) {//upwards
-            if (yPos < 0){
-                break; 
-            }else if(map[xPos][yPos - l].getOnTile() != null){
-                if(map[xPos][yPos - l].getOnTile() instanceof Block){
-                    if(((Block)map[xPos][yPos - l].getOnTile()).isBreakable()){
-                        map[xPos][yPos - l].destroy(1);
-                    }
-                    break;
-                }else if(map[xPos][yPos - l].getOnTile() instanceof Bomb){
-                    toKill.addAll(map[xPos][yPos - l].destroy(1));
+        for (int i = 0; i < l; i++) {//downward
+            if(map[xPos][yPos + l].getOnTile() != null){
+                if(map[xPos][yPos + l].getOnTile() instanceof Bomb){
+                    map[xPos][yPos + l].setEx(new Explosion(xPos, yPos + l, 3));
+                }else{
+                    map[xPos][yPos + l].destroy(map);
                 }
-                toKill.add(map[xPos][yPos - l]);
+                break;
+            }else{
+                map[xPos][yPos + l].setEx(new Explosion(xPos, yPos + l, 3));
             }
-            
-        }
         }
         
-        if(direction != 4){
-            for (int i = 0; i < l; i++) {//to the right
-            if (xPos + l >= map.length){
-                break; 
-            }else if(map[xPos + l][yPos].getOnTile() != null){
-                if(map[xPos + l][yPos].getOnTile() instanceof Block){
-                    if(((Block)map[xPos + l][yPos].getOnTile()).isBreakable()){
-                        map[xPos + l][yPos].destroy(2);
-                    }
-                    break;
-                }else if(map[xPos + l][yPos].getOnTile() instanceof Bomb){
-                    toKill.addAll(map[xPos + l][yPos].destroy(2));
+        for (int i = 0; i < l; i++) {//leftly
+            if(map[xPos - l][yPos].getOnTile() != null){
+                if(map[xPos - l][yPos].getOnTile() instanceof Bomb){
+                    map[xPos - l][yPos].setEx(new Explosion(xPos - l, yPos, 4));
+                }else{
+                    map[xPos - 1][yPos].destroy(map);
                 }
-                toKill.add(map[xPos + l][yPos]);
-            }
-            
+                break;
+            }else{
+                map[xPos - 1][yPos].setEx(new Explosion(xPos - l, yPos, 4));
             }
         }
         
-        return toKill;
+        
     }
     public void draw(Graphics2D g2d) {
         g2d.setColor(Color.BLACK);

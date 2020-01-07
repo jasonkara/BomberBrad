@@ -15,15 +15,15 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.image.BufferedImage;
-import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import javax.imageio.ImageIO;
+import javax.swing.JPanel;
+import javax.swing.Timer;
+import java.io.File;
 import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.Clip;
-import javax.swing.JPanel;
-import javax.swing.Timer;
 
 public class DrawingSurface extends JPanel{
     
@@ -35,6 +35,7 @@ public class DrawingSurface extends JPanel{
     boolean moveDown = false, moveUp = false, moveLeft = false, moveRight = false;
     boolean playingLevel = false;
     Tile[][] board;
+    int difficulty;
     Clip clip;
     AudioInputStream[] audio = new AudioInputStream[3];
     
@@ -64,7 +65,6 @@ public class DrawingSurface extends JPanel{
                     if (k.getID() == KeyEvent.KEY_PRESSED) { // stuff that happens when a key is pressed
                         if (k.getKeyCode() == KeyEvent.VK_W) {
                             moveUp = true;
-                            playAudio("explosion");
                         } else if (k.getKeyCode() == KeyEvent.VK_S) {
                             moveDown = true;
                         } else if (k.getKeyCode() == KeyEvent.VK_A) {
@@ -96,8 +96,8 @@ public class DrawingSurface extends JPanel{
                 return false;
             }
         });
-        board = levelRandomizer(1);
-        printBoard(board);
+        
+        //printBoard(board);
         Timer timer = new Timer(250, al);
         timer.start();
         playAudio("title");
@@ -126,27 +126,7 @@ public class DrawingSurface extends JPanel{
             g2d.drawImage(menuImg,112,100,848,252,0,0,368,76,null);
         } else if (windowState == 1) { // main game
             if (playingLevel) {
-                if (moveUp || moveDown || moveLeft || moveRight) {
-                    if (moveDown) {
-                        player.setDirection(1);
-                    } else if (moveRight) {
-                        player.setDirection(2);
-                    } else if (moveLeft) {
-                        player.setDirection(4);
-                    } else {
-                        player.setDirection(3);
-                    }
-                    player.move();
-                }
-                for (int i = 0; i < 11; i ++) {
-                 for (int o = 0; o < 15; o ++) {
-                     board[o][i].draw(g2d);
-                 }
-                 }
-                for (Enemy e: enemiesList) {
-                    e.action(board);
-                    e.draw(g2d);
-                }
+              mainGame(g2d);
             } else {
                 if (frameCounter == 0) {
                     g2d.setColor(Color.BLACK);
@@ -183,20 +163,6 @@ public class DrawingSurface extends JPanel{
         
     }
     
-    private void startLevel(Graphics2D g2d) {
-        g2d.setColor(Color.BLACK);
-        g2d.fillRect(0, 0, 960, 776);
-        g2d.setColor(Color.WHITE);
-        g2d.drawString("Level 1", 370, 300);
-        clip.stop();
-        playAudio("stagestart");
-        while (clip.getMicrosecondLength() != clip.getMicrosecondPosition()) {}
-        clip.stop();
-        playAudio("stage");
-        clip.loop(clip.LOOP_CONTINUOUSLY);
-        playingLevel = true;
-    }
-    
     private void playAudio(String sound) {
         try {
             AudioInputStream instream = AudioSystem.getAudioInputStream(new File("src\\bomberbrad\\audio\\" + sound + ".wav").getAbsoluteFile());
@@ -219,6 +185,8 @@ public class DrawingSurface extends JPanel{
      private void getSelected() {
          if (selectedYPos == 381) {
              windowState = 1; // go to main game
+             difficulty = 1;
+             restartLevel();
              playingLevel = false;
              frameCounter = 0;
          } else if (selectedYPos == 431) {
@@ -237,12 +205,57 @@ public class DrawingSurface extends JPanel{
         doDrawing(g);
     }
     
-    private boolean intersecting(Entity e1, Entity e2) {
-        int x1 = Math.min(e1.getXPos(), e2.getXPos()), y1 = Math.min(e1.getYPos(), e2.getYPos()), x2 = Math.max(e1.getXPos(), e2.getXPos()), y2 = Math.max(e1.getYPos(), e2.getYPos());
+    public boolean intersecting(int x1,int y1,int x2,int y2) {
+        
         boolean xOverlap, yOverlap;
-        xOverlap = (Math.abs(x1 - x2) < 12);
-        yOverlap = (Math.abs(y1 - y2) < 12);
+        xOverlap = (Math.abs(x1 - x2) < 16);
+        yOverlap = (Math.abs(y1 - y2) < 16);
         return (xOverlap && yOverlap);
+    }
+
+    public ArrayList<Enemy> getEnemiesList() {
+        return enemiesList;
+    }
+
+    public void setEnemiesList(ArrayList<Enemy> enemiesList) {
+        this.enemiesList = enemiesList;
+    }
+
+    public Tile[][] getBoard() {
+        return board;
+    }
+
+    public void setBoard(Tile[][] board) {
+        this.board = board;
+    }
+    
+    private void mainGame(Graphics2D g2d) {
+        g2d.drawString("Main Game", 10, 50);
+        player.setMoving(false);
+            if (moveUp || moveDown || moveLeft || moveRight) {
+                if (moveDown) {
+                    player.setDirection(3);
+                } else if (moveRight) {
+                    player.setDirection(2);
+                } else if (moveLeft) {
+                    player.setDirection(4);
+                } else {
+                    player.setDirection(1);
+                }
+                player.setMoving(true);
+            }
+            player.action(this,g2d);
+            for (int i = 0; i < 11; i ++) {
+             for (int o = 0; o < 15; o ++) {
+                 board[o][i].draw(board, g2d);
+             }
+             }
+            player.draw(g2d);
+           
+            for (Enemy e: enemiesList) {
+                e.action(board);
+                e.draw(g2d);
+            }
     }
     
     private boolean overlapping(Tile t, Entity e) {
@@ -257,7 +270,7 @@ public class DrawingSurface extends JPanel{
         int enemies = 5;
         int breakableBlocks = 25;
         int powerups = 5;
-        Tile[][] board = new Tile[15][11];
+        board = new Tile[15][11];
         //Creating blank tiles
         for (int i = 0; i < 15; i ++) {
              for (int o = 0; o < 11; o ++) {
@@ -307,12 +320,12 @@ public class DrawingSurface extends JPanel{
         }
         while (powerups > 0) {
         random = (int)(Math.random() * possible.size());
-        (possible.get(random)).setOnTile(new Block(possible.get(random).getxPos(),possible.get(random).getyPos(),"powerUP",true));
+        (possible.get(random)).setOnTile(new Block(possible.get(random).getxPos(),possible.get(random).getyPos(),new PowerUp(possible.get(random).getxPos(),possible.get(random).getyPos(),2),true));
         powerups --;
         possible.remove(random);
         }
         random = (int)(Math.random() * possible.size());
-        (possible.get(random)).setOnTile(new Block(possible.get(random).getxPos(),possible.get(random).getyPos(),"Exit",true));
+        (possible.get(random)).setOnTile(new Block(possible.get(random).getxPos(),possible.get(random).getyPos(),new Exit(possible.get(random).getxPos(),possible.get(random).getyPos()),true));
         possible.remove(random);
         
         while (enemies > 0) {
@@ -334,6 +347,12 @@ public class DrawingSurface extends JPanel{
         System.out.println(enemiesList.size());
         return board;
     }
+    
+    public void restartLevel(){
+        board = levelRandomizer(difficulty);
+        
+    }
+    
     private void printBoard(Tile[][] board) {
         String print = "";
         Block unbreak = new Block(0,0,null,false);
@@ -353,14 +372,14 @@ public class DrawingSurface extends JPanel{
                      print += "T\t";
                  }
                  else if (((Block)(board[o][i].getOnTile())).equals(unbreak)) {
-                     if (((Block)(board[o][i].getOnTile())).getPowerType() == null) {
+                     if (((Block)(board[o][i].getOnTile())).getPU() == null) {
                      print += "UB\t";
                      }
                  }
                  else if (((Block)(board[o][i].getOnTile())).equals(breaka)) {
-                     if (((Block)(board[o][i].getOnTile())).getPowerType() == null) {
+                     if (((Block)(board[o][i].getOnTile())).getPU() == null) {
                      print += "BB\t";
-                     } else if (((Block)(board[o][i].getOnTile())).getPowerType().equals("Exit")){
+                     } else if ((board[o][i].getOnTile()) instanceof Exit){
                          print  += "EX\t";
                      } else {
                      print += "PU\t";
@@ -371,6 +390,9 @@ public class DrawingSurface extends JPanel{
              print += "\n";
         }
         System.out.println(print);
+    }
+    public void updateGameScreen(Tile[][] board) {
+        
     }
     
 }
