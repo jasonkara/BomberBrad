@@ -1,63 +1,92 @@
-
 package bomberbrad;
 
 import java.awt.Color;
 import java.awt.Graphics2D;
+import java.util.ArrayList;
 
+public class Player extends Entity {
 
-public class Player extends Entity{
-    
-    Player(int xPos, int yPos, int direction){
-        super( xPos,  yPos,  1,  direction,  2, null);
+    private boolean moving;
+
+    Player(int xPos, int yPos, int direction) {
+        super(xPos, yPos, 1, direction, 2, null);
     }
-    
-    public void action(Tile[][] map){
-        int xMod = 0;
-        int yMod = 0;
-        
-        switch(direction){
-            case 1:
-                yMod-=speed;
-                break;
-            case 2:
-                xMod+=speed;
-                break;
-            case 3:
-                yMod+=speed;
-                break;
-            default:
-                xMod-=speed;
-        }
-        if(map[(xPos + xMod) / 16][(yPos + yMod) / 16].getOnTile() != null//top left
-                && map[(xPos + 12+ xMod) / 16][(yPos + yMod) / 16].getOnTile() != null//top right
-                && map[(xPos + xMod) / 16][(yPos + 12 + yMod) / 16].getOnTile() != null//bottom left
-                && map[(xPos + 12 + xMod) / 16][(yPos + 12 + yMod) / 16].getOnTile() != null){//bottom right
 
-        }else{
-            move();
+    public void action(DrawingSurface ds, Graphics2D g2d) {
+        Tile[][] map = ds.getBoard();
+        ArrayList<Enemy> EL = ds.getEnemiesList();
+        if (moving) {
+            switch (direction) {
+                case 1:
+                    if (map[xPos / 16][(yPos - speed) / 16].getOnTile() != null
+                            || map[(xPos + 15) / 16][(yPos - speed) / 16].getOnTile() != null) {
+
+                    } else {
+                        move();
+                    }
+
+                    break;
+                case 2:
+                    if (map[(xPos + 15 + speed) / 16][(yPos) / 16].getOnTile() != null
+                            || map[(xPos + 15 + speed) / 16][(yPos + 15) / 16].getOnTile() != null) {
+
+                    } else {
+                        move();
+                    }
+
+                    break;
+                case 3:
+                    if (map[xPos / 16][(yPos + 15 + speed) / 16].getOnTile() != null
+                            || map[(xPos + 15) / 16][(yPos + 15 + speed) / 16].getOnTile() != null) {
+                    } else {
+                        move();
+                    }
+
+                    break;
+                default:
+                    if (map[(xPos - speed) / 16][(yPos) / 16].getOnTile() != null
+                            || map[(xPos - speed) / 16][(yPos + 15) / 16].getOnTile() != null) {
+
+                    } else {
+                        move();
+                    }
+
+            }
         }
-        
+        for (Enemy e : EL) {
+            if (ds.intersecting(xPos, yPos, e.getXPos(), e.getYPos())) {
+                ds.restartLevel();
+            }
+        }
     }
-    
-    public void move(){
-        switch(direction){
+
+    public boolean isMoving() {
+        return moving;
+    }
+
+    public void setMoving(boolean moving) {
+        this.moving = moving;
+    }
+
+    public void move() {
+        switch (direction) {
             case 1:
-                yPos += speed;
+                yPos -= speed;
                 break;
             case 2:
                 xPos += speed;
                 break;
             case 3:
-                yPos -= speed;
+                yPos += speed;
                 break;
             default:
                 xPos -= speed;
         }
     }
-    
-    public void draw(Graphics2D g2d){
+
+    public void draw(Graphics2D g2d) {
         g2d.setColor(Color.RED);
-        g2d.drawRect(xPos*4,yPos*4,48,48);
+        g2d.fillRect(xPos * 4, yPos * 4, 64, 64);
     }
-    
+
 }

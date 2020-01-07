@@ -86,7 +86,7 @@ public class Tile {
         }else if(onTile instanceof PowerUp){
             onTile = null;
         }else{
-            DrawingSurface.restartLevel();
+            //DrawingSurface.restartLevel();
         }
     }
     public void draw (Tile[][] board, Graphics2D g2d) {

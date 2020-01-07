@@ -29,6 +29,7 @@ public class DrawingSurface extends JPanel{
     Player player = new Player(16,16,1);
     boolean moveDown = false, moveUp = false, moveLeft = false, moveRight = false;
     Tile[][] board;
+    int difficulty;
     
     public DrawingSurface() {
         
@@ -83,8 +84,8 @@ public class DrawingSurface extends JPanel{
                 return false;
             }
         });
-        board = levelRandomizer(1);
-        printBoard(board);
+        
+        //printBoard(board);
         Timer timer = new Timer(250, al);
         timer.start();
     }
@@ -111,28 +112,7 @@ public class DrawingSurface extends JPanel{
             g2d.fillPolygon(new int[] {350, 350, 360}, new int[] {selectedYPos, selectedYPos + 20, selectedYPos + 10}, 3);
             g2d.drawImage(menuImg,112,100,848,252,0,0,368,76,null);
         } else if (windowState == 1) { // main game
-            g2d.drawString("Main Game", 10, 50);
-            if (moveUp || moveDown || moveLeft || moveRight) {
-                if (moveDown) {
-                    player.setDirection(1);
-                } else if (moveRight) {
-                    player.setDirection(2);
-                } else if (moveLeft) {
-                    player.setDirection(4);
-                } else {
-                    player.setDirection(3);
-                }
-                player.move();
-            }
-            for (int i = 0; i < 11; i ++) {
-             for (int o = 0; o < 15; o ++) {
-                 board[o][i].draw(board, g2d);
-             }
-             }
-            for (Enemy e: enemiesList) {
-                e.action(board);
-                e.draw(g2d);
-            }
+            mainGame(g2d);
         } else if (windowState == 2) { // high scores
             g2d.setFont(new Font("Arial", Font.BOLD, 32));
             g2d.drawString("High Scores", 380, 100);
@@ -163,6 +143,9 @@ public class DrawingSurface extends JPanel{
      private void getSelected() {
          if (selectedYPos == 381) {
              windowState = 1; // go to main game
+             difficulty = 1;
+             restartLevel();
+             
          } else if (selectedYPos == 431) {
              windowState = 2; // go to high scores
          } else if (selectedYPos == 481) {
@@ -179,12 +162,57 @@ public class DrawingSurface extends JPanel{
         doDrawing(g);
     }
     
-    private boolean intersecting(Entity e1, Entity e2) {
-        int x1 = Math.min(e1.getXPos(), e2.getXPos()), y1 = Math.min(e1.getYPos(), e2.getYPos()), x2 = Math.max(e1.getXPos(), e2.getXPos()), y2 = Math.max(e1.getYPos(), e2.getYPos());
+    public boolean intersecting(int x1,int y1,int x2,int y2) {
+        
         boolean xOverlap, yOverlap;
-        xOverlap = (Math.abs(x1 - x2) < 12);
-        yOverlap = (Math.abs(y1 - y2) < 12);
+        xOverlap = (Math.abs(x1 - x2) < 16);
+        yOverlap = (Math.abs(y1 - y2) < 16);
         return (xOverlap && yOverlap);
+    }
+
+    public ArrayList<Enemy> getEnemiesList() {
+        return enemiesList;
+    }
+
+    public void setEnemiesList(ArrayList<Enemy> enemiesList) {
+        this.enemiesList = enemiesList;
+    }
+
+    public Tile[][] getBoard() {
+        return board;
+    }
+
+    public void setBoard(Tile[][] board) {
+        this.board = board;
+    }
+    
+    private void mainGame(Graphics2D g2d) {
+        g2d.drawString("Main Game", 10, 50);
+        player.setMoving(false);
+            if (moveUp || moveDown || moveLeft || moveRight) {
+                if (moveDown) {
+                    player.setDirection(3);
+                } else if (moveRight) {
+                    player.setDirection(2);
+                } else if (moveLeft) {
+                    player.setDirection(4);
+                } else {
+                    player.setDirection(1);
+                }
+                player.setMoving(true);
+            }
+            player.action(this,g2d);
+            for (int i = 0; i < 11; i ++) {
+             for (int o = 0; o < 15; o ++) {
+                 board[o][i].draw(board, g2d);
+             }
+             }
+            player.draw(g2d);
+           
+            for (Enemy e: enemiesList) {
+                e.action(board);
+                e.draw(g2d);
+            }
     }
     
     private boolean overlapping(Tile t, Entity e) {
@@ -199,7 +227,7 @@ public class DrawingSurface extends JPanel{
         int enemies = 5;
         int breakableBlocks = 25;
         int powerups = 5;
-        Tile[][] board = new Tile[15][11];
+        board = new Tile[15][11];
         //Creating blank tiles
         for (int i = 0; i < 15; i ++) {
              for (int o = 0; o < 11; o ++) {
@@ -278,7 +306,8 @@ public class DrawingSurface extends JPanel{
     }
     
     public void restartLevel(){
-        //i
+        board = levelRandomizer(difficulty);
+        
     }
     
     private void printBoard(Tile[][] board) {
