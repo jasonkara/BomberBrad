@@ -38,6 +38,7 @@ public class DrawingSurface extends JPanel{
     int difficulty;
     Clip clip;
     AudioInputStream[] audio = new AudioInputStream[3];
+    Timer timer;
     
     public DrawingSurface() {
         
@@ -98,7 +99,7 @@ public class DrawingSurface extends JPanel{
         });
         
         //printBoard(board);
-        Timer timer = new Timer(250, al);
+        timer = new Timer(50, al);
         timer.start();
         playAudio("title");
     }
@@ -349,7 +350,12 @@ public class DrawingSurface extends JPanel{
     }
     
     public void restartLevel(){
+        timer.stop();
+        windowState = 0;
         board = levelRandomizer(difficulty);
+        playingLevel = false;
+        windowState = 1;
+        timer.start();
         
     }
     
