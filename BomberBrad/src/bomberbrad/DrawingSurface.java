@@ -36,7 +36,7 @@ public class DrawingSurface extends JPanel{
     boolean playingLevel = false;
     Tile[][] board;
     int difficulty;
-    Clip clip;
+    public Clip clip;
     AudioInputStream[] audio = new AudioInputStream[3];
     Timer timer;
     int exitX,exitY;
@@ -116,9 +116,10 @@ public class DrawingSurface extends JPanel{
         g2d.fillRect(0,0,960,776);
         g2d.setColor(Color.WHITE);
         g2d.setFont(new Font("Arial", Font.BOLD, 24));
-        BufferedImage menuImg = null;
+        BufferedImage menuImg = null, lifeSprite = null;
         try {
             menuImg = ImageIO.read(getClass().getResource("/bomberbrad/menulogo.png"));
+            lifeSprite = ImageIO.read(getClass().getResource("/bomberbrad/sprites/entity/player/r1.png"));
         } catch (IOException e) {
             g2d.drawString("Error: " + e, 10, 10);
         }
@@ -132,23 +133,34 @@ public class DrawingSurface extends JPanel{
             g2d.fillPolygon(new int[] {350, 350, 360}, new int[] {selectedYPos, selectedYPos + 20, selectedYPos + 10}, 3);
             g2d.drawImage(menuImg,112,100,848,252,0,0,368,76,null);
         } else if (windowState == 1) { // main game
-            if (playingLevel) {
-              mainGame(g2d);
-            } else {
+            if (player.getLives() < 1) {
+                g2d.drawString("Press ESC to return to the menu", 270, 500);
+                g2d.setFont(new Font("Arial", Font.BOLD, 64));
+                g2d.setColor(Color.RED);
+                g2d.drawString("Game Over!", 270, 300);
                 if (frameCounter == 0) {
-                    g2d.setColor(Color.BLACK);
-                    g2d.fillRect(0, 0, 960, 776);
-                    g2d.setColor(Color.WHITE);
-                    g2d.drawString("Level " + level, 370, 300);
+                    clip.stop();
+                    playAudio("gameover");
                     frameCounter = 1;
-                    clip.stop();
-                    playAudio("stagestart");
+                }
+            } else {
+                if (playingLevel) {
+                  mainGame(g2d);
                 } else {
-                    while (clip.getMicrosecondLength() != clip.getMicrosecondPosition()) {}
-                    clip.stop();
-                    playAudio("stage");
-                    clip.loop(clip.LOOP_CONTINUOUSLY);
-                    playingLevel = true;
+                    if (frameCounter == 0) {
+                        g2d.drawString("Level " + level, 400, 340);
+                        g2d.drawString("Lives: " + player.getLives(), 420, 410);
+                        g2d.drawImage(lifeSprite,370,385,402,417,0,0,16,16,null);
+                        frameCounter = 1;
+                        clip.stop();
+                        playAudio("stagestart");
+                    } else {
+                        while (clip.getMicrosecondLength() != clip.getMicrosecondPosition()) {}
+                        clip.stop();
+                        playAudio("stage");
+                        clip.loop(clip.LOOP_CONTINUOUSLY);
+                        playingLevel = true;
+                    }
                 }
             }
         } else if (windowState == 2) { // high scores
@@ -170,7 +182,7 @@ public class DrawingSurface extends JPanel{
         
     }
     
-    private void playAudio(String sound) {
+    public void playAudio(String sound) {
         try {
             AudioInputStream instream = AudioSystem.getAudioInputStream(new File("src\\bomberbrad\\audio\\" + sound + ".wav").getAbsoluteFile());
             clip = AudioSystem.getClip();
@@ -197,7 +209,7 @@ public class DrawingSurface extends JPanel{
              restartLevel();
              playingLevel = false;
              bombs = 1;
-             
+             player.setLives(3);
          } else if (selectedYPos == 431) {
              windowState = 2; // go to high scores
          } else if (selectedYPos == 481) {
