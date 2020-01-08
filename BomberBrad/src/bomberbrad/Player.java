@@ -7,9 +7,11 @@ import java.util.ArrayList;
 public class Player extends Entity {
 
     private boolean moving;
+    private int lives;
 
     Player(int xPos, int yPos, int direction) {
         super(xPos, yPos, 1, direction, 2, null);
+        lives = 3;
     }
 
     public void action(DrawingSurface ds, Graphics2D g2d) {
@@ -55,8 +57,13 @@ public class Player extends Entity {
         }
         for (Enemy e : EL) {
             if (ds.intersecting(xPos, yPos, e.getXPos(), e.getYPos())) {
+                ds.clip.stop();
+                ds.playAudio("die");
+                while (ds.clip.getMicrosecondLength() != ds.clip.getMicrosecondPosition()) {}
+                ds.clip.stop();
                 ds.restartLevel();
                 ds.setBombs(1);
+                lives --;
             }
         }
         
@@ -72,6 +79,14 @@ public class Player extends Entity {
 
     public void setMoving(boolean moving) {
         this.moving = moving;
+    }
+    
+    public void setLives(int l) {
+        lives = l;
+    }
+    
+    public int getLives() {
+        return lives;
     }
 
     public void move() {
