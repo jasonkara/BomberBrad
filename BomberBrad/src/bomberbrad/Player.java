@@ -56,9 +56,11 @@ public class Player extends Entity {
         for (Enemy e : EL) {
             if (ds.intersecting(xPos, yPos, e.getXPos(), e.getYPos())) {
                 ds.restartLevel();
+                ds.setBombs(1);
             }
         }
-        if (ds.intersecting(xPos,yPos,ds.getExitX() * 16,ds.getExitY() * 16)) {
+        
+        if (ds.intersecting(xPos,yPos,ds.getExitX() * 16,ds.getExitY() * 16) && EL.size() == 0) {
             ds.setLevel(ds.getLevel() + 1);
             ds.restartLevel();
         }
