@@ -41,7 +41,8 @@ public class DrawingSurface extends JPanel{
     Timer timer;
     int exitX,exitY;
     int level;
-    
+    int bombs;
+    ArrayList<Bomb> bombsList = new ArrayList();
     public DrawingSurface() {
         
         ActionListener al = new ActionListener() {
@@ -75,7 +76,10 @@ public class DrawingSurface extends JPanel{
                         } else if (k.getKeyCode() == KeyEvent.VK_D) {
                             moveRight = true;
                         } else if (k.getKeyCode() == KeyEvent.VK_SPACE) {
-                            // place bomb;
+                            if (bombs > 1) {
+                                bombs --;
+                                bombsList.add(new Bomb(player.getXPos() / 16, player.getYPos() / 16));
+                            }
                         }
                     } else if (k.getID() == KeyEvent.KEY_RELEASED) { // stuff that happens when a key is released
                         if (k.getKeyCode() == KeyEvent.VK_W) {
@@ -192,6 +196,7 @@ public class DrawingSurface extends JPanel{
              level = 1;
              restartLevel();
              playingLevel = false;
+             bombs = 1;
              
          } else if (selectedYPos == 431) {
              windowState = 2; // go to high scores
@@ -259,6 +264,10 @@ public class DrawingSurface extends JPanel{
             for (Enemy e: enemiesList) {
                 e.action(board);
                 e.draw(g2d);
+            }
+            for (Bomb b: bombsList) {
+                //b.update();
+                b.draw(g2d);
             }
     }
     
@@ -360,9 +369,10 @@ public class DrawingSurface extends JPanel{
         
         enemiesList = new ArrayList();
         //windowState = 0;
-       
+        
         playingLevel = false;
-        player = new Player(16,16,1);
+        player.setxPos(16);
+        player.setyPos(16);
         frameCounter = 0;
         if (level < 4) {
             difficulty = 1;
@@ -440,6 +450,14 @@ public class DrawingSurface extends JPanel{
 
     public void setLevel(int level) {
         this.level = level;
+    }
+
+    public int getBombs() {
+        return bombs;
+    }
+
+    public void setBombs(int bombs) {
+        this.bombs = bombs;
     }
     
 }
