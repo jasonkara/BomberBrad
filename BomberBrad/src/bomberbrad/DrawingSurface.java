@@ -42,7 +42,7 @@ public class DrawingSurface extends JPanel{
     int exitX,exitY;
     int level;
     int bombs;
-    ArrayList<Bomb> bombsList = new ArrayList();
+    
     public DrawingSurface() {
         
         ActionListener al = new ActionListener() {
@@ -76,9 +76,9 @@ public class DrawingSurface extends JPanel{
                         } else if (k.getKeyCode() == KeyEvent.VK_D) {
                             moveRight = true;
                         } else if (k.getKeyCode() == KeyEvent.VK_SPACE) {
-                            if (bombs > 1) {
+                            if (bombs >= 1) {
                                 bombs --;
-                                bombsList.add(new Bomb(player.getXPos() / 16, player.getYPos() / 16));
+                                board[player.getXPos() / 16][player.getYPos() / 16].setOnTile(new Bomb(player.getXPos() / 16, player.getYPos() / 16));
                             }
                         }
                     } else if (k.getID() == KeyEvent.KEY_RELEASED) { // stuff that happens when a key is released
@@ -257,6 +257,8 @@ public class DrawingSurface extends JPanel{
             for (int i = 0; i < 11; i ++) {
              for (int o = 0; o < 15; o ++) {
                  board[o][i].draw(board, g2d);
+                 
+                 board[o][i].update(board,this);
              }
              }
             player.draw(g2d);
@@ -265,10 +267,7 @@ public class DrawingSurface extends JPanel{
                 e.action(board);
                 e.draw(g2d);
             }
-            for (Bomb b: bombsList) {
-                //b.update();
-                b.draw(g2d);
-            }
+            
     }
     
     private boolean overlapping(Tile t, Entity e) {

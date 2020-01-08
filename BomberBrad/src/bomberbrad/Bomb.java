@@ -16,7 +16,7 @@ public class Bomb extends tileObject{
      */
     public Bomb(int xPos, int yPos) {
         super(xPos,yPos);
-        counter = 0;
+        counter = 50;
     }
     /**
      * Accessor method for the counter keeping track of when the bomb will explode
