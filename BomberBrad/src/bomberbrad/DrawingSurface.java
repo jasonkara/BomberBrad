@@ -36,13 +36,13 @@ public class DrawingSurface extends JPanel{
     boolean playingLevel = false;
     Tile[][] board;
     int difficulty;
-    public Clip clip;
+    Clip clip;
     AudioInputStream[] audio = new AudioInputStream[3];
     Timer timer;
     int exitX,exitY;
     int level;
     int bombs;
-    ArrayList<Bomb> bombsList = new ArrayList();
+    
     public DrawingSurface() {
         
         ActionListener al = new ActionListener() {
@@ -76,9 +76,9 @@ public class DrawingSurface extends JPanel{
                         } else if (k.getKeyCode() == KeyEvent.VK_D) {
                             moveRight = true;
                         } else if (k.getKeyCode() == KeyEvent.VK_SPACE) {
-                            if (bombs > 1) {
+                            if (bombs >= 1) {
                                 bombs --;
-                                bombsList.add(new Bomb(player.getXPos() / 16, player.getYPos() / 16));
+                                board[player.getXPos() / 16][player.getYPos() / 16].setOnTile(new Bomb(player.getXPos() / 16, player.getYPos() / 16));
                             }
                         }
                     } else if (k.getID() == KeyEvent.KEY_RELEASED) { // stuff that happens when a key is released
@@ -123,17 +123,7 @@ public class DrawingSurface extends JPanel{
         } catch (IOException e) {
             g2d.drawString("Error: " + e, 10, 10);
         }
-        if (windowState == 0) { // main menu
-            g2d.drawString("Start Game", 370, 400);
-            g2d.drawString("High Scores", 370, 450);
-            g2d.drawString("Credits", 370, 500);
-            g2d.drawString("Exit", 370, 550);
-            g2d.setFont(new Font("Arial", Font.BOLD, 16));
-            g2d.drawString("© 2019 DKP Studios", 370, 650);
-            g2d.fillPolygon(new int[] {350, 350, 360}, new int[] {selectedYPos, selectedYPos + 20, selectedYPos + 10}, 3);
-            g2d.drawImage(menuImg,112,100,848,252,0,0,368,76,null);
-        } else if (windowState == 1) { // main game
-            if (player.getLives() < 1) {
+         if (player.getLives() < 1) {
                 g2d.drawString("Press ESC to return to the menu", 270, 500);
                 g2d.setFont(new Font("Arial", Font.BOLD, 64));
                 g2d.setColor(Color.RED);
@@ -182,7 +172,7 @@ public class DrawingSurface extends JPanel{
         
     }
     
-    public void playAudio(String sound) {
+    private void playAudio(String sound) {
         try {
             AudioInputStream instream = AudioSystem.getAudioInputStream(new File("src\\bomberbrad\\audio\\" + sound + ".wav").getAbsoluteFile());
             clip = AudioSystem.getClip();
@@ -269,6 +259,8 @@ public class DrawingSurface extends JPanel{
             for (int i = 0; i < 11; i ++) {
              for (int o = 0; o < 15; o ++) {
                  board[o][i].draw(board, g2d);
+                 
+                 board[o][i].update(board,this);
              }
              }
             player.draw(g2d);
@@ -277,10 +269,7 @@ public class DrawingSurface extends JPanel{
                 e.action(board);
                 e.draw(g2d);
             }
-            for (Bomb b: bombsList) {
-                //b.update();
-                b.draw(g2d);
-            }
+            
     }
     
     private boolean overlapping(Tile t, Entity e) {

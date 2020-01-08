@@ -3,6 +3,7 @@
 //Class to represent a bombs explosion
 package bomberbrad;
 
+import java.awt.Color;
 import java.awt.Graphics2D;
 
 /**
@@ -21,9 +22,7 @@ public class Explosion {
         this.direction = direction;
         
     }
-    public void update() {
-        time --;
-    }
+    
 
     public int getX() {
         return x;
@@ -57,10 +56,13 @@ public class Explosion {
         this.direction = direction;
     }
     public void draw(Tile[][] board, Graphics2D g2d) {
+        g2d.setColor(Color.orange);
+        g2d.fillRect(x * 64,y*64,64,64);
         if (direction == 0) {
             //Image of center
         } else if (direction == 1) {
             if (board[x][y - 1].getEx() != null) {
+                
                 //image of vertical connector
             } else {
                 //image of upward tipped explosion
