@@ -39,6 +39,8 @@ public class DrawingSurface extends JPanel{
     Clip clip;
     AudioInputStream[] audio = new AudioInputStream[3];
     Timer timer;
+    int exitX,exitY;
+    int level;
     
     public DrawingSurface() {
         
@@ -133,7 +135,7 @@ public class DrawingSurface extends JPanel{
                     g2d.setColor(Color.BLACK);
                     g2d.fillRect(0, 0, 960, 776);
                     g2d.setColor(Color.WHITE);
-                    g2d.drawString("Level 1", 370, 300);
+                    g2d.drawString("Level " + level, 370, 300);
                     frameCounter = 1;
                     clip.stop();
                     playAudio("stagestart");
@@ -187,9 +189,10 @@ public class DrawingSurface extends JPanel{
          if (selectedYPos == 381) {
              windowState = 1; // go to main game
              difficulty = 1;
+             level = 1;
              restartLevel();
              playingLevel = false;
-             frameCounter = 0;
+             
          } else if (selectedYPos == 431) {
              windowState = 2; // go to high scores
          } else if (selectedYPos == 481) {
@@ -327,6 +330,10 @@ public class DrawingSurface extends JPanel{
         }
         random = (int)(Math.random() * possible.size());
         (possible.get(random)).setOnTile(new Block(possible.get(random).getxPos(),possible.get(random).getyPos(),new Exit(possible.get(random).getxPos(),possible.get(random).getyPos()),true));
+        exitX = possible.get(random).getxPos();
+        exitY = possible.get(random).getyPos();
+        //exitX = 1;
+        //exitY = 2;
         possible.remove(random);
         
         while (enemies > 0) {
@@ -350,13 +357,23 @@ public class DrawingSurface extends JPanel{
     }
     
     public void restartLevel(){
-        timer.stop();
-        windowState = 0;
-        board = levelRandomizer(difficulty);
-        playingLevel = false;
-        windowState = 1;
-        timer.start();
         
+        enemiesList = new ArrayList();
+        //windowState = 0;
+       
+        playingLevel = false;
+        player = new Player(16,16,1);
+        frameCounter = 0;
+        if (level < 4) {
+            difficulty = 1;
+        } else if (level < 7) {
+            difficulty = 2;
+        } else if (level < 9) {
+            difficulty = 3;
+        } else {
+            difficulty = 4;
+        }
+         board = levelRandomizer(difficulty);
     }
     
     private void printBoard(Tile[][] board) {
@@ -399,6 +416,30 @@ public class DrawingSurface extends JPanel{
     }
     public void updateGameScreen(Tile[][] board) {
         
+    }
+
+    public int getExitX() {
+        return exitX;
+    }
+
+    public void setExitX(int exitX) {
+        this.exitX = exitX;
+    }
+
+    public int getExitY() {
+        return exitY;
+    }
+
+    public void setExitY(int exitY) {
+        this.exitY = exitY;
+    }
+
+    public int getLevel() {
+        return level;
+    }
+
+    public void setLevel(int level) {
+        this.level = level;
     }
     
 }

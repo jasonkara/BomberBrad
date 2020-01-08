@@ -58,6 +58,10 @@ public class Player extends Entity {
                 ds.restartLevel();
             }
         }
+        if (ds.intersecting(xPos,yPos,ds.getExitX() * 16,ds.getExitY() * 16)) {
+            ds.setLevel(ds.getLevel() + 1);
+            ds.restartLevel();
+        }
     }
 
     public boolean isMoving() {
