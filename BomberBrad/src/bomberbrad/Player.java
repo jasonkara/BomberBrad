@@ -7,9 +7,11 @@ import java.util.ArrayList;
 public class Player extends Entity {
 
     private boolean moving;
+    private int lives;
 
     Player(int xPos, int yPos, int direction) {
         super(xPos, yPos, 1, direction, 2, null);
+        lives = 3;
     }
 
     public void action(DrawingSurface ds, Graphics2D g2d) {
@@ -55,6 +57,7 @@ public class Player extends Entity {
         }
         for (Enemy e : EL) {
             if (ds.intersecting(xPos, yPos, e.getXPos(), e.getYPos())) {
+                lives --;
                 ds.restartLevel();
             }
         }
@@ -70,6 +73,14 @@ public class Player extends Entity {
 
     public void setMoving(boolean moving) {
         this.moving = moving;
+    }
+    
+    public void setLives(int l) {
+        lives = 3;
+    }
+    
+    public int getLives() {
+        return lives;
     }
 
     public void move() {

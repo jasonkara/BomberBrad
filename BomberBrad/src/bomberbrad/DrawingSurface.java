@@ -136,6 +136,7 @@ public class DrawingSurface extends JPanel{
                     g2d.fillRect(0, 0, 960, 776);
                     g2d.setColor(Color.WHITE);
                     g2d.drawString("Level " + level, 370, 300);
+                    g2d.drawString("Lives: " + player.getLives(), 370, 400);
                     frameCounter = 1;
                     clip.stop();
                     playAudio("stagestart");
