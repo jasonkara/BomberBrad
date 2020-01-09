@@ -78,7 +78,7 @@ public class DrawingSurface extends JPanel{
                         } else if (k.getKeyCode() == KeyEvent.VK_SPACE) {
                             if (bombs >= 1) {
                                 bombs --;
-                                board[player.getXPos() / 16][player.getYPos() / 16].setOnTile(new Bomb(player.getXPos() / 16, player.getYPos() / 16));
+                                board[(player.getXPos() + 8) / 16][(player.getYPos() + 8) / 16].setOnTile(new Bomb((player.getXPos() + 8) / 16, (player.getYPos() + 8) / 16));
                             }
                         }
                     } else if (k.getID() == KeyEvent.KEY_RELEASED) { // stuff that happens when a key is released
@@ -268,9 +268,10 @@ public class DrawingSurface extends JPanel{
             player.action(this,g2d);
             for (int i = 0; i < 11; i ++) {
              for (int o = 0; o < 15; o ++) {
+                 board[o][i].update(this);
                  board[o][i].draw(board, g2d);
                  
-                 board[o][i].update(board,this);
+                 
              }
              }
             player.draw(g2d);
@@ -317,7 +318,7 @@ public class DrawingSurface extends JPanel{
                  board[i][o] = new Tile(i,o,new Block(i,o,null,false));
              }
         }
-        //creating random vairble to choose random positions
+        //creating random variable to choose random positions
         int random;
         //creating arraylist of possible positions for breakable blocks, 
         ArrayList<Tile> possible = new ArrayList();
@@ -469,6 +470,14 @@ public class DrawingSurface extends JPanel{
 
     public void setBombs(int bombs) {
         this.bombs = bombs;
+    }
+
+    public Player getPlayer() {
+        return player;
+    }
+
+    public void setPlayer(Player player) {
+        this.player = player;
     }
     
 }

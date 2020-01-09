@@ -51,12 +51,14 @@ public class Block extends tileObject{
         }
     }
     public void draw(Graphics2D g2d) {
+        
         if (breakable) {
             g2d.setColor(Color.DARK_GRAY);
         }
         else {
             g2d.setColor(Color.LIGHT_GRAY);
         }
+       
         g2d.fillRect(xPos*64,yPos*64,64,64);
     }
     
