@@ -111,6 +111,12 @@ public class DrawingSurface extends JPanel{
         Ballom b = new Ballom(0,0,0);
         b.loadImages();
         b = null;
+        Dahl d = new Dahl(0,0,0);
+        d.loadImages();
+        d = null;
+        Onil o = new Onil(0,0,0);
+        o.loadImages();
+        o = null;
     }
 
     private void doDrawing(Graphics g) {        
@@ -208,7 +214,7 @@ public class DrawingSurface extends JPanel{
          if (selectedYPos == 381) {
              windowState = 1; // go to main game
              difficulty = 1;
-             level = 1;
+             level = 8;
              restartLevel();
              playingLevel = false;
              bombs = 1;

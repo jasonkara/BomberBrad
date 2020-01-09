@@ -15,15 +15,39 @@ import javax.imageio.ImageIO;
 public class Ballom extends Enemy {
     
     private static BufferedImage[] sprites = new BufferedImage[11];
+    private int frameCounter;
     
     public Ballom(int xPos, int yPos, int direction){
         super( xPos,  yPos,  1,  direction, 2);
+        frameCounter = 0;
     }
     
     
         
     public void draw(Graphics2D g2d){
-        g2d.drawImage(sprites[0],xPos*4,yPos*4,xPos*4+64,yPos*4+64,0,0,16,16,null);
+        BufferedImage shown;
+        if (direction <= 2) {
+            if (frameCounter < 2) {
+                shown = sprites[3];
+            } else if (frameCounter < 6 && frameCounter > 3) {
+                shown = sprites[5];
+            } else {
+                shown = sprites[4];
+            }
+        } else {
+            if (frameCounter < 2) {
+                shown = sprites[0];
+            } else if (frameCounter < 6 && frameCounter > 3) {
+                shown = sprites[2];
+            } else {
+                shown = sprites[1];
+            }
+        }
+        g2d.drawImage(shown,xPos*4,yPos*4,xPos*4+64,yPos*4+64,0,0,16,16,null);
+        frameCounter ++;
+        if (frameCounter == 8) {
+            frameCounter = 0;
+        }
     }
     
     public void loadImages() {
