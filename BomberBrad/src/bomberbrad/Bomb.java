@@ -88,8 +88,9 @@ public class Bomb extends tileObject{
         
     }
     public void draw(Graphics2D g2d) {
-        g2d.setColor(Color.BLACK);
-        g2d.drawRect(xPos*64,yPos*64,64,64);
+        
+        g2d.setColor(Color.black);
+        g2d.fillRect(xPos*64,yPos*64,64,64);
     }
     
 }

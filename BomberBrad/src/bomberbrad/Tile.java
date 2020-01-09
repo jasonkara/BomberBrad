@@ -98,8 +98,13 @@ public class Tile {
     public void destroy(Tile[][] board) {
         if (onTile instanceof Block) {
             if (((Block)(onTile)).isBreakable()) {
+                if (((Block)(onTile)).getPU() != null) {
+                    onTile = ((Block)(onTile)).getPU();
+                } else {
+                    onTile = null;
+                }
                 //((Block)onTile).startBreak();
-                onTile = null;
+                
             }
         } else if (onTile instanceof PowerUp) {
             onTile = null;
@@ -109,12 +114,11 @@ public class Tile {
     }
 
     public void draw(Tile[][] board, Graphics2D g2d) {
-        if (ex != null) {
-            ex.draw(board, g2d);
-        }
+        
         if (onTile != null) {
             onTile.draw(g2d);
-        } else {
+        } 
+        else {
             g2d.setColor(Color.WHITE);
             g2d.fillRect(xPos * 64, yPos * 64, 64, 64);
         }
@@ -123,9 +127,26 @@ public class Tile {
         }
     }
 
-    public void update(Tile[][] board,DrawingSurface ds) {
+    public void update(DrawingSurface ds) {
+        Tile[][] board = ds.getBoard();
+        ArrayList<Enemy> EL = ds.getEnemiesList();
         if (ex != null) {
             ex.setTime(ex.getTime() - 1);
+            if (ds.intersecting(xPos * 16, yPos * 16, ds.getPlayer().getXPos(),ds.getPlayer().getYPos())) {
+                ds.clip.stop();
+                ds.playAudio("die");
+                while (ds.clip.getMicrosecondLength() != ds.clip.getMicrosecondPosition()) {}
+                ds.clip.stop();
+                ds.restartLevel();
+                ds.setBombs(1);
+                ds.getPlayer().setLives(ds.getPlayer().getLives() - 1);
+            }
+            for (Enemy e: EL) {
+                if (ds.intersecting(xPos * 16, yPos * 16, e.getXPos(),e.getYPos())) {
+                    //death animation of enemy
+                    EL.remove(e);
+                }
+            }
             if (ex.getTime() == 0) {
                 ex = null;
             }
@@ -139,6 +160,7 @@ public class Tile {
                 ds.setBombs(ds.getBombs() + 1);
             } 
         }
+        
     }
     
 }
