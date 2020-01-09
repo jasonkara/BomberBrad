@@ -123,6 +123,16 @@ public class DrawingSurface extends JPanel{
         } catch (IOException e) {
             g2d.drawString("Error: " + e, 10, 10);
         }
+        if (windowState == 0) { // main menu
+            g2d.drawString("Start Game", 370, 400);
+            g2d.drawString("High Scores", 370, 450);
+            g2d.drawString("Credits", 370, 500);
+            g2d.drawString("Exit", 370, 550);
+            g2d.setFont(new Font("Arial", Font.BOLD, 16));
+            g2d.drawString("© 2019 DKP Studios", 370, 650);
+            g2d.fillPolygon(new int[] {350, 350, 360}, new int[] {selectedYPos, selectedYPos + 20, selectedYPos + 10}, 3);
+            g2d.drawImage(menuImg,112,100,848,252,0,0,368,76,null);
+        } else if (windowState == 1) { // main game
          if (player.getLives() < 1) {
                 g2d.drawString("Press ESC to return to the menu", 270, 500);
                 g2d.setFont(new Font("Arial", Font.BOLD, 64));
@@ -172,7 +182,7 @@ public class DrawingSurface extends JPanel{
         
     }
     
-    private void playAudio(String sound) {
+    public void playAudio(String sound) {
         try {
             AudioInputStream instream = AudioSystem.getAudioInputStream(new File("src\\bomberbrad\\audio\\" + sound + ".wav").getAbsoluteFile());
             clip = AudioSystem.getClip();
