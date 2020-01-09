@@ -10,7 +10,7 @@ public class Player extends Entity {
     private int lives;
 
     Player(int xPos, int yPos, int direction) {
-        super(xPos, yPos, 1, direction, 2, null);
+        super(xPos, yPos, 1, direction, 2);
         lives = 3;
     }
 

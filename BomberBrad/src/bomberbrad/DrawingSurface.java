@@ -1,3 +1,4 @@
+
 /**
  * DKP Studios (Jason)
  * JPanel that displays game graphics
@@ -108,6 +109,15 @@ public class DrawingSurface extends JPanel{
         timer = new Timer(50, al);
         timer.start();
         playAudio("title");
+        Ballom b = new Ballom(0,0,0);
+        b.loadImages();
+        b = null;
+        Dahl d = new Dahl(0,0,0);
+        d.loadImages();
+        d = null;
+        Onil o = new Onil(0,0,0);
+        o.loadImages();
+        o = null;
     }
 
     private void doDrawing(Graphics g) {        
@@ -481,3 +491,4 @@ public class DrawingSurface extends JPanel{
     }
     
 }
+
