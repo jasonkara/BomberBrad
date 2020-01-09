@@ -108,6 +108,9 @@ public class DrawingSurface extends JPanel{
         timer = new Timer(50, al);
         timer.start();
         playAudio("title");
+        Ballom b = new Ballom(0,0,0);
+        b.loadImages();
+        b = null;
     }
 
     private void doDrawing(Graphics g) {        

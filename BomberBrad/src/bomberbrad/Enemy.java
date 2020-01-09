@@ -27,8 +27,8 @@ public abstract class Enemy extends Entity {
         return r;
     }
     
-    Enemy(int xPos, int yPos, int health, int direction, int speed, ArrayList<BufferedImage> sprites){
-        super( xPos,  yPos,  health,  direction,  speed, sprites);
+    Enemy(int xPos, int yPos, int health, int direction, int speed){
+        super( xPos,  yPos,  health,  direction,  speed);
     }
 
     //abstract action that will made

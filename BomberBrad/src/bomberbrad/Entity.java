@@ -19,16 +19,14 @@ public abstract class Entity {
     protected int health;
     protected int direction;
     protected int speed;
-    ArrayList<BufferedImage> sprites;
 
     
-    public Entity(int xPos, int yPos, int health, int direction, int speed, ArrayList<BufferedImage> sprites){
+    public Entity(int xPos, int yPos, int health, int direction, int speed){
         this.xPos = xPos;
         this.yPos = yPos;
         this.health = health;
         this.direction = direction;
         this.speed = speed;
-        this.sprites = sprites;
     }
     
     /**
@@ -72,15 +70,6 @@ public abstract class Entity {
     }   
     
     /**
-     * getter for the sprite
-     * @param i the index of the sprite
-     * @return the sprite
-     */
-    public BufferedImage getSprite(int i){
-        return sprites.get(i);
-    }
-    
-    /**
      * setter for the xPos
      * @param xPos the xPos
      */
@@ -118,14 +107,6 @@ public abstract class Entity {
      */
     public void setSpeed(int speed) {
         this.speed = speed;
-    }
-
-    /**
-     * setter for the sprites
-     * @param sprites the arraylist of sprites
-     */
-    public void setSprites(ArrayList<BufferedImage> sprites) {
-        this.sprites = sprites;
     }
     
     /**
