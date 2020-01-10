@@ -99,6 +99,7 @@ public class Tile {
         if (onTile instanceof Block) {
             if (((Block)(onTile)).isBreakable()) {
                 ((Block)onTile).startBreak();
+
                 
             }
         } else if (onTile instanceof PowerUp) {
@@ -109,13 +110,13 @@ public class Tile {
     }
 
     public void draw(Tile[][] board, Graphics2D g2d) {
-        if (ex != null) {
-            ex.draw(board, g2d);
-        }
+        
         if (onTile != null) {
             onTile.draw(g2d);
+
         } else {
             g2d.setColor(new Color(62, 120, 19));
+
             g2d.fillRect(xPos * 64, yPos * 64, 64, 64);
         }
         if (ex != null) {
@@ -123,10 +124,28 @@ public class Tile {
         }
     }
 
-    public void update(Tile[][] board,DrawingSurface ds) {
+    public void update(DrawingSurface ds) {
+        Tile[][] board = ds.getBoard();
+        ArrayList<Enemy> EL = ds.getEnemiesList();
         if (ex != null) {
             ex.setTime(ex.getTime() - 1);
-            if (ex.getTime() < 0) {
+
+            if (ds.intersecting(xPos * 16, yPos * 16, ds.getPlayer().getXPos(),ds.getPlayer().getYPos())) {
+                ds.clip.stop();
+                ds.playAudio("die");
+                while (ds.clip.getMicrosecondLength() != ds.clip.getMicrosecondPosition()) {}
+                ds.clip.stop();
+                ds.restartLevel();
+                ds.setBombs(1);
+                ds.getPlayer().setLives(ds.getPlayer().getLives() - 1);
+            }
+            for (Enemy e: EL) {
+                if (ds.intersecting(xPos * 16, yPos * 16, e.getXPos(),e.getYPos())) {
+                    //death animation of enemy
+                    EL.remove(e);
+                }
+            }
+            if (ex.getTime() == 0) {
                 ex = null;
             }
         }
@@ -143,16 +162,20 @@ public class Tile {
             } 
         }
         
+
         if (onTile instanceof Block) {
             if(((Block)(onTile)).isBreaking()){
                 ((Block)(onTile)).setTime(((Block)(onTile)).getTime() - 1);
             }
             
             
-            if (((Block)(onTile)).getTime() < 0) {
-                onTile = null;
-            } 
+            if (((Block)(onTile)).getPU() != null) {
+                    onTile = ((Block)(onTile)).getPU();
+                } else {
+                    onTile = null;
+                } 
         }
+
     }
     
 }

@@ -5,6 +5,7 @@
  */
 package bomberbrad;
 
+import java.awt.Color;
 import java.awt.Graphics2D;
 
 /**
@@ -16,6 +17,7 @@ public class Exit extends tileObject {
         super(xPos,yPos);
     }
     public void draw(Graphics2D g2d) {
-        //exit
+        g2d.setColor(Color.blue);
+        g2d.fillRect(xPos*64,yPos*64,64,64);
     }
 }

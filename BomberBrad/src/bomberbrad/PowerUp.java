@@ -3,6 +3,7 @@
 //Class to represent one of 5 types of powerups
 package bomberbrad;
 
+import java.awt.Color;
 import java.awt.Graphics2D;
 
 /**
@@ -24,6 +25,7 @@ public class PowerUp extends tileObject {
         this.type = type;
     }
     public void draw(Graphics2D g2d) {
+        
         switch(type){
             case 1:
                 //extra bomb

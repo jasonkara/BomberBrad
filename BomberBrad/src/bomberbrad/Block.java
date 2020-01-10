@@ -94,9 +94,11 @@ public class Block extends tileObject{
         }
     }
     public void draw(Graphics2D g2d) {
+
         g2d.setColor(new Color(62, 120, 19));
         g2d.fillRect(xPos * 64, yPos * 64, 64, 64);
         BufferedImage shown;
+
         if (breakable) {
             if(breaking){
                 shown = sprites[time / 2 + 2];
@@ -109,9 +111,11 @@ public class Block extends tileObject{
         else {
             shown = sprites[0];
         }
+
         
         g2d.drawImage(shown,xPos*64,yPos*64,(xPos + 1)*64,(yPos + 1)*64,0,0,16,16,null);
         
+
     }
     
     public void startBreak(){
