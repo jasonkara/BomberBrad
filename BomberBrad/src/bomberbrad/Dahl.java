@@ -23,6 +23,7 @@ public class Dahl extends Enemy {
     
     public Dahl(int xPos, int yPos, int direction){
        super( xPos,  yPos,  1,  direction, 4);
+       frameCounter = 0;
     }
     
     public void changeDirection(){

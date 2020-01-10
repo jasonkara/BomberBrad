@@ -23,6 +23,7 @@ public class Onil extends Enemy {
     
     public Onil(int xPos, int yPos, int direction){
         super( xPos,  yPos,  1,  direction, 4);
+        frameCounter = 0;
     }
     
     public void draw(Graphics2D g2d){
