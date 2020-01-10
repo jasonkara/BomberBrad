@@ -85,7 +85,7 @@ public class Explosion {
         BufferedImage shown = null;
         
         if (direction == 0) {
-            shown = sprites[time % 3 + 1][0];
+            shown = sprites[time /3 ][0];
         } else if (direction == 1) {
             if (board[x][y - 1].getEx() != null) {
                 
@@ -95,21 +95,21 @@ public class Explosion {
             }
         } else if (direction == 2) {
             if (board[x + 1][y].getEx() != null) {
-                shown = sprites[time % 3 + 1][6];
+                shown = sprites[time / 3][6];
             } else {
-                shown = sprites[time % 3 + 1][2];
+                shown = sprites[time / 3][2];
             }
         } else if (direction == 3) {
             if (board[x][y + 1].getEx() != null) {
-                shown = sprites[time % 3 + 1][5];
+                shown = sprites[time / 3][5];
             } else {
-                shown = sprites[time % 3 + 1][3];
+                shown = sprites[time / 3][3];
             }
         } else if (direction == 4) {
             if (board[x - 1][y].getEx() != null) {
-                shown = sprites[time % 3 + 1][6];
+                shown = sprites[time / 3][6];
             } else {
-                shown = sprites[time % 3 + 1][4];
+                shown = sprites[time / 3][4];
             }
         }
         g2d.drawImage(shown,x*64,y*64,(x + 1)*64,(y + 1)*64,0,0,16,16,null);

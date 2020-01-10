@@ -267,6 +267,9 @@ public class DrawingSurface extends JPanel{
         Explosion ex = new Explosion(0,0,0);
         ex.loadImages();
         ex = null;
+        Bomb bo = new Bomb(0,0);
+        bo.loadImages();
+        bo = null;
         
     }
     

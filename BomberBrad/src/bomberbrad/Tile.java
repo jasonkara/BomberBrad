@@ -115,7 +115,7 @@ public class Tile {
         if (onTile != null) {
             onTile.draw(g2d);
         } else {
-            g2d.setColor(Color.WHITE);
+            g2d.setColor(new Color(62, 120, 19));
             g2d.fillRect(xPos * 64, yPos * 64, 64, 64);
         }
         if (ex != null) {
@@ -135,7 +135,7 @@ public class Tile {
         
         if (onTile instanceof Bomb) {
             ((Bomb)(onTile)).setCounter(((Bomb)(onTile)).getCounter() - 1);
-            System.out.println(((Bomb)(onTile)).getCounter());
+            
             if (((Bomb)(onTile)).getCounter() == 0) {
                 ((Bomb)(onTile)).explode(1,board);
                 onTile = null;
@@ -144,12 +144,13 @@ public class Tile {
         }
         
         if (onTile instanceof Block) {
-            ((Bomb)(onTile)).setCounter(((Bomb)(onTile)).getCounter() - 1);
-            System.out.println(((Bomb)(onTile)).getCounter());
-            if (((Bomb)(onTile)).getCounter() == 0) {
-                ((Bomb)(onTile)).explode(1,board);
+            if(((Block)(onTile)).isBreaking()){
+                ((Block)(onTile)).setTime(((Block)(onTile)).getTime() - 1);
+            }
+            
+            
+            if (((Block)(onTile)).getTime() < 0) {
                 onTile = null;
-                ds.setBombs(ds.getBombs() + 1);
             } 
         }
     }

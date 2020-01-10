@@ -33,6 +33,14 @@ public class Block extends tileObject{
             System.out.println("error: " + e);
         }
     }
+
+    public int getTime() {
+        return time;
+    }
+
+    public void setTime(int time) {
+        this.time = time;
+    }
     
     /**
      * Constructor
@@ -46,6 +54,16 @@ public class Block extends tileObject{
         this.breakable = breakable;
     }
 
+    public boolean isBreaking() {
+        return breaking;
+    }
+
+    public void setBreaking(boolean breaking) {
+        this.breaking = breaking;
+    }
+
+    
+    
     public tileObject getPU() {
         return PU;
     }
@@ -76,11 +94,13 @@ public class Block extends tileObject{
         }
     }
     public void draw(Graphics2D g2d) {
+        g2d.setColor(new Color(62, 120, 19));
+        g2d.fillRect(xPos * 64, yPos * 64, 64, 64);
         BufferedImage shown;
         if (breakable) {
             if(breaking){
                 shown = sprites[time / 2 + 2];
-                time--;
+                
             }else{
                 shown = sprites[1];
             }
