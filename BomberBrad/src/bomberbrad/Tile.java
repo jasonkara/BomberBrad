@@ -143,6 +143,7 @@ public class Tile {
                 if (ds.intersecting(xPos * 16, yPos * 16, e.getXPos(),e.getYPos())) {
                     //death animation of enemy
                     EL.remove(e);
+                    ds.setScore(ds.getScore() + 200);
                 }
             }
             if (ex.getTime() == 0) {

@@ -70,6 +70,11 @@ public class Player extends Entity {
                 ds.restartLevel();
                 ds.setBombs(1);
                 lives --;
+                if (ds.getScore() < 1000) {
+                    ds.setScore(0);
+                } else {
+                ds.setScore(ds.getScore() - 1000);
+                }
             }
         }
         
@@ -178,5 +183,6 @@ public class Player extends Entity {
             System.out.println("error: " + e);
         }
     }
+    
 
 }
