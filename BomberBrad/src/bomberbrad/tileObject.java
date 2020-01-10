@@ -17,6 +17,7 @@ public abstract class tileObject {
         xPos = xLoc;
         yPos = yLoc;
     }
+    
      /**
      * Accessor method for the x position of the block
      * @return the x position of the block

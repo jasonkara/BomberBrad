@@ -108,15 +108,7 @@ public class DrawingSurface extends JPanel{
         timer = new Timer(50, al);
         timer.start();
         playAudio("title");
-        Ballom b = new Ballom(0,0,0);
-        b.loadImages();
-        b = null;
-        Dahl d = new Dahl(0,0,0);
-        d.loadImages();
-        d = null;
-        Onil o = new Onil(0,0,0);
-        o.loadImages();
-        o = null;
+        loadSprites();
     }
 
     private void doDrawing(Graphics g) {        
@@ -214,7 +206,7 @@ public class DrawingSurface extends JPanel{
          if (selectedYPos == 381) {
              windowState = 1; // go to main game
              difficulty = 1;
-             level = 8;
+             level = 1;
              restartLevel();
              playingLevel = false;
              bombs = 1;
@@ -257,6 +249,25 @@ public class DrawingSurface extends JPanel{
 
     public void setBoard(Tile[][] board) {
         this.board = board;
+    }
+    
+    private void loadSprites(){
+        Ballom b = new Ballom(0,0,0);
+        b.loadImages();
+        b = null;
+        Dahl d = new Dahl(0,0,0);
+        d.loadImages();
+        d = null;
+        Onil o = new Onil(0,0,0);
+        o.loadImages();
+        o = null;
+        Block bl = new Block(0, 0, null, false);
+        bl.loadImages();
+        bl = null;
+        Explosion ex = new Explosion(0,0,0);
+        ex.loadImages();
+        ex = null;
+        
     }
     
     private void mainGame(Graphics2D g2d) {

@@ -5,10 +5,35 @@ package bomberbrad;
 
 import java.awt.Color;
 import java.awt.Graphics2D;
+import java.awt.image.BufferedImage;
+import java.io.IOException;
+import java.util.ArrayList;
+import javax.imageio.ImageIO;
 
 public class Block extends tileObject{
     private tileObject PU;
     private boolean breakable;
+    private int time = 11;
+    private boolean breaking = false;
+    private static BufferedImage[] sprites = new BufferedImage[8];
+    
+    
+    public void loadImages() {
+        try {    
+            sprites[0] = ImageIO.read(getClass().getResource("/bomberbrad/sprites/tile/solidblock.png"));
+            sprites[1] = ImageIO.read(getClass().getResource("/bomberbrad/sprites/tile/breakblock/block.png"));
+            sprites[2] = ImageIO.read(getClass().getResource("/bomberbrad/sprites/tile/breakblock/exp1.png"));
+            sprites[3] = ImageIO.read(getClass().getResource("/bomberbrad/sprites/tile/breakblock/exp2.png"));
+            sprites[4] = ImageIO.read(getClass().getResource("/bomberbrad/sprites/tile/breakblock/exp3.png"));
+            sprites[5] = ImageIO.read(getClass().getResource("/bomberbrad/sprites/tile/breakblock/exp4.png"));
+            sprites[6] = ImageIO.read(getClass().getResource("/bomberbrad/sprites/tile/breakblock/exp5.png"));
+            sprites[7] = ImageIO.read(getClass().getResource("/bomberbrad/sprites/tile/breakblock/exp6.png"));
+
+        } catch (IOException e) {
+            System.out.println("error: " + e);
+        }
+    }
+    
     /**
      * Constructor
      * @param xPos x position of the breakable block
@@ -51,17 +76,26 @@ public class Block extends tileObject{
         }
     }
     public void draw(Graphics2D g2d) {
+        BufferedImage shown;
         if (breakable) {
-            g2d.setColor(Color.DARK_GRAY);
+            if(breaking){
+                shown = sprites[time / 2 + 2];
+                time--;
+            }else{
+                shown = sprites[1];
+            }
+            
         }
         else {
-            g2d.setColor(Color.LIGHT_GRAY);
+            shown = sprites[0];
         }
-        g2d.fillRect(xPos*64,yPos*64,64,64);
+        
+        g2d.drawImage(shown,xPos*64,yPos*64,(xPos + 1)*64,(yPos + 1)*64,0,0,16,16,null);
+        
     }
     
     public void startBreak(){
-        
+        breaking = true;
     }
     
     public String toString(){

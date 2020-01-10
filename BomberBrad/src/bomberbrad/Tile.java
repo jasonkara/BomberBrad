@@ -98,8 +98,8 @@ public class Tile {
     public void destroy(Tile[][] board) {
         if (onTile instanceof Block) {
             if (((Block)(onTile)).isBreakable()) {
-                //((Block)onTile).startBreak();
-                onTile = null;
+                ((Block)onTile).startBreak();
+                
             }
         } else if (onTile instanceof PowerUp) {
             onTile = null;
@@ -126,11 +126,24 @@ public class Tile {
     public void update(Tile[][] board,DrawingSurface ds) {
         if (ex != null) {
             ex.setTime(ex.getTime() - 1);
-            if (ex.getTime() == 0) {
+            if (ex.getTime() < 0) {
                 ex = null;
             }
         }
+        
+        
+        
         if (onTile instanceof Bomb) {
+            ((Bomb)(onTile)).setCounter(((Bomb)(onTile)).getCounter() - 1);
+            System.out.println(((Bomb)(onTile)).getCounter());
+            if (((Bomb)(onTile)).getCounter() == 0) {
+                ((Bomb)(onTile)).explode(1,board);
+                onTile = null;
+                ds.setBombs(ds.getBombs() + 1);
+            } 
+        }
+        
+        if (onTile instanceof Block) {
             ((Bomb)(onTile)).setCounter(((Bomb)(onTile)).getCounter() - 1);
             System.out.println(((Bomb)(onTile)).getCounter());
             if (((Bomb)(onTile)).getCounter() == 0) {

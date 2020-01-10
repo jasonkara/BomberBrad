@@ -33,6 +33,9 @@ public class Bomb extends tileObject{
         this.counter = counter;
     }
     public void explode(int l, Tile[][] map) {
+        
+        map[xPos][yPos].setEx(new Explosion(xPos, yPos, 0));
+        
         for (int i = 0; i < l; i++) {//upwards
             if(map[xPos][yPos - l].getOnTile() != null){
                 if(map[xPos][yPos - l].getOnTile() instanceof Bomb){
