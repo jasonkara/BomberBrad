@@ -98,12 +98,8 @@ public class Tile {
     public void destroy(Tile[][] board) {
         if (onTile instanceof Block) {
             if (((Block)(onTile)).isBreakable()) {
-                if (((Block)(onTile)).getPU() != null) {
-                    onTile = ((Block)(onTile)).getPU();
-                } else {
-                    onTile = null;
-                }
-                //((Block)onTile).startBreak();
+                ((Block)onTile).startBreak();
+
                 
             }
         } else if (onTile instanceof PowerUp) {
@@ -117,9 +113,10 @@ public class Tile {
         
         if (onTile != null) {
             onTile.draw(g2d);
-        } 
-        else {
-            g2d.setColor(Color.WHITE);
+
+        } else {
+            g2d.setColor(new Color(62, 120, 19));
+
             g2d.fillRect(xPos * 64, yPos * 64, 64, 64);
         }
         if (ex != null) {
@@ -132,6 +129,7 @@ public class Tile {
         ArrayList<Enemy> EL = ds.getEnemiesList();
         if (ex != null) {
             ex.setTime(ex.getTime() - 1);
+
             if (ds.intersecting(xPos * 16, yPos * 16, ds.getPlayer().getXPos(),ds.getPlayer().getYPos())) {
                 ds.clip.stop();
                 ds.playAudio("die");
@@ -151,9 +149,12 @@ public class Tile {
                 ex = null;
             }
         }
+        
+        
+        
         if (onTile instanceof Bomb) {
             ((Bomb)(onTile)).setCounter(((Bomb)(onTile)).getCounter() - 1);
-            System.out.println(((Bomb)(onTile)).getCounter());
+            
             if (((Bomb)(onTile)).getCounter() == 0) {
                 ((Bomb)(onTile)).explode(1,board);
                 onTile = null;
@@ -161,6 +162,20 @@ public class Tile {
             } 
         }
         
+
+        if (onTile instanceof Block) {
+            if(((Block)(onTile)).isBreaking()){
+                ((Block)(onTile)).setTime(((Block)(onTile)).getTime() - 1);
+            }
+            
+            
+            if (((Block)(onTile)).getPU() != null) {
+                    onTile = ((Block)(onTile)).getPU();
+                } else {
+                    onTile = null;
+                } 
+        }
+
     }
     
 }

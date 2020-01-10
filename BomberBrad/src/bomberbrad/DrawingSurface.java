@@ -1,4 +1,5 @@
 
+
 /**
  * DKP Studios (Jason)
  * JPanel that displays game graphics
@@ -109,15 +110,7 @@ public class DrawingSurface extends JPanel{
         timer = new Timer(50, al);
         timer.start();
         playAudio("title");
-        Ballom b = new Ballom(0,0,0);
-        b.loadImages();
-        b = null;
-        Dahl d = new Dahl(0,0,0);
-        d.loadImages();
-        d = null;
-        Onil o = new Onil(0,0,0);
-        o.loadImages();
-        o = null;
+        loadSprites();
     }
 
     private void doDrawing(Graphics g) {        
@@ -260,6 +253,29 @@ public class DrawingSurface extends JPanel{
         this.board = board;
     }
     
+  
+  private void loadSprites(){
+        Ballom b = new Ballom(0,0,0);
+        b.loadImages();
+        b = null;
+        Dahl d = new Dahl(0,0,0);
+        d.loadImages();
+        d = null;
+        Onil o = new Onil(0,0,0);
+        o.loadImages();
+        o = null;
+        Block bl = new Block(0, 0, null, false);
+        bl.loadImages();
+        bl = null;
+        Explosion ex = new Explosion(0,0,0);
+        ex.loadImages();
+        ex = null;
+        Bomb bo = new Bomb(0,0);
+        bo.loadImages();
+        bo = null;
+        
+    }
+  
     private void mainGame(Graphics2D g2d) {
         g2d.drawString("Main Game", 10, 50);
         player.setMoving(false);

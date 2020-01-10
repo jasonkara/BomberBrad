@@ -5,6 +5,9 @@ package bomberbrad;
 
 import java.awt.Color;
 import java.awt.Graphics2D;
+import java.awt.image.BufferedImage;
+import java.io.IOException;
+import javax.imageio.ImageIO;
 
 /**
  *
@@ -14,13 +17,36 @@ public class Explosion {
     private int x,y;
     private int time;
     private int direction;
-
+    private static BufferedImage[][] sprites = new BufferedImage[4][7];
+    
+    
+    
     public Explosion(int x, int y, int direction) {
         this.x = x;
         this.y = y;
-        time = 10;
+        time = 11;
         this.direction = direction;
         
+        
+    }
+    
+    public void loadImages() {
+        try {    
+            for (int i = 0; i < 4; i++) {
+                sprites[i][0] = ImageIO.read(getClass().getResource("/bomberbrad/sprites/explosion/"+ (i + 1) +"/mid.png"));
+                sprites[i][1] = ImageIO.read(getClass().getResource("/bomberbrad/sprites/explosion/"+ (i + 1) +"/top.png"));
+                sprites[i][2] = ImageIO.read(getClass().getResource("/bomberbrad/sprites/explosion/"+ (i + 1) +"/right.png"));
+                sprites[i][3] = ImageIO.read(getClass().getResource("/bomberbrad/sprites/explosion/"+ (i + 1) +"/bottom.png"));
+                sprites[i][4] = ImageIO.read(getClass().getResource("/bomberbrad/sprites/explosion/"+ (i + 1) +"/left.png"));
+                sprites[i][5] = ImageIO.read(getClass().getResource("/bomberbrad/sprites/explosion/"+ (i + 1) +"/ver.png"));
+                sprites[i][6] = ImageIO.read(getClass().getResource("/bomberbrad/sprites/explosion/"+ (i + 1) +"/hor.png"));
+            }
+            
+            
+
+        } catch (IOException e) {
+            System.out.println("error: " + e);
+        }
     }
     
 
@@ -56,36 +82,37 @@ public class Explosion {
         this.direction = direction;
     }
     public void draw(Tile[][] board, Graphics2D g2d) {
-        g2d.setColor(Color.orange);
-        g2d.fillRect(x * 64,y*64,64,64);
+        BufferedImage shown = null;
+        
         if (direction == 0) {
-            //Image of center
+            shown = sprites[time /3 ][0];
         } else if (direction == 1) {
             if (board[x][y - 1].getEx() != null) {
                 
-                //image of vertical connector
+                shown = sprites[time / 3][5];
             } else {
-                //image of upward tipped explosion
+                shown = sprites[time / 3][1];
             }
         } else if (direction == 2) {
             if (board[x + 1][y].getEx() != null) {
-                //image of horizontal connector
+                shown = sprites[time / 3][6];
             } else {
-                //image of rightward tipped explosion
+                shown = sprites[time / 3][2];
             }
         } else if (direction == 3) {
             if (board[x][y + 1].getEx() != null) {
-                //image of vertical connector
+                shown = sprites[time / 3][5];
             } else {
-                //image of downward tipped explosion
+                shown = sprites[time / 3][3];
             }
         } else if (direction == 4) {
             if (board[x - 1][y].getEx() != null) {
-                //image of horiontal connector
+                shown = sprites[time / 3][6];
             } else {
-                //image of leftward tipped explosion
+                shown = sprites[time / 3][4];
             }
         }
+        g2d.drawImage(shown,x*64,y*64,(x + 1)*64,(y + 1)*64,0,0,16,16,null);
     }
     
 }
