@@ -64,6 +64,11 @@ public class Player extends Entity {
                 ds.restartLevel();
                 ds.setBombs(1);
                 lives --;
+                if (ds.getScore() < 1000) {
+                    ds.setScore(0);
+                } else {
+                ds.setScore(ds.getScore() - 1000);
+                }
             }
         }
         
@@ -109,5 +114,6 @@ public class Player extends Entity {
         g2d.setColor(Color.RED);
         g2d.fillRect(xPos * 4, yPos * 4, 64, 64);
     }
+    
 
 }

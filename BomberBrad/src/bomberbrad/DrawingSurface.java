@@ -23,6 +23,8 @@ import javax.imageio.ImageIO;
 import javax.swing.JPanel;
 import javax.swing.Timer;
 import java.io.File;
+import java.io.InputStream;
+import java.util.Scanner;
 import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.Clip;
@@ -44,6 +46,8 @@ public class DrawingSurface extends JPanel{
     int exitX,exitY;
     int level;
     int bombs;
+    int score;
+    ArrayList<Score> scores = new ArrayList();
     
     public DrawingSurface() {
         
@@ -167,11 +171,12 @@ public class DrawingSurface extends JPanel{
                 }
             }
         } else if (windowState == 2) { // high scores
+            score();
             g2d.setFont(new Font("Arial", Font.BOLD, 32));
             g2d.drawString("High Scores", 380, 100);
             g2d.setFont(new Font("Monospaced", Font.BOLD, 24));
             g2d.drawString("No.  Name   Score", 330, 200);
-            g2d.drawString("1.   JSK    900000", 330, 250);
+            drawScores(g2d);
         } else if (windowState == 3) { // credits
             g2d.drawImage(menuImg,150,75,518,151,0,0,368,76,null);
             g2d.drawString("was created by:", 550, 122);
@@ -296,7 +301,8 @@ public class DrawingSurface extends JPanel{
              for (int o = 0; o < 15; o ++) {
                  board[o][i].update(this);
                  board[o][i].draw(board, g2d);
-                 
+                 g2d.setColor(Color.WHITE);
+                 g2d.drawString("SCORE: " + score, 40, 730);
                  
              }
              }
@@ -465,6 +471,33 @@ public class DrawingSurface extends JPanel{
     public void updateGameScreen(Tile[][] board) {
         
     }
+    public void score() {
+        scores = new ArrayList();
+        try {
+            InputStream in = DrawingSurface.class.getResourceAsStream("scores.txt");
+            Scanner s = new Scanner(in);
+            int value;
+            String name;
+            Score score;
+            while (s.hasNextLine()) {
+                name = s.nextLine();
+                value = Integer.parseInt(s.nextLine());
+                score = new Score(value,name);
+                scores.add(score);
+            }
+            
+        } catch (NullPointerException e) {
+            System.out.println(e);
+        }
+        
+    }
+    public void drawScores(Graphics2D g2d) {
+        g2d.setColor(Color.white);
+        
+        for (int i = 0; i < scores.size(); i ++) {
+            g2d.drawString((i + 1) + "     " + scores.get(i).getName()+ "      " + scores.get(i).getAmount(),330,250 + (50 * i));
+        }
+    }
 
     public int getExitX() {
         return exitX;
@@ -504,6 +537,14 @@ public class DrawingSurface extends JPanel{
 
     public void setPlayer(Player player) {
         this.player = player;
+    }
+
+    public int getScore() {
+        return score;
+    }
+
+    public void setScore(int score) {
+        this.score = score;
     }
     
 }
