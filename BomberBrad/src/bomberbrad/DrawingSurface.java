@@ -273,7 +273,7 @@ public class DrawingSurface extends JPanel{
         Bomb bo = new Bomb(0,0);
         bo.loadImages();
         bo = null;
-        
+        player.loadImages();
     }
   
     private void mainGame(Graphics2D g2d) {
