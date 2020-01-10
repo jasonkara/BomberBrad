@@ -168,12 +168,14 @@ public class Tile {
                 ((Block)(onTile)).setTime(((Block)(onTile)).getTime() - 1);
             }
             
-            
-            if (((Block)(onTile)).getPU() != null) {
+            if(((Block)(onTile)).getTime() < 0){
+                if (((Block)(onTile)).getPU() != null) {
                     onTile = ((Block)(onTile)).getPU();
                 } else {
                     onTile = null;
                 } 
+            }
+            
         }
 
     }
