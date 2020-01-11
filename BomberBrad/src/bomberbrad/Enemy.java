@@ -22,7 +22,7 @@ public abstract class Enemy extends Entity {
      */
     public static int rndNum(int low, int high){
         int r;
-        r= (int)(Math.random() * (high - low + 1) + 1);
+        r= (int)(Math.random() * (high - low + 1) + low);
         
         return r;
     }
@@ -36,43 +36,51 @@ public abstract class Enemy extends Entity {
     public void action(Tile[][] map){
         
         
-        switch(direction){
-            case 1:
-                if(map[xPos/16][(yPos-speed)/16].getOnTile() != null
-                && map[(xPos + 15)/16][(yPos-speed)/16].getOnTile() != null){
-                    changeDirection();
-                }else{
-                    move();
-                }
-                
-                break;
-            case 2:
-                if(map[(xPos+15 + speed)/16][(yPos)/16].getOnTile() != null
-                && map[(xPos + 15 + speed)/16][(yPos+15)/16].getOnTile() != null){
-                    changeDirection();
-                }else{
-                    move();
-                }
-                
-                break;
-            case 3:
-                if(map[xPos/16][(yPos+15+speed)/16].getOnTile() != null
-                && map[(xPos + 15)/16][(yPos+15+speed)/16].getOnTile() != null){
-                    changeDirection();
-                }else{
-                    move();
-                }
-                
-                break;
-            default:
-                if(map[(xPos - speed)/16][(yPos)/16].getOnTile() != null
-                && map[(xPos - speed)/16][(yPos+15)/16].getOnTile() != null){
-                    changeDirection();
-                }else{
-                    move();
-                }
-                
-        }
+        switch (direction) {
+                case 1:
+                    if (isWalkable(map[xPos / 16][(yPos - speed) / 16].getOnTile())//top left of the player + speed
+                            && isWalkable(map[(xPos + 15) / 16][(yPos - speed) / 16].getOnTile())) {//top right
+                        
+                        move();
+                        
+                    } else {
+                        
+                        changeDirection();
+                    }
+
+                    break;
+                case 2:
+                    if (isWalkable(map[(xPos + 15 + speed) / 16][(yPos) / 16].getOnTile())
+                            && isWalkable(map[(xPos + 15 + speed) / 16][(yPos + 15) / 16].getOnTile())) {
+                        
+                        move();
+                    } else {
+                        
+                        changeDirection();
+                    }
+
+                    break;
+                case 3:
+                    if (isWalkable(map[xPos / 16][(yPos + 15 + speed) / 16].getOnTile())
+                            && isWalkable(map[(xPos + 15) / 16][(yPos + 15 + speed) / 16].getOnTile())) {
+                        
+                        move();
+                    } else {
+                        
+                        changeDirection();
+                    }
+                    break;
+                default:
+                    if (isWalkable(map[(xPos - speed) / 16][(yPos) / 16].getOnTile())
+                            && isWalkable(map[(xPos - speed) / 16][(yPos + 15) / 16].getOnTile())) {
+
+                        move();
+                    } else {
+                        
+                        changeDirection();
+                    }
+
+            }
         
         
     }

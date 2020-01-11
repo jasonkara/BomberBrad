@@ -129,6 +129,11 @@ public abstract class Entity {
     public void addWalkable(Class<? extends tileObject> c) {
         walkable.add(c);
     }
+    
+    protected void shift(int xShift, int yShift){
+        xPos += xShift;
+        yPos += yShift;
+    }
 
     protected boolean isWalkable(tileObject t){
         boolean walk = false;

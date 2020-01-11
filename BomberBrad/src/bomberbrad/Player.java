@@ -72,10 +72,8 @@ public class Player extends Entity {
                         
                         if(isWalkable(map[(xPos)  / 16][(yPos + 15 + speed) / 16].getOnTile())){
                             shift(-1,0);
-                            System.out.println("Shift left");
                         }else if(isWalkable(map[(xPos + 15) / 16][(yPos + 15 + speed) / 16].getOnTile())){
                             shift(1,0);
-                            System.out.println("Shift right");
                         }
                     }
                     break;
@@ -139,10 +137,7 @@ public class Player extends Entity {
         return lives;
     }
     
-    private void shift(int xShift, int yShift){
-        xPos += xShift;
-        yPos += yShift;
-    }
+    
 
     public void move() {
         switch (direction) {
