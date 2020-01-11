@@ -305,6 +305,12 @@ public class DrawingSurface extends JPanel{
         Exit e = new Exit(0,0);
         e.loadImages();
         e = null;
+        Blob bb = new Blob(0,0,0);
+        bb.loadImages();
+        bb = null;
+        Ghost g = new Ghost(0,0,0);
+        g.loadImages();
+        g = null;
     }
   
     private void mainGame(Graphics2D g2d) {
@@ -426,8 +432,7 @@ public class DrawingSurface extends JPanel{
         //exitY = 2;
         possible.remove(random);
         
-        while (enemies > 0) {
-            
+        while (enemies > 0) {  
             random = (int)(Math.random() * possible.size());
             if (difficulty == 1) {
                 enemiesList.add(new Ballom(possible.get(random).getxPos() * 16,possible.get(random).getyPos() * 16,Enemy.rndNum(1,4)));
