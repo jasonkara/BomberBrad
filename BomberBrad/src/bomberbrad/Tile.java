@@ -130,14 +130,11 @@ public class Tile {
         if (ex != null) {
             ex.setTime(ex.getTime() - 1);
 
-            if (ds.intersecting(xPos * 16, yPos * 16, ds.getPlayer().getXPos(),ds.getPlayer().getYPos())) {
+            if (ds.intersecting(xPos * 16, yPos * 16, ds.getPlayer().getXPos(),ds.getPlayer().getYPos()) && ! ds.getPlayer().isDying()) {
                 ds.clip.stop();
                 ds.playAudio("die");
-                while (ds.clip.getMicrosecondLength() != ds.clip.getMicrosecondPosition()) {}
-                ds.clip.stop();
-                ds.restartLevel();
-                ds.setBombs(1);
-                ds.getPlayer().setLives(ds.getPlayer().getLives() - 1);
+                ds.getPlayer().setFrameCounter(0);
+                ds.getPlayer().setDying(true);
             }
             for (Enemy e: EL) {
                 if (ds.intersecting(xPos * 16, yPos * 16, e.getXPos(),e.getYPos())) {

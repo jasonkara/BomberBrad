@@ -13,11 +13,13 @@ public class Player extends Entity {
     private int lives;
     private static BufferedImage[] sprites = new BufferedImage[19];
     private int frameCounter;
+    private boolean dying;
 
     Player(int xPos, int yPos, int direction) {
         super(xPos, yPos, 1, direction, 2);
         lives = 3;
         frameCounter = 0;
+        dying = false;
     }
 
     public void action(DrawingSurface ds, Graphics2D g2d) {
@@ -99,20 +101,17 @@ public class Player extends Entity {
         }
         
         for (Enemy e : EL) {
-            if (ds.intersecting(xPos, yPos, e.getXPos(), e.getYPos())) {
+            if (ds.intersecting(xPos, yPos, e.getXPos(), e.getYPos()) && ! dying) {
                 ds.clip.stop();
                 ds.playAudio("die");
-                while (ds.clip.getMicrosecondLength() != ds.clip.getMicrosecondPosition()) {}
-                ds.clip.stop();
-                ds.restartLevel();
-                ds.setBombs(1);
-                lives --;
-                if (ds.getScore() < 1000) {
-                    ds.setScore(0);
-                } else {
-                ds.setScore(ds.getScore() - 1000);
-                }
+                dying = true;
+                frameCounter = 0;
             }
+        }
+        
+        if (dying && ds.clip.getMicrosecondLength() == ds.clip.getMicrosecondPosition()) {
+            dying = false;
+            ds.death();
         }
         
         if (ds.intersecting(xPos,yPos,ds.getExitX() * 16,ds.getExitY() * 16) && EL.size() == 0) {
@@ -136,65 +135,66 @@ public class Player extends Entity {
     public int getLives() {
         return lives;
     }
-    
-    
 
-    public void move() {
-        switch (direction) {
-            case 1:
-                yPos -= speed;
-                break;
-            case 2:
-                xPos += speed;
-                break;
-            case 3:
-                yPos += speed;
-                break;
-            default:
-                xPos -= speed;
-        }
+    public boolean isDying() {
+        return dying;
     }
 
+    public void setDying(boolean dying) {
+        this.dying = dying;
+    }
+    
+    public void setFrameCounter(int fc) {
+        this.frameCounter = fc;
+    }
+    
+    public int getFrameCounter() {
+        return frameCounter;
+    }
+
+    public void move() {
+        if (! dying) {
+            switch (direction) {
+                case 1:
+                    yPos -= speed;
+                    break;
+                case 2:
+                    xPos += speed;
+                    break;
+                case 3:
+                    yPos += speed;
+                    break;
+                default:
+                    xPos -= speed;
+            }
+        }
+    }
+    
+    
+
     public void draw(Graphics2D g2d){
-        BufferedImage shown;
-        if (direction == 1) {
-            if (frameCounter < 2) {
-                shown = sprites[0];
-            } else if (frameCounter < 6 && frameCounter > 3) {
-                shown = sprites[2];
-            } else {
-                shown = sprites[1];
+        BufferedImage shown = null;
+        if (dying) {
+            if (frameCounter < 14) {
+                shown = sprites[12 + frameCounter / 2];
             }
-        } else if (direction == 2) {
-            if (frameCounter < 2) {
-                shown = sprites[3];
-            } else if (frameCounter < 6 && frameCounter > 3) {
-                shown = sprites[5];
-            } else {
-                shown = sprites[4];
-            }
-        } else if (direction == 3) {
-            if (frameCounter < 2) {
-                shown = sprites[6];
-            } else if (frameCounter < 6 && frameCounter > 3) {
-                shown = sprites[8];
-            } else {
-                shown = sprites[7];
-            }
+            frameCounter ++;
         } else {
+            int add = (direction - 1) * 3;
             if (frameCounter < 2) {
-                shown = sprites[9];
+                shown = sprites[0 + add];
             } else if (frameCounter < 6 && frameCounter > 3) {
-                shown = sprites[11];
+                shown = sprites[2 + add];
             } else {
-                shown = sprites[10];
+                shown = sprites[1 + add];
+            }
+            if (moving) frameCounter ++;
+            if (frameCounter >= 8) {
+                frameCounter = 0;
             }
         }
         g2d.drawImage(shown,xPos*4,yPos*4,xPos*4+64,yPos*4+64,0,0,16,16,null);
-        if (moving) frameCounter ++;
-        if (frameCounter == 8) {
-            frameCounter = 0;
-        }
+        System.out.println(frameCounter);
     }
     
     public void loadImages() {
