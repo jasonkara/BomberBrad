@@ -14,6 +14,7 @@ import java.util.ArrayList;
 
 public abstract class Entity {
     
+    protected ArrayList<Class <? extends tileObject>> walkable = new ArrayList<>();
     protected int xPos;
     protected int yPos;
     protected int health;
@@ -27,6 +28,9 @@ public abstract class Entity {
         this.health = health;
         this.direction = direction;
         this.speed = speed;
+        walkable.add(PowerUp.class);
+        walkable.add(Exit.class);
+        
     }
     
     /**
@@ -118,6 +122,31 @@ public abstract class Entity {
     
     abstract public void draw(Graphics2D g2d);
 
-    
+    public ArrayList<Class<? extends tileObject>> getWalkable() {
+        return walkable;
+    }
+
+    public void addWalkable(Class<? extends tileObject> c) {
+        walkable.add(c);
+    }
+
+    protected boolean isWalkable(tileObject t){
+        boolean walk = false;
+        if(t == null){
+            return true;
+        }
+        for (Class<? extends tileObject> c : walkable){
+            
+            if(t.getClass() == c){
+                if(c == Block.class){
+                    walk = ((Block)(t)).isBreakable();
+                }else{
+                    walk = true;
+                }
+                
+            }
+        }
+        return walk;
+    }
     
 }

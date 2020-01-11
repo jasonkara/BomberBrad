@@ -47,6 +47,8 @@ public class DrawingSurface extends JPanel{
     int level;
     int bombs;
     int score;
+    private int length;
+    private boolean detonator;
     ArrayList<Score> scores = new ArrayList();
     
     public DrawingSurface() {
@@ -217,6 +219,8 @@ public class DrawingSurface extends JPanel{
              restartLevel();
              playingLevel = false;
              bombs = 1;
+             length = 1;
+             detonator = false;
              player.setLives(3);
          } else if (selectedYPos == 431) {
              windowState = 2; // go to high scores
@@ -226,6 +230,14 @@ public class DrawingSurface extends JPanel{
              System.exit(0);
          }
      }
+
+    public int getLength() {
+        return length;
+    }
+
+    public void setLength(int length) {
+        this.length = length;
+    }
      
     @Override
     public void paintComponent(Graphics g) {
@@ -257,6 +269,14 @@ public class DrawingSurface extends JPanel{
     public void setBoard(Tile[][] board) {
         this.board = board;
     }
+
+    public boolean hasDetonator() {
+        return detonator;
+    }
+
+    public void setDetonator(boolean detonator) {
+        this.detonator = detonator;
+    }
     
   
   private void loadSprites(){
@@ -279,6 +299,12 @@ public class DrawingSurface extends JPanel{
         bo.loadImages();
         bo = null;
         player.loadImages();
+        PowerUp pu = new PowerUp(0,0,0);
+        pu.loadImages();
+        pu = null;
+        Exit e = new Exit(0,0);
+        e.loadImages();
+        e = null;
     }
   
     private void mainGame(Graphics2D g2d) {
@@ -326,7 +352,7 @@ public class DrawingSurface extends JPanel{
     private Tile[][] levelRandomizer(int difficulty) {
         int enemies = 5;
         int breakableBlocks = 25;
-        int powerups = 5;
+        int powerups = 2;
         board = new Tile[15][11];
         //Creating blank tiles
         for (int i = 0; i < 15; i ++) {
@@ -377,7 +403,18 @@ public class DrawingSurface extends JPanel{
         }
         while (powerups > 0) {
         random = (int)(Math.random() * possible.size());
-        (possible.get(random)).setOnTile(new Block(possible.get(random).getxPos(),possible.get(random).getyPos(),new PowerUp(possible.get(random).getxPos(),possible.get(random).getyPos(),2),true));
+        int puType;
+        switch (difficulty){
+            case 1:
+                puType = (int)(Math.random() * 2) + 1;
+                break;
+            case 2:
+                puType = (int)(Math.random() * 4) + 1;
+                break;
+            default:
+                puType = (int)(Math.random() * 6) + 1;
+        }
+        (possible.get(random)).setOnTile(new Block(possible.get(random).getxPos(),possible.get(random).getyPos(),new PowerUp(possible.get(random).getxPos(),possible.get(random).getyPos(),puType),true));
         powerups --;
         possible.remove(random);
         }
@@ -407,6 +444,12 @@ public class DrawingSurface extends JPanel{
         System.out.println(enemiesList);
         System.out.println(enemiesList.size());
         return board;
+    }
+    
+    public void death(){
+        detonator = false;
+        player.setLives(player.getLives() - 1);
+        restartLevel();
     }
     
     public void restartLevel(){

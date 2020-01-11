@@ -23,44 +23,83 @@ public class Player extends Entity {
     public void action(DrawingSurface ds, Graphics2D g2d) {
         Tile[][] map = ds.getBoard();
         ArrayList<Enemy> EL = ds.getEnemiesList();
+        
+        boolean onBomb = map[(xPos + 8) / 16][(yPos + 8) / 16].getOnTile() instanceof Bomb;
+        
+        if(onBomb){
+            walkable.add(Bomb.class);
+        }
+        
         if (moving) {
             switch (direction) {
                 case 1:
-                    if (map[xPos / 16][(yPos - speed) / 16].getOnTile() != null
-                            || map[(xPos + 15) / 16][(yPos - speed) / 16].getOnTile() != null) {
-
-                    } else {
+                    if (isWalkable(map[xPos / 16][(yPos - speed) / 16].getOnTile())//top left of the player + speed
+                            && isWalkable(map[(xPos + 15) / 16][(yPos - speed) / 16].getOnTile())) {//top right
+                        
                         move();
+                        
+                    } else {
+                        
+                        if(isWalkable(map[(xPos) / 16][(yPos - speed) / 16].getOnTile())){
+                            shift(-1,0);
+                        }else if(isWalkable(map[(xPos + 15) / 16][(yPos - speed) / 16].getOnTile())){
+                            shift(1,0);
+                        }
                     }
 
                     break;
                 case 2:
-                    if (map[(xPos + 15 + speed) / 16][(yPos) / 16].getOnTile() != null
-                            || map[(xPos + 15 + speed) / 16][(yPos + 15) / 16].getOnTile() != null) {
-
-                    } else {
+                    if (isWalkable(map[(xPos + 15 + speed) / 16][(yPos) / 16].getOnTile())
+                            && isWalkable(map[(xPos + 15 + speed) / 16][(yPos + 15) / 16].getOnTile())) {
+                        
                         move();
+                    } else {
+                        
+                        if(isWalkable(map[(xPos + 15 + speed) / 16][(yPos) / 16].getOnTile())){
+                            shift(0,-1);
+                        }else if(isWalkable(map[(xPos + 15 + speed) / 16][(yPos + 15) / 16].getOnTile())){
+                            shift(0,1);
+                        }
                     }
 
                     break;
                 case 3:
-                    if (map[xPos / 16][(yPos + 15 + speed) / 16].getOnTile() != null
-                            || map[(xPos + 15) / 16][(yPos + 15 + speed) / 16].getOnTile() != null) {
-                    } else {
+                    if (isWalkable(map[xPos / 16][(yPos + 15 + speed) / 16].getOnTile())
+                            && isWalkable(map[(xPos + 15) / 16][(yPos + 15 + speed) / 16].getOnTile())) {
+                        
                         move();
+                    } else {
+                        
+                        if(isWalkable(map[(xPos)  / 16][(yPos + 15 + speed) / 16].getOnTile())){
+                            shift(-1,0);
+                            System.out.println("Shift left");
+                        }else if(isWalkable(map[(xPos + 15) / 16][(yPos + 15 + speed) / 16].getOnTile())){
+                            shift(1,0);
+                            System.out.println("Shift right");
+                        }
                     }
-
                     break;
                 default:
-                    if (map[(xPos - speed) / 16][(yPos) / 16].getOnTile() != null
-                            || map[(xPos - speed) / 16][(yPos + 15) / 16].getOnTile() != null) {
+                    if (isWalkable(map[(xPos - speed) / 16][(yPos) / 16].getOnTile())
+                            && isWalkable(map[(xPos - speed) / 16][(yPos + 15) / 16].getOnTile())) {
 
-                    } else {
                         move();
+                    } else {
+                        
+                        if(isWalkable(map[(xPos - speed) / 16][(yPos) / 16].getOnTile())){
+                            shift(0,-1);
+                        }else if(isWalkable(map[(xPos - speed) / 16][(yPos + 15) / 16].getOnTile())){
+                            shift(0,1);
+                        }
                     }
 
             }
         }
+        
+        if(onBomb){
+            walkable.remove(Bomb.class);
+        }
+        
         for (Enemy e : EL) {
             if (ds.intersecting(xPos, yPos, e.getXPos(), e.getYPos())) {
                 ds.clip.stop();
@@ -98,6 +137,11 @@ public class Player extends Entity {
     
     public int getLives() {
         return lives;
+    }
+    
+    private void shift(int xShift, int yShift){
+        xPos += xShift;
+        yPos += yShift;
     }
 
     public void move() {

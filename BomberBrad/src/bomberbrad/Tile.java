@@ -149,6 +149,10 @@ public class Tile {
             if (ex.getTime() == 0) {
                 ex = null;
             }
+            
+            if (onTile instanceof Bomb){
+                ((Bomb)(onTile)).explode(ds.getLength(),board);
+            }
         }
         
         
@@ -157,7 +161,7 @@ public class Tile {
             ((Bomb)(onTile)).setCounter(((Bomb)(onTile)).getCounter() - 1);
             
             if (((Bomb)(onTile)).getCounter() == 0) {
-                ((Bomb)(onTile)).explode(1,board);
+                ((Bomb)(onTile)).explode(ds.getLength(),board);
                 onTile = null;
                 ds.setBombs(ds.getBombs() + 1);
             } 
@@ -177,6 +181,37 @@ public class Tile {
                 } 
             }
             
+        }
+        
+        if(onTile instanceof PowerUp){
+            if (ds.intersecting(xPos * 16, yPos * 16, ds.getPlayer().getXPos(),ds.getPlayer().getYPos())) {
+                
+                switch(((PowerUp)(onTile)).getType()){
+            case 1:
+                ds.setBombs(ds.getBombs() + 1);
+                //more bombs
+                break;
+            case 2:
+                ds.setLength(ds.getLength() + 1);
+                //bigger bomb explosion
+                break;
+            case 3:
+                ds.getPlayer().setSpeed(4);
+                //speed
+                break;
+            case 4:
+                ds.getPlayer().addWalkable(Block.class);
+                //go through walls
+                break;
+            case 5:
+                ds.setDetonator(true);
+                //detonator
+            case 6:
+                ds.getPlayer().addWalkable(Bomb.class);
+                //walk through bombs
+        }
+                onTile = null;
+            }
         }
 
     }

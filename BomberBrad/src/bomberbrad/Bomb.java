@@ -50,59 +50,59 @@ public class Bomb extends tileObject{
     public void setCounter(int counter) {
         this.counter = counter;
     }
-    public void explode(int l, Tile[][] map) {
+    public void explode(int length, Tile[][] map) {
         
         map[xPos][yPos].setEx(new Explosion(xPos, yPos, 0));
         
-        for (int i = 0; i < l; i++) {//upwards
-            if(map[xPos][yPos - l].getOnTile() != null){
-                if(map[xPos][yPos - l].getOnTile() instanceof Bomb){
-                    map[xPos][yPos - l].setEx(new Explosion(xPos, yPos - l, 1));
+        for (int i = 1; i <= length; i++) {//upwards
+            if(map[xPos][yPos - i].getOnTile() != null){
+                if(map[xPos][yPos - i].getOnTile() instanceof Bomb){
+                    map[xPos][yPos - i].setEx(new Explosion(xPos, yPos - i, 1));
                 }else{
-                    map[xPos][yPos - l].destroy(map);
+                    map[xPos][yPos - i].destroy(map);
                 }
                 break;
             }else{
-                map[xPos][yPos - l].setEx(new Explosion(xPos, yPos - l, 1));
+                map[xPos][yPos - i].setEx(new Explosion(xPos, yPos - i, 1));
             }
         }
         
-        for (int i = 0; i < l; i++) {//rightly
-            if(map[xPos + l][yPos].getOnTile() != null){
-                if(map[xPos + l][yPos].getOnTile() instanceof Bomb){
-                    map[xPos + l][yPos].setEx(new Explosion(xPos + l, yPos, 2));
+        for (int i = 1; i <= length; i++) {//rightly
+            if(map[xPos + i][yPos].getOnTile() != null){
+                if(map[xPos + i][yPos].getOnTile() instanceof Bomb){
+                    map[xPos + i][yPos].setEx(new Explosion(xPos + i, yPos, 2));
                 }else{
-                    map[xPos + 1][yPos].destroy(map);
+                    map[xPos + i][yPos].destroy(map);
                 }
                 break;
             }else{
-                map[xPos + 1][yPos].setEx(new Explosion(xPos + l, yPos, 2));
+                map[xPos + i][yPos].setEx(new Explosion(xPos + i, yPos, 2));
             }
         }
         
-        for (int i = 0; i < l; i++) {//downward
-            if(map[xPos][yPos + l].getOnTile() != null){
-                if(map[xPos][yPos + l].getOnTile() instanceof Bomb){
-                    map[xPos][yPos + l].setEx(new Explosion(xPos, yPos + l, 3));
+        for (int i = 1; i <= length; i++) {//downward
+            if(map[xPos][yPos + i].getOnTile() != null){
+                if(map[xPos][yPos + i].getOnTile() instanceof Bomb){
+                    map[xPos][yPos + i].setEx(new Explosion(xPos, yPos + i, 3));
                 }else{
-                    map[xPos][yPos + l].destroy(map);
+                    map[xPos][yPos + i].destroy(map);
                 }
                 break;
             }else{
-                map[xPos][yPos + l].setEx(new Explosion(xPos, yPos + l, 3));
+                map[xPos][yPos + i].setEx(new Explosion(xPos, yPos + i, 3));
             }
         }
         
-        for (int i = 0; i < l; i++) {//leftly
-            if(map[xPos - l][yPos].getOnTile() != null){
-                if(map[xPos - l][yPos].getOnTile() instanceof Bomb){
-                    map[xPos - l][yPos].setEx(new Explosion(xPos - l, yPos, 4));
+        for (int i = 1; i <= length; i++) {//leftly
+            if(map[xPos - i][yPos].getOnTile() != null){
+                if(map[xPos - i][yPos].getOnTile() instanceof Bomb){
+                    map[xPos - i][yPos].setEx(new Explosion(xPos - i, yPos, 4));
                 }else{
-                    map[xPos - 1][yPos].destroy(map);
+                    map[xPos - i][yPos].destroy(map);
                 }
                 break;
             }else{
-                map[xPos - 1][yPos].setEx(new Explosion(xPos - l, yPos, 4));
+                map[xPos - i][yPos].setEx(new Explosion(xPos - i, yPos, 4));
             }
         }
         
@@ -114,9 +114,6 @@ public class Bomb extends tileObject{
         g2d.fillRect(xPos*64,yPos*64,64,64);
         
         BufferedImage shown;
-        
-        System.out.println(frame);
-        System.out.println(frame / 4 + "\n-----------------");
         
         shown = sprites[frame / 4];
         frame--;
