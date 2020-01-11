@@ -194,7 +194,6 @@ public class Player extends Entity {
             }
         }
         g2d.drawImage(shown,xPos*4,yPos*4,xPos*4+64,yPos*4+64,0,0,16,16,null);
-        System.out.println(frameCounter);
     }
     
     public void loadImages() {
