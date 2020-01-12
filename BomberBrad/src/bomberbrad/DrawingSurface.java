@@ -28,6 +28,7 @@ import java.util.Scanner;
 import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.Clip;
+import javax.swing.JOptionPane;
 
 public class DrawingSurface extends JPanel{
     
@@ -50,7 +51,7 @@ public class DrawingSurface extends JPanel{
     private int length;
     private boolean detonator;
     ArrayList<Score> scores = new ArrayList();
-    
+    boolean addedScore;
     public DrawingSurface() {
         
         ActionListener al = new ActionListener() {
@@ -100,6 +101,10 @@ public class DrawingSurface extends JPanel{
                             moveRight = false;
                         }
                     }
+                } else if (windowState == 2) {
+                     if (k.getKeyCode() == KeyEvent.VK_SPACE) {
+                         JOptionPane.showInputDialog("Enter a username to search for.");
+                     }
                 }
                 if (k.getKeyCode() == KeyEvent.VK_ESCAPE && windowState != 0) { // following input can happen at any time except main menu
                     if (windowState == 1) {
@@ -113,6 +118,7 @@ public class DrawingSurface extends JPanel{
         });
         
         //printBoard(board);
+        score();
         timer = new Timer(50, al);
         timer.start();
         playAudio("title");
@@ -147,6 +153,11 @@ public class DrawingSurface extends JPanel{
                 g2d.setFont(new Font("Arial", Font.BOLD, 64));
                 g2d.setColor(Color.RED);
                 g2d.drawString("Game Over!", 270, 300);
+                if (addedScore == false) {
+                    addedScore = true;
+                    addScores();
+                    
+                }
                 if (frameCounter == 0) {
                     clip.stop();
                     playAudio("gameover");
@@ -173,7 +184,7 @@ public class DrawingSurface extends JPanel{
                 }
             }
         } else if (windowState == 2) { // high scores
-            score();
+            
             g2d.setFont(new Font("Arial", Font.BOLD, 32));
             g2d.drawString("High Scores", 380, 100);
             g2d.setFont(new Font("Monospaced", Font.BOLD, 24));
@@ -221,6 +232,7 @@ public class DrawingSurface extends JPanel{
              bombs = 1;
              length = 1;
              detonator = false;
+             addedScore = false;
              player.setLives(3);
          } else if (selectedYPos == 431) {
              windowState = 2; // go to high scores
@@ -455,6 +467,7 @@ public class DrawingSurface extends JPanel{
         detonator = false;
         player.setLives(player.getLives() - 1);
         restartLevel();
+        
     }
     
     public void restartLevel(){
@@ -545,6 +558,16 @@ public class DrawingSurface extends JPanel{
         for (int i = 0; i < scores.size(); i ++) {
             g2d.drawString((i + 1) + "     " + scores.get(i).getName()+ "      " + scores.get(i).getAmount(),330,250 + (50 * i));
         }
+    }
+    public void addScores() {
+        String userName;
+        userName = JOptionPane.showInputDialog("Enter 3 characters to represent you.");
+        while (userName.length() > 3) {
+            userName = JOptionPane.showInputDialog("Invalid entry, please enter a maximum of 3 characters.\nEnter 3 characters to represent you.");
+        }
+        scores.add(new Score(score,userName));
+        
+        
     }
 
     public int getExitX() {
