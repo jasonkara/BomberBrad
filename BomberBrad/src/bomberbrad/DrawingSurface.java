@@ -87,8 +87,8 @@ public class DrawingSurface extends JPanel {
                         } else if (k.getKeyCode() == KeyEvent.VK_D) {
                             moveRight = true;
                         } else if (k.getKeyCode() == KeyEvent.VK_SPACE) {
-                            if (bombs >= 1) {
-                                bombs--;
+                            if (bombs >= 1 && ! player.isDying()) {
+                                bombs --;
                                 playSE("placebomb");
                                 board[(player.getXPos() + 8) / 16][(player.getYPos() + 8) / 16].setOnTile(new Bomb((player.getXPos() + 8) / 16, (player.getYPos() + 8) / 16));
                             }
@@ -147,9 +147,10 @@ public class DrawingSurface extends JPanel {
             g2d.drawString("Credits", 370, 500);
             g2d.drawString("Exit", 370, 550);
             g2d.setFont(new Font("Arial", Font.BOLD, 16));
-            g2d.drawString("© 2019 DKP Studios", 370, 650);
-            g2d.fillPolygon(new int[]{350, 350, 360}, new int[]{selectedYPos, selectedYPos + 20, selectedYPos + 10}, 3);
-            g2d.drawImage(menuImg, 112, 100, 848, 252, 0, 0, 368, 76, null);
+
+            g2d.drawString("© 2020 DKP Studios", 370, 650);
+            g2d.fillPolygon(new int[] {350, 350, 360}, new int[] {selectedYPos, selectedYPos + 20, selectedYPos + 10}, 3);
+            g2d.drawImage(menuImg,112,100,848,252,0,0,368,76,null);
         } else if (windowState == 1) { // main game
             if (player.getLives() < 1) {
                 g2d.drawString("Press ESC to return to the menu", 270, 500);
@@ -202,7 +203,7 @@ public class DrawingSurface extends JPanel {
             g2d.drawString("REEGAL PANCHAL - Project Manager", 200, 500);
             g2d.drawString("Special thanks to TOMMY JOHNSTON", 200, 600);
             g2d.setFont(new Font("Arial", Font.BOLD, 16));
-            g2d.drawString("© 2019 DKP Studios", 370, 650);
+            g2d.drawString("© 2020 DKP Studios", 370, 650);
         }
 
     }
