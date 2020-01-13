@@ -52,6 +52,8 @@ public class DrawingSurface extends JPanel{
     private boolean detonator;
     ArrayList<Score> scores = new ArrayList();
     boolean addedScore;
+    int timeBonus;
+    int bonusCounter;
     public DrawingSurface() {
         
         ActionListener al = new ActionListener() {
@@ -368,6 +370,10 @@ public class DrawingSurface extends JPanel{
                 e.action(board);
                 e.draw(g2d);
             }
+            bonusCounter ++;
+            if (bonusCounter == 20) {
+                timeBonus --;
+            }
             
     }
     
@@ -455,18 +461,50 @@ public class DrawingSurface extends JPanel{
         //exitX = 1;
         //exitY = 2;
         possible.remove(random);
-        
+        int enemyType;
         while (enemies > 0) {  
             random = (int)(Math.random() * possible.size());
-            if (difficulty == 1) {
+            switch (difficulty) {
+            case 1:
                 enemiesList.add(new Ballom(possible.get(random).getxPos() * 16,possible.get(random).getyPos() * 16,Enemy.rndNum(1,4)));
                 enemies --;
-            } else if (difficulty == 2) {
-                enemiesList.add(new Onil(possible.get(random).getxPos() * 16,possible.get(random).getyPos() * 16,Enemy.rndNum(1,4)));
+                break;
+            case 2:
+                enemyType = (int)(Math.random() * 3) + 1;
+                switch (enemyType) {
+                    case 1:
+                        enemiesList.add(new Ballom(possible.get(random).getxPos() * 16,possible.get(random).getyPos() * 16,Enemy.rndNum(1,4)));
+                        break;
+                    case 2: 
+                        enemiesList.add(new Onil(possible.get(random).getxPos() * 16,possible.get(random).getyPos() * 16,Enemy.rndNum(1,4)));
+                        break;
+                    case 3:
+                        enemiesList.add(new Dahl(possible.get(random).getxPos() * 16,possible.get(random).getyPos() * 16,Enemy.rndNum(1,4)));
+                        break;
+                }
+                
                 enemies --;
-            } else if (difficulty == 3) {
-                enemiesList.add(new Dahl(possible.get(random).getxPos() * 16,possible.get(random).getyPos() * 16,Enemy.rndNum(1,4)));
+            default: 
+                enemyType = (int)(Math.random() * 5) + 1;
+                switch (enemyType) {
+                    case 1:
+                        enemiesList.add(new Ballom(possible.get(random).getxPos() * 16,possible.get(random).getyPos() * 16,Enemy.rndNum(1,4)));
+                        break;
+                    case 2: 
+                        enemiesList.add(new Onil(possible.get(random).getxPos() * 16,possible.get(random).getyPos() * 16,Enemy.rndNum(1,4)));
+                        break;
+                    case 3:
+                        enemiesList.add(new Dahl(possible.get(random).getxPos() * 16,possible.get(random).getyPos() * 16,Enemy.rndNum(1,4)));
+                        break;
+                    case 4:
+                        enemiesList.add(new Blob(possible.get(random).getxPos() * 16,possible.get(random).getyPos() * 16,Enemy.rndNum(1,4)));
+                        break;
+                    case 5:
+                        enemiesList.add(new Ghost(possible.get(random).getxPos() * 16,possible.get(random).getyPos() * 16,Enemy.rndNum(1,4)));
+                        break;
+                }
                 enemies --;
+                
             }
             
         }
@@ -486,7 +524,8 @@ public class DrawingSurface extends JPanel{
         
         enemiesList = new ArrayList();
         //windowState = 0;
-        
+        timeBonus = 240;
+        bonusCounter = 0;
         playingLevel = false;
         player.setxPos(16);
         player.setyPos(16);
@@ -628,6 +667,14 @@ public class DrawingSurface extends JPanel{
 
     public void setScore(int score) {
         this.score = score;
+    }
+
+    public int getTimeBonus() {
+        return timeBonus;
+    }
+
+    public void setTimeBonus(int timeBonus) {
+        this.timeBonus = timeBonus;
     }
     
 }
