@@ -24,7 +24,7 @@ public class Window extends JFrame {
         //add a custom JPanel to draw on
         add(new DrawingSurface());
         //set the size of the window
-        setSize(960,776);
+        setSize(960,812);
         //tell the JFrame what to do when closed
         //this is important if our application has multiple windows
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
