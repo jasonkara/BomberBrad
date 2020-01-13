@@ -120,6 +120,7 @@ public class Player extends Entity {
             while (ds.clip.getMicrosecondLength() != ds.clip.getMicrosecondPosition()) {}
             ds.setLevel(ds.getLevel() + 1);
             ds.restartLevel();
+            ds.setScore(ds.getScore() + ds.getTimeBonus());
         }
         
         if (! dying && moving && frameCounter % 4 == 0) {

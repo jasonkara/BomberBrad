@@ -189,10 +189,12 @@ public class Tile {
         if(onTile instanceof PowerUp){
             if (ds.intersecting(xPos * 16, yPos * 16, ds.getPlayer().getXPos(),ds.getPlayer().getYPos())) {
                 ds.playSE("powerup");
+                ds.setScore(ds.getScore() + 200);
                 switch(((PowerUp)(onTile)).getType()){
             case 1:
                 ds.setBombs(ds.getBombs() + 1);
                 //more bombs
+                
                 break;
             case 2:
                 ds.setLength(ds.getLength() + 1);
