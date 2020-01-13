@@ -140,6 +140,12 @@ public class Tile {
                 if (ds.intersecting(xPos * 16, yPos * 16, e.getXPos(),e.getYPos())) {
                     //death animation of enemy
                     EL.remove(e);
+                    if (EL.size() == 0) {
+                        ds.playSE("enemiesclear");
+                        ds.clip.stop();
+                        ds.playAudio("exit");
+                        ds.clip.loop(ds.clip.LOOP_CONTINUOUSLY);
+                    }
                     ds.setScore(ds.getScore() + 200);
                 }
             }
@@ -182,7 +188,7 @@ public class Tile {
         
         if(onTile instanceof PowerUp){
             if (ds.intersecting(xPos * 16, yPos * 16, ds.getPlayer().getXPos(),ds.getPlayer().getYPos())) {
-                
+                ds.playSE("powerup");
                 switch(((PowerUp)(onTile)).getType()){
             case 1:
                 ds.setBombs(ds.getBombs() + 1);

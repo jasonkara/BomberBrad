@@ -41,7 +41,7 @@ public class DrawingSurface extends JPanel{
     boolean playingLevel = false;
     Tile[][] board;
     int difficulty;
-    Clip clip;
+    Clip clip, clipSE;
     AudioInputStream[] audio = new AudioInputStream[3];
     Timer timer;
     int exitX,exitY;
@@ -87,6 +87,7 @@ public class DrawingSurface extends JPanel{
                         } else if (k.getKeyCode() == KeyEvent.VK_SPACE) {
                             if (bombs >= 1) {
                                 bombs --;
+                                playSE("placebomb");
                                 board[(player.getXPos() + 8) / 16][(player.getYPos() + 8) / 16].setOnTile(new Bomb((player.getXPos() + 8) / 16, (player.getYPos() + 8) / 16));
                             }
                         }
@@ -212,6 +213,17 @@ public class DrawingSurface extends JPanel{
             System.out.println("error: " + e);
         }
         clip.start();
+    }
+    
+    public void playSE(String sound) {
+        try {
+            AudioInputStream instream = AudioSystem.getAudioInputStream(new File("src\\bomberbrad\\audio\\" + sound + ".wav").getAbsoluteFile());
+            clipSE = AudioSystem.getClip();
+            clipSE.open(instream);
+        } catch (Exception e) {
+            System.out.println("error: " + e);
+        }
+        clipSE.start();
     }
      
      private void updateMenuSelectedYPos(int i) {

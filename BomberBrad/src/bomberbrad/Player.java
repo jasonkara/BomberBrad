@@ -115,8 +115,15 @@ public class Player extends Entity {
         }
         
         if (ds.intersecting(xPos,yPos,ds.getExitX() * 16,ds.getExitY() * 16) && EL.size() == 0) {
+            ds.clip.stop();
+            ds.playAudio("stagecomplete");
+            while (ds.clip.getMicrosecondLength() != ds.clip.getMicrosecondPosition()) {}
             ds.setLevel(ds.getLevel() + 1);
             ds.restartLevel();
+        }
+        
+        if (! dying && moving && frameCounter % 4 == 0) {
+            ds.playSE("step");
         }
     }
 
