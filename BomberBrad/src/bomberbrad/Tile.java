@@ -138,20 +138,16 @@ public class Tile {
             }
             for (Enemy e: EL) {
                 if (ds.intersecting(xPos * 16, yPos * 16, e.getXPos(),e.getYPos())) {
-                    //death animation of enemy
-                    e.setDying(true);
-                    ds.setScore(ds.getScore() + 200);
-                }
-                if (e.getDeathFrame() == 8) {
-                    e.setDeathFrame(-1);
                     EL.remove(e);
-                }
-                if (EL.size() == 0) {
+                    if (EL.size() == 0) {
                     ds.playSE("enemiesclear");
                     ds.clip.stop();
                     ds.playAudio("exit");
                     ds.clip.loop(ds.clip.LOOP_CONTINUOUSLY);
                 }
+                }
+                
+                
             }
             if (ex.getTime() == 0) {
                 ex = null;

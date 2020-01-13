@@ -210,7 +210,7 @@ public class DrawingSurface extends JPanel {
 
     public void playAudio(String sound) {
         try {
-            AudioInputStream instream = AudioSystem.getAudioInputStream(new File("src\\bomberbrad\\audio\\" + sound + ".wav").getAbsoluteFile());
+            AudioInputStream instream = AudioSystem.getAudioInputStream(getClass().getResource("/bomberbrad/audio/" + sound + ".wav"));
             clip = AudioSystem.getClip();
             clip.open(instream);
         } catch (Exception e) {
@@ -221,7 +221,7 @@ public class DrawingSurface extends JPanel {
 
     public void playSE(String sound) {
         try {
-            AudioInputStream instream = AudioSystem.getAudioInputStream(new File("src\\bomberbrad\\audio\\" + sound + ".wav").getAbsoluteFile());
+            AudioInputStream instream = AudioSystem.getAudioInputStream(getClass().getResource("/bomberbrad/audio/" + sound + ".wav"));
             clipSE = AudioSystem.getClip();
             clipSE.open(instream);
         } catch (Exception e) {

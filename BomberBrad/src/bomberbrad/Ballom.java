@@ -25,10 +25,7 @@ public class Ballom extends Enemy {
         
     public void draw(Graphics2D g2d){
         BufferedImage shown;
-        if (dying && deathFrame >= 0) {
-            shown = sprites[6 + deathFrame / 2];
-            deathFrame ++;
-        } else {
+        
             if (direction <= 2) {
                 if (frameCounter < 2) {
                     shown = sprites[3];
@@ -51,7 +48,7 @@ public class Ballom extends Enemy {
             if (frameCounter == 8) {
                 frameCounter = 0;
             }
-        }
+       
     }
     
     public void loadImages() {
