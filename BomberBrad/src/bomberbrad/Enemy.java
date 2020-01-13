@@ -14,12 +14,16 @@ import java.util.ArrayList;
 
 public abstract class Enemy extends Entity {
     
+    protected int deathFrame;
+    protected boolean dying;
+    
     /**
      * Random number generator
      * @param low 
      * @param high
      * @return 
      */
+    
     public static int rndNum(int low, int high){
         int r;
         r= (int)(Math.random() * (high - low + 1) + low);
@@ -29,6 +33,16 @@ public abstract class Enemy extends Entity {
     
     Enemy(int xPos, int yPos, int health, int direction, int speed){
         super( xPos,  yPos,  health,  direction,  speed);
+        deathFrame = -1;
+        dying = false;
+    }
+
+    public boolean isDying() {
+        return dying;
+    }
+
+    public void setDying(boolean dying) {
+        this.dying = dying;
     }
 
     //abstract action that will made
@@ -83,6 +97,14 @@ public abstract class Enemy extends Entity {
             }
         
         
+    }
+
+    public int getDeathFrame() {
+        return deathFrame;
+    }
+
+    public void setDeathFrame(int deathFrame) {
+        this.deathFrame = deathFrame;
     }
     
     public void changeDirection(){

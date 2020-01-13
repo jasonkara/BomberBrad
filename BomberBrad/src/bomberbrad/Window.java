@@ -20,7 +20,7 @@ public class Window extends JFrame {
     //create the custom JFrame
     private void initUI() {        
         //set title of the JFrame
-        setTitle("BomberBrad - © 2019 DKP Studios");
+        setTitle("BomberBrad - © 2020 DKP Studios");
         //add a custom JPanel to draw on
         add(new DrawingSurface());
         //set the size of the window

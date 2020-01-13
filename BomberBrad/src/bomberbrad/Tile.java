@@ -139,19 +139,24 @@ public class Tile {
             for (Enemy e: EL) {
                 if (ds.intersecting(xPos * 16, yPos * 16, e.getXPos(),e.getYPos())) {
                     //death animation of enemy
-                    EL.remove(e);
-                    if (EL.size() == 0) {
-                        ds.playSE("enemiesclear");
-                        ds.clip.stop();
-                        ds.playAudio("exit");
-                        ds.clip.loop(ds.clip.LOOP_CONTINUOUSLY);
-                    }
+                    e.setDying(true);
                     ds.setScore(ds.getScore() + 200);
+                }
+                if (e.getDeathFrame() == 8) {
+                    e.setDeathFrame(-1);
+                    EL.remove(e);
+                }
+                if (EL.size() == 0) {
+                    ds.playSE("enemiesclear");
+                    ds.clip.stop();
+                    ds.playAudio("exit");
+                    ds.clip.loop(ds.clip.LOOP_CONTINUOUSLY);
                 }
             }
             if (ex.getTime() == 0) {
                 ex = null;
             }
+            
             
             if (onTile instanceof Bomb){
                 ((Bomb)(onTile)).explode(ds.getLength(),board);
@@ -165,6 +170,7 @@ public class Tile {
             
             if (((Bomb)(onTile)).getCounter() == 0) {
                 ((Bomb)(onTile)).explode(ds.getLength(),board);
+                ds.playSE("explosion");
                 onTile = null;
                 ds.setBombs(ds.getBombs() + 1);
             } 
