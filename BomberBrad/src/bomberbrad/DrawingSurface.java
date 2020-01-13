@@ -247,6 +247,7 @@ public class DrawingSurface extends JPanel {
             playingLevel = false;
             bombs = 1;
             length = 1;
+            player.setSpeed(2);
             detonator = false;
             addedScore = false;
             player.setLives(3);
@@ -341,7 +342,17 @@ public class DrawingSurface extends JPanel {
     }
 
     private void mainGame(Graphics2D g2d) {
-        g2d.drawString("Main Game", 10, 50);
+        /*BufferedImage bombHud = null, lengthHud = null, speedHud = null, detonateHud = null, wallHud = null, fireHud = null;
+        try {
+            bombHud = ImageIO.read(getClass().getResource("/bomberbrad/sprites/tile/power/1.png"));
+            lengthHud = ImageIO.read(getClass().getResource("/bomberbrad/sprites/tile/power/1.png"));
+            speedHud = ImageIO.read(getClass().getResource("/bomberbrad/sprites/tile/power/1.png"));
+            detonateHud = ImageIO.read(getClass().getResource("/bomberbrad/sprites/tile/power/1.png"));
+            wallHud = ImageIO.read(getClass().getResource("/bomberbrad/sprites/tile/power/1.png"));
+            fireHud = ImageIO.read(getClass().getResource("/bomberbrad/sprites/tile/power/1.png"));
+        } catch (IOException e) {
+            g2d.drawString("Error: " + e, 10, 10);
+        } powerup hud stuff*/
         player.setMoving(false);
         if (moveUp || moveDown || moveLeft || moveRight) {
             if (moveDown) {
@@ -361,8 +372,8 @@ public class DrawingSurface extends JPanel {
                 board[o][i].update(this);
                 board[o][i].draw(board, g2d);
                 g2d.setColor(Color.WHITE);
-                g2d.drawString("SCORE: " + score, 40, 730);
-
+                g2d.drawString("LEVEL: " + level + "   LIVES: " + player.getLives() + "   SCORE: " + score, 40, 745);
+                //if (detonator) g2d.drawImage(detonateHud, 496, 720, 528, 752, 0, 0, 16, 16, null); powerup hud stuff -- come back to later
             }
         }
         player.draw(g2d);
