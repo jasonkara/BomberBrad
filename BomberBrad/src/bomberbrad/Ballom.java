@@ -1,12 +1,11 @@
 
 package bomberbrad;
 
-import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
-import java.util.ArrayList;
 import javax.imageio.ImageIO;
+import javax.swing.JOptionPane;
 
 /**
  *
@@ -26,27 +25,32 @@ public class Ballom extends Enemy {
         
     public void draw(Graphics2D g2d){
         BufferedImage shown;
-        if (direction <= 2) {
-            if (frameCounter < 2) {
-                shown = sprites[3];
-            } else if (frameCounter < 6 && frameCounter > 3) {
-                shown = sprites[5];
-            } else {
-                shown = sprites[4];
-            }
+        if (dying && deathFrame >= 0) {
+            shown = sprites[6 + deathFrame / 2];
+            deathFrame ++;
         } else {
-            if (frameCounter < 2) {
-                shown = sprites[0];
-            } else if (frameCounter < 6 && frameCounter > 3) {
-                shown = sprites[2];
+            if (direction <= 2) {
+                if (frameCounter < 2) {
+                    shown = sprites[3];
+                } else if (frameCounter < 6 && frameCounter > 3) {
+                    shown = sprites[5];
+                } else {
+                    shown = sprites[4];
+                }
             } else {
-                shown = sprites[1];
+                if (frameCounter < 2) {
+                    shown = sprites[0];
+                } else if (frameCounter < 6 && frameCounter > 3) {
+                    shown = sprites[2];
+                } else {
+                    shown = sprites[1];
+                }
             }
-        }
-        g2d.drawImage(shown,xPos*4,yPos*4,xPos*4+64,yPos*4+64,0,0,16,16,null);
-        frameCounter ++;
-        if (frameCounter == 8) {
-            frameCounter = 0;
+            g2d.drawImage(shown,xPos*4,yPos*4,xPos*4+64,yPos*4+64,0,0,16,16,null);
+            frameCounter ++;
+            if (frameCounter == 8) {
+                frameCounter = 0;
+            }
         }
     }
     
