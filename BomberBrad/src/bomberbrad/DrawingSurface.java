@@ -46,7 +46,7 @@ public class DrawingSurface extends JPanel {
     Timer timer;
     int exitX, exitY;
     int level;
-    int bombs;
+    int bombs, maxBombs;
     int score;
     private int length;
     private boolean firePass;
@@ -54,7 +54,9 @@ public class DrawingSurface extends JPanel {
     boolean addedScore;
     int timeBonus;
     int bonusCounter;
+    boolean bombPass, wallPass;
     UIManager ui = new UIManager();
+    BufferedImage bombHud = null, lengthHud = null, speedHud = null, bombpassHud = null, wallHud = null, fireHud = null;
 
     public DrawingSurface() {
 
@@ -112,7 +114,7 @@ public class DrawingSurface extends JPanel {
                         searchScores(user);
                     }
                 }
-                if (k.getKeyCode() == KeyEvent.VK_ESCAPE && windowState != 0) { // following input can happen at any time except main menu
+                if (k.getKeyCode() == KeyEvent.VK_ESCAPE && windowState != 0 && ! player.isDying()) { // following input can happen at any time except main menu
                     if (windowState == 1) {
                         clip.stop();
                         playAudio("title"); // plays the title music again only if coming from main game
@@ -269,10 +271,13 @@ public class DrawingSurface extends JPanel {
             playingLevel = false;
             powerUpList = new ArrayList();
             bombs = 1;
+            maxBombs = 1;
             length = 1;
             player.setSpeed(2);
             firePass = false;
             addedScore = false;
+            bombPass = false;
+            wallPass = false;
             player.setLives(3);
             score = 0;
         } else if (selectedYPos == 431) {
@@ -367,20 +372,17 @@ public class DrawingSurface extends JPanel {
         Ghost g = new Ghost(0, 0, 0);
         g.loadImages();
         g = null;
+        try {
+            bombHud = ImageIO.read(getClass().getResource("/bomberbrad/sprites/tile/power/1.png"));
+            lengthHud = ImageIO.read(getClass().getResource("/bomberbrad/sprites/tile/power/2.png"));
+            speedHud = ImageIO.read(getClass().getResource("/bomberbrad/sprites/tile/power/3.png"));
+            wallHud = ImageIO.read(getClass().getResource("/bomberbrad/sprites/tile/power/4.png"));
+            fireHud = ImageIO.read(getClass().getResource("/bomberbrad/sprites/tile/power/5.png"));
+            bombpassHud = ImageIO.read(getClass().getResource("/bomberbrad/sprites/tile/power/6.png"));
+        } catch (IOException error) {}
     }
 
     private void mainGame(Graphics2D g2d) {
-        /*BufferedImage bombHud = null, lengthHud = null, speedHud = null, detonateHud = null, wallHud = null, fireHud = null;
-        try {
-            bombHud = ImageIO.read(getClass().getResource("/bomberbrad/sprites/tile/power/1.png"));
-            lengthHud = ImageIO.read(getClass().getResource("/bomberbrad/sprites/tile/power/1.png"));
-            speedHud = ImageIO.read(getClass().getResource("/bomberbrad/sprites/tile/power/1.png"));
-            firePassHud = ImageIO.read(getClass().getResource("/bomberbrad/sprites/tile/power/1.png"));
-            wallHud = ImageIO.read(getClass().getResource("/bomberbrad/sprites/tile/power/1.png"));
-            fireHud = ImageIO.read(getClass().getResource("/bomberbrad/sprites/tile/power/1.png"));
-        } catch (IOException e) {
-            g2d.drawString("Error: " + e, 10, 10);
-        } powerup hud stuff*/
         player.setMoving(false);
         if (moveUp || moveDown || moveLeft || moveRight) {
             if (moveDown) {
@@ -400,10 +402,16 @@ public class DrawingSurface extends JPanel {
                 board[o][i].update(this);
                 board[o][i].draw(board, g2d);
                 g2d.setColor(Color.WHITE);
-                g2d.drawString("LEVEL: " + level + "   LIVES: " + player.getLives() + "   SCORE: " + score, 40, 745);
-                //if (firePass) g2d.drawImage(detonateHud, 496, 720, 528, 752, 0, 0, 16, 16, null); powerup hud stuff -- come back to later
             }
         }
+        g2d.drawString("LEVEL: " + level + "   LIVES: " + player.getLives() + "   SCORE: " + score, 40, 745);
+        if (firePass) g2d.drawImage(fireHud, 496, 720, 528, 752, 0, 0, 16, 16, null);
+        if (player.getSpeed() == 4) g2d.drawImage(speedHud, 536, 720, 568, 752, 0, 0, 16, 16, null);
+        if (bombPass) g2d.drawImage(bombpassHud, 576, 720, 608, 752, 0, 0, 16, 16, null);
+        if (wallPass) g2d.drawImage(wallHud, 616, 720, 648, 752, 0, 0, 16, 16, null);
+        g2d.drawImage(bombHud, 696, 720, 728, 752, 0, 0, 16, 16, null);
+        g2d.drawImage(lengthHud, 816, 720, 848, 752, 0, 0, 16, 16, null);
+        g2d.drawString("x " + maxBombs + "             x " + length, 737, 745);
         player.draw(g2d);
 
         for (Enemy e : enemiesList) {
@@ -564,6 +572,7 @@ public class DrawingSurface extends JPanel {
 
     public void restartLevel() {
 
+        bombs = maxBombs;
         enemiesList = new ArrayList();
         //windowState = 0;
         timeBonus = 240;
@@ -771,6 +780,7 @@ public class DrawingSurface extends JPanel {
 
     public void setBombs(int bombs) {
         this.bombs = bombs;
+        maxBombs = bombs;
     }
 
     public Player getPlayer() {
@@ -791,6 +801,22 @@ public class DrawingSurface extends JPanel {
 
     public int getTimeBonus() {
         return timeBonus;
+    }
+
+    public boolean isBombPass() {
+        return bombPass;
+    }
+
+    public void setBombPass(boolean bombPass) {
+        this.bombPass = bombPass;
+    }
+
+    public boolean isWallPass() {
+        return wallPass;
+    }
+
+    public void setWallPass(boolean wallPass) {
+        this.wallPass = wallPass;
     }
 
     public void setTimeBonus(int timeBonus) {
