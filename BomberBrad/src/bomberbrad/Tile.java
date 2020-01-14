@@ -139,11 +139,13 @@ public class Tile {
             for (Enemy e: EL) {
                 if (ds.intersecting(xPos * 16, yPos * 16, e.getXPos(),e.getYPos())) {
                     EL.remove(e);
+                    ds.setScore(ds.getScore() + 200);
                     if (EL.size() == 0) {
                     ds.playSE("enemiesclear");
                     ds.clip.stop();
                     ds.playAudio("exit");
                     ds.clip.loop(ds.clip.LOOP_CONTINUOUSLY);
+                    ds.setScore(ds.getScore() + 200);
                 }
                 }
                 
