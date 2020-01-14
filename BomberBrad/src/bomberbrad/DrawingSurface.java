@@ -453,6 +453,8 @@ public class DrawingSurface extends JPanel {
                 board[i][o] = new Tile(i, o, new Block(i, o, null, false));
             }
         }
+        board[1][3] = new Tile(1,3,new Block(1,3,null,true));
+        board[3][1] = new Tile(3,1,new Block(3,1,null,true));
         //creating random variable to choose random positions
         int random;
         //creating arraylist of possible positions for breakable blocks, 
