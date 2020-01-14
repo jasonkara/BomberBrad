@@ -597,8 +597,8 @@ public class DrawingSurface extends JPanel {
     }
 
     public void score() {
-            File f = new File(System.getProperty("user.home") + "/Documents/bomberbrad");
-            File file = new File(System.getProperty("user.home") + "/Documents/bomberbrad/scores.txt");
+            File f = new File(System.getProperty("user.home") + "/Documents/BomberBrad");
+            File file = new File(System.getProperty("user.home") + "/Documents/BomberBrad/scores.txt");
             String userName;
             int userAmount;
         try {
@@ -655,8 +655,8 @@ public class DrawingSurface extends JPanel {
             userName = JOptionPane.showInputDialog("Invalid entry, please enter a maximum of 3 characters.\nEnter 3 characters to represent you.");
         }
         scores.add(new Score(score, userName));
-        File f = new File(System.getProperty("user.home") + "/Documents/bomberbrad");
-        File file = new File(System.getProperty("user.home") + "/Documents/bomberbrad/scores.txt");
+        File f = new File(System.getProperty("user.home") + "/Documents/BomberBrad");
+        File file = new File(System.getProperty("user.home") + "/Documents/BomberBrad/scores.txt");
         Score[] sorting = new Score[scores.size()];
         for (int i = 0; i < scores.size(); i ++) {
             sorting[i] = new Score(scores.get(i).getAmount(),scores.get(i).getName());
