@@ -41,7 +41,7 @@ public class DrawingSurface extends JPanel {
     boolean playingLevel = false;
     Tile[][] board;
     int difficulty;
-    Clip clip, clipSE;
+    Clip clip, clipSE; // two seperate clips: one for background music (BGM), one for sound effects (SE)
     AudioInputStream[] audio = new AudioInputStream[3];
     Timer timer;
     int exitX, exitY;
@@ -93,7 +93,7 @@ public class DrawingSurface extends JPanel {
                         } else if (k.getKeyCode() == KeyEvent.VK_SPACE) {
                             if (bombs >= 1 && !player.isDying() && board[(player.getXPos() + 8) / 16][(player.getYPos() + 8) / 16].getOnTile() == null) {
                                 bombs--;
-                                playSE("placebomb");
+                                playSE("placebomb"); // plays sound effect for placing a bomb
                                 board[(player.getXPos() + 8) / 16][(player.getYPos() + 8) / 16].setOnTile(new Bomb((player.getXPos() + 8) / 16, (player.getYPos() + 8) / 16));
                             }
                         }
@@ -116,7 +116,7 @@ public class DrawingSurface extends JPanel {
                 }
                 if (k.getKeyCode() == KeyEvent.VK_ESCAPE && windowState != 0 && !player.isDying()) { // following input can happen at any time except main menu
                     if (windowState == 1) {
-                        clip.stop();
+                        clip.stop(); // stops other background music
                         playAudio("title"); // plays the title music again only if coming from main game
                     }
                     windowState = 0; // ESC returns to main menu
@@ -132,7 +132,7 @@ public class DrawingSurface extends JPanel {
         score();
         timer = new Timer(50, al);
         timer.start();
-        playAudio("title");
+        playAudio("title"); // plays title music for main menu
         loadSprites();
     }
 
@@ -171,15 +171,15 @@ public class DrawingSurface extends JPanel {
 
                 }
                 if (frameCounter == 0) {
-                    clip.stop();
-                    playAudio("gameover");
+                    clip.stop(); // stops other background music
+                    playAudio("gameover"); // plays game over music
                     frameCounter = 1;
                 }
             } else {
                 if (level == 11) {
                     if (frameCounter == 0) {
-                        clip.stop();
-                        playAudio("ending");
+                        clip.stop(); // stops other background music
+                        playAudio("ending"); // plays game over music
                         frameCounter = 1;
                         addScores();
                     }
@@ -199,14 +199,14 @@ public class DrawingSurface extends JPanel {
                             g2d.drawString("Lives: " + player.getLives(), 420, 410);
                             g2d.drawImage(lifeSprite, 370, 385, 402, 417, 0, 0, 16, 16, null);
                             frameCounter = 1;
-                            clip.stop();
-                            playAudio("stagestart");
+                            clip.stop(); // stops other background music
+                            playAudio("stagestart"); // plays stage starting music
                         } else {
-                            while (clip.getMicrosecondLength() != clip.getMicrosecondPosition()) {
+                            while (clip.getMicrosecondLength() != clip.getMicrosecondPosition()) { // freezes program until end of stage starting music
                             }
-                            clip.stop();
-                            playAudio("stage");
-                            clip.loop(clip.LOOP_CONTINUOUSLY);
+                            clip.stop(); // stops other background music
+                            playAudio("stage"); // plays main stage music
+                            clip.loop(clip.LOOP_CONTINUOUSLY); // loops main stage music continuously
                             playingLevel = true;
                         }
                     }
@@ -232,26 +232,32 @@ public class DrawingSurface extends JPanel {
 
     }
 
+    /**
+     * plays background music
+     * @param sound name of music track to be played
+     */
     public void playAudio(String sound) {
         try {
-            AudioInputStream instream = AudioSystem.getAudioInputStream(getClass().getResource("/bomberbrad/audio/" + sound + ".wav"));
-            clip = AudioSystem.getClip();
-            clip.open(instream);
+            AudioInputStream instream = AudioSystem.getAudioInputStream(getClass().getResource("/bomberbrad/audio/" + sound + ".wav")); // retrieves audio file
+            clip = AudioSystem.getClip(); // assigns audio file to bgm clip
+            clip.open(instream); // opens audio file
         } catch (Exception e) {
-            System.out.println("error: " + e);
         }
-        clip.start();
+        clip.start(); // starts playing file
     }
 
+    /**
+     * plays sound effect
+     * @param sound name of music track to be played
+     */
     public void playSE(String sound) {
         try {
-            AudioInputStream instream = AudioSystem.getAudioInputStream(getClass().getResource("/bomberbrad/audio/" + sound + ".wav"));
-            clipSE = AudioSystem.getClip();
-            clipSE.open(instream);
+            AudioInputStream instream = AudioSystem.getAudioInputStream(getClass().getResource("/bomberbrad/audio/" + sound + ".wav")); // retrieves audio file
+            clipSE = AudioSystem.getClip(); // assigns audio file to se clip
+            clipSE.open(instream); // opens audio file
         } catch (Exception e) {
-            System.out.println("error: " + e);
         }
-        clipSE.start();
+        clipSE.start(); // starts playing file
     }
 
     private void updateMenuSelectedYPos(int i) {
