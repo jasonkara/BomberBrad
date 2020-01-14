@@ -1,4 +1,8 @@
-
+/**
+ * DKP Studios 
+ * 2020-01-14
+ * Class that represents the Balloom
+ */
 package bomberbrad;
 
 import java.awt.Graphics2D;
@@ -7,52 +11,79 @@ import java.io.IOException;
 import javax.imageio.ImageIO;
 import javax.swing.JOptionPane;
 
-/**
- *
- * @author Reegal
- */
 public class Ballom extends Enemy {
-    
+
     private static BufferedImage[] sprites = new BufferedImage[11];
     private int frameCounter;
-    
-    public Ballom(int xPos, int yPos, int direction){
-        super( xPos,  yPos,  1,  direction, 2);
+
+    /**
+     * Constructor, accepts x and y position and direction
+     *
+     * @param xPos x position
+     * @param yPos y position
+     * @param direction direction the ballom is facing
+     */
+    public Ballom(int xPos, int yPos, int direction) {
+        //call super class constructor, all balloms have 1 health and a speed of 2
+        super(xPos, yPos, 1, direction, 2);
+        //set frame counter to 0
         frameCounter = 0;
     }
-    
-    
-        
-    public void draw(Graphics2D g2d){
+
+    /**
+     * Draw method, draws the ballom
+     *
+     * @param g2d graphics 2d object to draw with
+     */
+    public void draw(Graphics2D g2d) {
         BufferedImage shown;
-        
-            if (direction <= 2) {
-                if (frameCounter < 2) {
-                    shown = sprites[3];
-                } else if (frameCounter < 6 && frameCounter > 3) {
-                    shown = sprites[5];
-                } else {
-                    shown = sprites[4];
-                }
+        //if facing up or right
+        if (direction <= 2) {
+            //if frame counter is less than 2
+            if (frameCounter < 2) {
+                //show appropriate sprite
+                shown = sprites[3];
+                //else if frame counter is between 6 and an 3
+            } else if (frameCounter < 6 && frameCounter > 3) {
+                //display second sprite in animation
+                shown = sprites[5];
             } else {
-                if (frameCounter < 2) {
-                    shown = sprites[0];
-                } else if (frameCounter < 6 && frameCounter > 3) {
-                    shown = sprites[2];
-                } else {
-                    shown = sprites[1];
-                }
+                //else show final sprite in animation
+                shown = sprites[4];
             }
-            g2d.drawImage(shown,xPos*4,yPos*4,xPos*4+64,yPos*4+64,0,0,16,16,null);
-            frameCounter ++;
-            if (frameCounter == 8) {
-                frameCounter = 0;
+            //else direction must be down or left
+        } else {
+            //if first two frames
+            if (frameCounter < 2) {
+                //display appropriate sprite
+                shown = sprites[0];
+                //else if frame counter between 3 and 6
+            } else if (frameCounter < 6 && frameCounter > 3) {
+                //display second sprite in animation
+                shown = sprites[2];
+                //else if frame count is more than 6
+            } else {
+                //display third sprite in animation
+                shown = sprites[1];
             }
-       
+        }
+        //display ballom
+        g2d.drawImage(shown, xPos * 4, yPos * 4, xPos * 4 + 64, yPos * 4 + 64, 0, 0, 16, 16, null);
+        //add to frame counter
+        frameCounter++;
+        //if frame counter is 8, set it to zero to restart animation
+        if (frameCounter == 8) {
+            frameCounter = 0;
+        }
+
     }
-    
+
+    /**
+     * method to load all sprites
+     */
     public void loadImages() {
-        try {    
+        try {
+            //load sprites into array
             sprites[0] = ImageIO.read(getClass().getResource("/bomberbrad/sprites/entity/enemy/ballom/l1.png"));
             sprites[1] = ImageIO.read(getClass().getResource("/bomberbrad/sprites/entity/enemy/ballom/l2.png"));
             sprites[2] = ImageIO.read(getClass().getResource("/bomberbrad/sprites/entity/enemy/ballom/l3.png"));
@@ -64,11 +95,10 @@ public class Ballom extends Enemy {
             sprites[8] = ImageIO.read(getClass().getResource("/bomberbrad/sprites/entity/enemy/ballom/die3.png"));
             sprites[9] = ImageIO.read(getClass().getResource("/bomberbrad/sprites/entity/enemy/ballom/die4.png"));
             sprites[10] = ImageIO.read(getClass().getResource("/bomberbrad/sprites/entity/enemy/ballom/die5.png"));
+            //if IOException is throw, print it.
         } catch (IOException e) {
             System.out.println("error: " + e);
         }
     }
-    
-    
-    
+
 }
