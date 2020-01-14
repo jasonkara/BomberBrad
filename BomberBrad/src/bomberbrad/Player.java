@@ -119,8 +119,9 @@ public class Player extends Entity {
             ds.playAudio("stagecomplete");
             while (ds.clip.getMicrosecondLength() != ds.clip.getMicrosecondPosition()) {}
             ds.setLevel(ds.getLevel() + 1);
-            ds.restartLevel();
             ds.setScore(ds.getScore() + ds.getTimeBonus());
+            ds.restartLevel();
+            
         }
         
         if (! dying && moving && frameCounter % 4 == 0) {

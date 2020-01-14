@@ -385,8 +385,9 @@ public class DrawingSurface extends JPanel {
             e.draw(g2d);
         }
         bonusCounter++;
-        if (bonusCounter == 20) {
+        if (bonusCounter >= 20) {
             timeBonus--;
+            bonusCounter = 0;
         }
 
     }
