@@ -106,7 +106,8 @@ public class DrawingSurface extends JPanel {
                     }
                 } else if (windowState == 2) {
                     if (k.getKeyCode() == KeyEvent.VK_SPACE) {
-                        JOptionPane.showInputDialog("Enter a username to search for.");
+                        String user = JOptionPane.showInputDialog("Enter a username to search for.");
+                        searchScores(user);
                     }
                 }
                 if (k.getKeyCode() == KeyEvent.VK_ESCAPE && windowState != 0) { // following input can happen at any time except main menu
@@ -251,6 +252,7 @@ public class DrawingSurface extends JPanel {
             detonator = false;
             addedScore = false;
             player.setLives(3);
+            score = 0;
         } else if (selectedYPos == 431) {
             windowState = 2; // go to high scores
         } else if (selectedYPos == 481) {
@@ -595,32 +597,55 @@ public class DrawingSurface extends JPanel {
     }
 
     public void score() {
-        scores = new ArrayList();
+            File f = new File(System.getProperty("user.home") + "/Documents/bomberbrad");
+            File file = new File(System.getProperty("user.home") + "/Documents/bomberbrad/scores.txt");
+            String userName;
+            int userAmount;
         try {
-            InputStream in = DrawingSurface.class.getResourceAsStream("scores.txt");
-            Scanner s = new Scanner(in);
-            int value;
-            String name;
-            Score score;
+            Scanner s = new Scanner(file);
             while (s.hasNextLine()) {
-                name = s.nextLine();
-                value = Integer.parseInt(s.nextLine());
-                score = new Score(value, name);
-                scores.add(score);
+                userName = s.nextLine();
+                userAmount = Integer.parseInt(s.nextLine());
+                scores.add(new Score(userAmount,userName));
             }
+            
 
-        } catch (NullPointerException e) {
-            System.out.println(e);
+        } catch (FileNotFoundException e) {
+            try {
+               f.mkdirs();
+               file.createNewFile();
+                PrintWriter writer = new PrintWriter(file);
+                scores.add(new Score(3000,"jsk"));
+                scores.add(new Score(2000,"ree"));
+                scores.add(new Score(1000,"rwd"));
+                for (Score s: scores) {
+                writer.print(s.getName());
+                writer.print(s.getAmount());
+                
+            }
+                writer.close();
+            } catch (FileNotFoundException u) {
+                System.out.println(u);
+            
+            } catch (IOException o) {
+                System.out.println(o);
+            }
         }
 
     }
 
     public void drawScores(Graphics2D g2d) {
         g2d.setColor(Color.white);
-
+        if (scores.size() < 5) {
         for (int i = 0; i < scores.size(); i++) {
             g2d.drawString((i + 1) + "     " + scores.get(i).getName() + "      " + scores.get(i).getAmount(), 330, 250 + (50 * i));
         }
+        } else {
+           for (int i = 0; i < 5; i++) {
+            g2d.drawString((i + 1) + "     " + scores.get(i).getName() + "      " + scores.get(i).getAmount(), 330, 250 + (50 * i));
+        } 
+        }
+        
     }
 
     public void addScores() {
@@ -630,23 +655,62 @@ public class DrawingSurface extends JPanel {
             userName = JOptionPane.showInputDialog("Invalid entry, please enter a maximum of 3 characters.\nEnter 3 characters to represent you.");
         }
         scores.add(new Score(score, userName));
-        File f = new File(System.getProperty("user.home") + "//documents//bomberbrad//scores.txt");
+        File f = new File(System.getProperty("user.home") + "/Documents/bomberbrad");
+        File file = new File(System.getProperty("user.home") + "/Documents/bomberbrad/scores.txt");
+        Score[] sorting = new Score[scores.size()];
+        for (int i = 0; i < scores.size(); i ++) {
+            sorting[i] = new Score(scores.get(i).getAmount(),scores.get(i).getName());
+        }
+        mergeSort(sorting,0,sorting.length - 1);
+        scores.clear();
+        for (int i = 0; i < sorting.length; i ++) {
+            scores.add(sorting[i]);
+        }
+        
         try {
 
-            PrintWriter writer = new PrintWriter(f);
-            writer.print("");
+            PrintWriter writer = new PrintWriter(file);
+            
+            for (Score s: scores) {
+                
+                writer.println(s.getName());
+                writer.println(s.getAmount());
+            }
             writer.close();
 
         } catch (FileNotFoundException e) {
             try {
-                f.mkdir();
-                PrintWriter writer = new PrintWriter(f);
+                f.mkdirs();
+               file.createNewFile();
+                PrintWriter writer = new PrintWriter(file);
+                for (Score s: scores) {
+                writer.print(s.getName());
+                writer.print(s.getAmount());
+                
+            }
+                writer.close();
             } catch (FileNotFoundException u) {
                 System.out.println(u);
+            
+            } catch (IOException o) {
+                System.out.println(o);
             }
 
         }
 
+    }
+    public void searchScores(String name) {
+        boolean found = false;
+        for (int i = 0; i < scores.size(); i ++) {
+            if (scores.get(i).getName().equals(name)) {
+                JOptionPane.showMessageDialog(null, name + " is first found in position " + (i + 1) + " with a score of " + scores.get(i).getAmount() + ".");
+                i = scores.size() + 1;
+                found = true;
+            }
+        }
+        if (!found) {
+            JOptionPane.showMessageDialog(null,"Name not found.");
+        }
     }
 
     public int getExitX() {
@@ -704,12 +768,12 @@ public class DrawingSurface extends JPanel {
     public void setTimeBonus(int timeBonus) {
         this.timeBonus = timeBonus;
     }
-     public static void merge(int nums[], int l, int m, int r) {
+     public static void merge(Score nums[], int l, int m, int r) {
         int i, j, k;
         int n1 = m - l + 1;
         int n2 = r - m;
-        int L[] = new int[n1];
-        int R[] = new int[n2];
+        Score L[] = new Score[n1];
+        Score R[] = new Score[n2];
         for (i = 0; i < n1; i++) {
             L[i] = nums[l + i];
         }
@@ -720,7 +784,7 @@ public class DrawingSurface extends JPanel {
         j = 0;
         k = l;
         while (i < n1 && j < n2) {
-            if (L[i] <= R[j]) {
+            if (L[i].getAmount() >= R[j].getAmount()) {
                 nums[k] = L[i];
                 i++;
             } else {
@@ -740,7 +804,7 @@ public class DrawingSurface extends JPanel {
             k++;
         }
     }
-    public static void mergeSort(int nums[],int l, int r) {
+    public static void mergeSort(Score nums[],int l, int r) {
         if (l < r) {
             int m = (l+r) / 2;
             mergeSort(nums,l,m);
