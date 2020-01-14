@@ -89,7 +89,7 @@ public class DrawingSurface extends JPanel {
                         } else if (k.getKeyCode() == KeyEvent.VK_D) {
                             moveRight = true;
                         } else if (k.getKeyCode() == KeyEvent.VK_SPACE) {
-                            if (bombs >= 1 && ! player.isDying()) {
+                            if (bombs >= 1 && ! player.isDying() && board[(player.getXPos() + 8) / 16][(player.getYPos() + 8) / 16].getOnTile() != null) {
                                 bombs --;
                                 playSE("placebomb");
                                 board[(player.getXPos() + 8) / 16][(player.getYPos() + 8) / 16].setOnTile(new Bomb((player.getXPos() + 8) / 16, (player.getYPos() + 8) / 16));
