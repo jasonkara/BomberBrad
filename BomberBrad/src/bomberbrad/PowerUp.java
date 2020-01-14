@@ -25,8 +25,11 @@ import javax.imageio.ImageIO;
 public class PowerUp extends tileObject {
     private int type;
     private static BufferedImage[] sprites = new BufferedImage[6];
-    
+    /**
+     * Load images method, loads all sprites into the sprites array
+     */
     public void loadImages() {
+        //try to load all images
         try {    
             sprites[0] = ImageIO.read(getClass().getResource("/bomberbrad/sprites/tile/power/1.png"));
             sprites[1] = ImageIO.read(getClass().getResource("/bomberbrad/sprites/tile/power/2.png"));
@@ -34,24 +37,39 @@ public class PowerUp extends tileObject {
             sprites[3] = ImageIO.read(getClass().getResource("/bomberbrad/sprites/tile/power/4.png"));
             sprites[4] = ImageIO.read(getClass().getResource("/bomberbrad/sprites/tile/power/5.png"));
             sprites[5] = ImageIO.read(getClass().getResource("/bomberbrad/sprites/tile/power/6.png"));
-            
+            //if io is thrown, print it
         } catch (IOException e) {
             System.out.println("error: " + e);
         }
     }
-    
+    /**
+     * Constructor, accepts x and y positions and a type
+     * @param xPos x position of the powerup
+     * @param yPos y position of the powerup
+     * @param type integer representing the type of powerup
+     */
     public PowerUp(int xPos, int yPos, int type) {
         super(xPos,yPos);
         this.type = type;
     }
-
+    /**
+     * Accessor method for type of powerup
+     * @return integer representing the type of power up
+     */
     public int getType() {
         return type;
     }
-
+    /**
+     * mutator method for type of powerup
+     * @param type the new integer to represent the type of powerup
+     */
     public void setType(int type) {
         this.type = type;
     }
+    /**
+     * Draw method, draws the powerup
+     * @param g2d the graphics 2d window to draw with
+     */
     public void draw(Graphics2D g2d) {
         BufferedImage shown = sprites[type - 1];
         
