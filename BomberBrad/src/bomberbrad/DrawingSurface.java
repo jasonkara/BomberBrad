@@ -35,6 +35,7 @@ public class DrawingSurface extends JPanel {
     int selectedYPos;
     int frameCounter;
     ArrayList<Enemy> enemiesList = new ArrayList();
+    ArrayList<Integer> powerUpList = new ArrayList();
     Player player = new Player(16, 16, 1);
     boolean moveDown = false, moveUp = false, moveLeft = false, moveRight = false;
     boolean playingLevel = false;
@@ -48,7 +49,7 @@ public class DrawingSurface extends JPanel {
     int bombs;
     int score;
     private int length;
-    private boolean detonator;
+    private boolean firePass;
     ArrayList<Score> scores = new ArrayList();
     boolean addedScore;
     int timeBonus;
@@ -250,10 +251,11 @@ public class DrawingSurface extends JPanel {
             level = 1;
             restartLevel();
             playingLevel = false;
+            powerUpList = new ArrayList();
             bombs = 1;
             length = 1;
             player.setSpeed(2);
-            detonator = false;
+            firePass = false;
             addedScore = false;
             player.setLives(3);
             score = 0;
@@ -272,6 +274,10 @@ public class DrawingSurface extends JPanel {
 
     public void setLength(int length) {
         this.length = length;
+    }
+
+    public ArrayList<Integer> getPowerUpList() {
+        return powerUpList;
     }
 
     @Override
@@ -305,12 +311,12 @@ public class DrawingSurface extends JPanel {
         this.board = board;
     }
 
-    public boolean hasDetonator() {
-        return detonator;
+    public boolean hasFirePass() {
+        return firePass;
     }
 
-    public void setDetonator(boolean detonator) {
-        this.detonator = detonator;
+    public void setFirePass(boolean firePass) {
+        this.firePass = firePass;
     }
 
     private void loadSprites() {
@@ -353,7 +359,7 @@ public class DrawingSurface extends JPanel {
             bombHud = ImageIO.read(getClass().getResource("/bomberbrad/sprites/tile/power/1.png"));
             lengthHud = ImageIO.read(getClass().getResource("/bomberbrad/sprites/tile/power/1.png"));
             speedHud = ImageIO.read(getClass().getResource("/bomberbrad/sprites/tile/power/1.png"));
-            detonateHud = ImageIO.read(getClass().getResource("/bomberbrad/sprites/tile/power/1.png"));
+            firePassHud = ImageIO.read(getClass().getResource("/bomberbrad/sprites/tile/power/1.png"));
             wallHud = ImageIO.read(getClass().getResource("/bomberbrad/sprites/tile/power/1.png"));
             fireHud = ImageIO.read(getClass().getResource("/bomberbrad/sprites/tile/power/1.png"));
         } catch (IOException e) {
@@ -379,7 +385,7 @@ public class DrawingSurface extends JPanel {
                 board[o][i].draw(board, g2d);
                 g2d.setColor(Color.WHITE);
                 g2d.drawString("LEVEL: " + level + "   LIVES: " + player.getLives() + "   SCORE: " + score, 40, 745);
-                //if (detonator) g2d.drawImage(detonateHud, 496, 720, 528, 752, 0, 0, 16, 16, null); powerup hud stuff -- come back to later
+                //if (firePass) g2d.drawImage(detonateHud, 496, 720, 528, 752, 0, 0, 16, 16, null); powerup hud stuff -- come back to later
             }
         }
         player.draw(g2d);
@@ -533,7 +539,6 @@ public class DrawingSurface extends JPanel {
     }
 
     public void death() {
-        detonator = false;
         player.setLives(player.getLives() - 1);
         restartLevel();
 
@@ -624,8 +629,8 @@ public class DrawingSurface extends JPanel {
                 scores.add(new Score(2000,"ree"));
                 scores.add(new Score(1000,"rwd"));
                 for (Score s: scores) {
-                writer.print(s.getName());
-                writer.print(s.getAmount());
+                writer.println(s.getName());
+                writer.println(s.getAmount());
                 
             }
                 writer.close();
@@ -689,8 +694,8 @@ public class DrawingSurface extends JPanel {
                file.createNewFile();
                 PrintWriter writer = new PrintWriter(file);
                 for (Score s: scores) {
-                writer.print(s.getName());
-                writer.print(s.getAmount());
+                writer.println(s.getName());
+                writer.println(s.getAmount());
                 
             }
                 writer.close();

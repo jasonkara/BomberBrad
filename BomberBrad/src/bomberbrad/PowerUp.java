@@ -7,7 +7,7 @@
 2 bigger bomb explosion
 3 speed
 4 go through walls
-5 detonator
+5 fire pass
 6 walk through bombs
 */
 package bomberbrad;

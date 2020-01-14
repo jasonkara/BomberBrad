@@ -130,7 +130,7 @@ public class Tile {
         if (ex != null) {
             ex.setTime(ex.getTime() - 1);
 
-            if (ds.intersecting(xPos * 16, yPos * 16, ds.getPlayer().getXPos(),ds.getPlayer().getYPos()) && ! ds.getPlayer().isDying()) {
+            if (ds.intersecting(xPos * 16, yPos * 16, ds.getPlayer().getXPos(),ds.getPlayer().getYPos()) && ! ds.getPlayer().isDying() && ! ds.hasFirePass()) {
                 ds.clip.stop();
                 ds.playAudio("die");
                 ds.getPlayer().setFrameCounter(0);
@@ -194,6 +194,7 @@ public class Tile {
             if (ds.intersecting(xPos * 16, yPos * 16, ds.getPlayer().getXPos(),ds.getPlayer().getYPos())) {
                 ds.playSE("powerup");
                 ds.setScore(ds.getScore() + 200);
+                ds.getPowerUpList().add(((PowerUp)(onTile)).getType());
                 switch(((PowerUp)(onTile)).getType()){
             case 1:
                 ds.setBombs(ds.getBombs() + 1);
@@ -213,8 +214,8 @@ public class Tile {
                 //go through walls
                 break;
             case 5:
-                ds.setDetonator(true);
-                //detonator
+                ds.setFirePass(true);
+                //firePass
             case 6:
                 ds.getPlayer().addWalkable(Bomb.class);
                 //walk through bombs
