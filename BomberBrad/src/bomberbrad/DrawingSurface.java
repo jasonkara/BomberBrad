@@ -159,10 +159,10 @@ public class DrawingSurface extends JPanel {
             g2d.drawImage(menuImg,112,100,848,252,0,0,368,76,null);
         } else if (windowState == 1) { // main game
             if (player.getLives() < 1) {
-                g2d.drawString("Press ESC to return to the menu", 270, 500);
+                g2d.drawString("Press ESC to return to the menu", 300, 500);
                 g2d.setFont(new Font("Arial", Font.BOLD, 64));
                 g2d.setColor(Color.RED);
-                g2d.drawString("Game Over!", 270, 300);
+                g2d.drawString("Game Over!", 300, 300);
                 if (addedScore == false) {
                     addedScore = true;
                     addScores();
@@ -174,23 +174,39 @@ public class DrawingSurface extends JPanel {
                     frameCounter = 1;
                 }
             } else {
-                if (playingLevel) {
-                    mainGame(g2d);
-                } else {
+                if (level == 11) {
                     if (frameCounter == 0) {
-                        g2d.drawString("Level " + level, 400, 340);
-                        g2d.drawString("Lives: " + player.getLives(), 420, 410);
-                        g2d.drawImage(lifeSprite, 370, 385, 402, 417, 0, 0, 16, 16, null);
+                        clip.stop();
+                        playAudio("ending");
                         frameCounter = 1;
-                        clip.stop();
-                        playAudio("stagestart");
+                        addScores();
+                    }
+                    g2d.drawString("You have recovered the tests from the evil Schaeffer", 180, 100);
+                    g2d.drawString("Report cards can go out on time", 290, 150);
+                    g2d.drawString("Your job is saved", 375, 200);
+                    g2d.drawString("Press ESC to return to the menu", 300, 650);
+                    g2d.setFont(new Font("Arial", Font.BOLD, 64));
+                    g2d.drawString("You Win!", 340, 400);
+                    //g2d.setFont
+                } else {
+                    if (playingLevel) {
+                        mainGame(g2d);
                     } else {
-                        while (clip.getMicrosecondLength() != clip.getMicrosecondPosition()) {
+                        if (frameCounter == 0) {
+                            g2d.drawString("Level " + level, 400, 340);
+                            g2d.drawString("Lives: " + player.getLives(), 420, 410);
+                            g2d.drawImage(lifeSprite, 370, 385, 402, 417, 0, 0, 16, 16, null);
+                            frameCounter = 1;
+                            clip.stop();
+                            playAudio("stagestart");
+                        } else {
+                            while (clip.getMicrosecondLength() != clip.getMicrosecondPosition()) {
+                            }
+                            clip.stop();
+                            playAudio("stage");
+                            clip.loop(clip.LOOP_CONTINUOUSLY);
+                            playingLevel = true;
                         }
-                        clip.stop();
-                        playAudio("stage");
-                        clip.loop(clip.LOOP_CONTINUOUSLY);
-                        playingLevel = true;
                     }
                 }
             }
@@ -396,7 +412,7 @@ public class DrawingSurface extends JPanel {
         }
         bonusCounter++;
         if (bonusCounter >= 20) {
-            timeBonus--;
+            if (timeBonus > 0) timeBonus--;
             bonusCounter = 0;
         }
 
