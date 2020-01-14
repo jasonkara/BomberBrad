@@ -21,13 +21,13 @@ import javax.swing.JPanel;
 import javax.swing.Timer;
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.InputStream;
 import java.io.PrintWriter;
 import java.util.Scanner;
 import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.Clip;
 import javax.swing.JOptionPane;
+import javax.swing.UIManager;
 
 public class DrawingSurface extends JPanel {
 
@@ -53,6 +53,7 @@ public class DrawingSurface extends JPanel {
     boolean addedScore;
     int timeBonus;
     int bonusCounter;
+    UIManager ui = new UIManager();
 
     public DrawingSurface() {
 
@@ -106,7 +107,7 @@ public class DrawingSurface extends JPanel {
                     }
                 } else if (windowState == 2) {
                     if (k.getKeyCode() == KeyEvent.VK_SPACE) {
-                        String user = JOptionPane.showInputDialog("Enter a username to search for.");
+                        String user = JOptionPane.showInputDialog(null, "Enter a username to search for.", "Search", JOptionPane.PLAIN_MESSAGE);
                         searchScores(user);
                     }
                 }
@@ -122,6 +123,9 @@ public class DrawingSurface extends JPanel {
         });
 
         //printBoard(board);
+        ui.put("OptionPane.background", Color.BLACK);
+        ui.put("Panel.background", Color.BLACK);
+        ui.put("OptionPane.messageForeground", Color.white);
         score();
         timer = new Timer(50, al);
         timer.start();
@@ -651,9 +655,9 @@ public class DrawingSurface extends JPanel {
 
     public void addScores() {
         String userName;
-        userName = JOptionPane.showInputDialog("Enter 3 characters to represent you.");
+        userName = JOptionPane.showInputDialog(null, "Enter 3 characters to represent you.", "Submit Score", JOptionPane.PLAIN_MESSAGE);
         while (userName.length() > 3) {
-            userName = JOptionPane.showInputDialog("Invalid entry, please enter a maximum of 3 characters.\nEnter 3 characters to represent you.");
+            userName = JOptionPane.showInputDialog(null, "Invalid entry, please enter a maximum of 3 characters.\nEnter 3 characters to represent you.", "ERROR", JOptionPane.PLAIN_MESSAGE);
         }
         scores.add(new Score(score, userName));
         File f = new File(System.getProperty("user.home") + "/Documents/BomberBrad");
@@ -704,13 +708,13 @@ public class DrawingSurface extends JPanel {
         boolean found = false;
         for (int i = 0; i < scores.size(); i ++) {
             if (scores.get(i).getName().equals(name)) {
-                JOptionPane.showMessageDialog(null, name + " is first found in position " + (i + 1) + " with a score of " + scores.get(i).getAmount() + ".");
+                JOptionPane.showMessageDialog(null, name + " is first found in position " + (i + 1) + " with a score of " + scores.get(i).getAmount() + ".", "Search Results", JOptionPane.PLAIN_MESSAGE);
                 i = scores.size() + 1;
                 found = true;
             }
         }
         if (!found) {
-            JOptionPane.showMessageDialog(null,"Name not found.");
+            JOptionPane.showMessageDialog(null,"Name not found.", "Search Results", JOptionPane.PLAIN_MESSAGE);
         }
     }
 
