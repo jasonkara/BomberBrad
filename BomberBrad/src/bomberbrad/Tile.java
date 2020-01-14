@@ -212,6 +212,7 @@ public class Tile {
             case 4:
                 ds.getPlayer().addWalkable(Block.class);
                 //go through walls
+                ds.setWallPass(true);
                 break;
             case 5:
                 ds.setFirePass(true);
@@ -219,6 +220,7 @@ public class Tile {
             case 6:
                 ds.getPlayer().addWalkable(Bomb.class);
                 //walk through bombs
+                ds.setBombPass(true);
         }
                 onTile = null;
             }

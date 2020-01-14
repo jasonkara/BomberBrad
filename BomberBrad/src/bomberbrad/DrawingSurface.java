@@ -46,7 +46,7 @@ public class DrawingSurface extends JPanel {
     Timer timer;
     int exitX, exitY;
     int level;
-    int bombs;
+    int bombs, maxBombs;
     int score;
     private int length;
     private boolean firePass;
@@ -54,7 +54,9 @@ public class DrawingSurface extends JPanel {
     boolean addedScore;
     int timeBonus;
     int bonusCounter;
+    boolean bombPass, wallPass;
     UIManager ui = new UIManager();
+    BufferedImage bombHud = null, lengthHud = null, speedHud = null, bombpassHud = null, wallHud = null, fireHud = null;
 
     public DrawingSurface() {
 
@@ -89,8 +91,8 @@ public class DrawingSurface extends JPanel {
                         } else if (k.getKeyCode() == KeyEvent.VK_D) {
                             moveRight = true;
                         } else if (k.getKeyCode() == KeyEvent.VK_SPACE) {
-                            if (bombs >= 1 && ! player.isDying() && board[(player.getXPos() + 8) / 16][(player.getYPos() + 8) / 16].getOnTile() == null) {
-                                bombs --;
+                            if (bombs >= 1 && !player.isDying() && board[(player.getXPos() + 8) / 16][(player.getYPos() + 8) / 16].getOnTile() == null) {
+                                bombs--;
                                 playSE("placebomb");
                                 board[(player.getXPos() + 8) / 16][(player.getYPos() + 8) / 16].setOnTile(new Bomb((player.getXPos() + 8) / 16, (player.getYPos() + 8) / 16));
                             }
@@ -107,12 +109,12 @@ public class DrawingSurface extends JPanel {
                         }
                     }
                 } else if (windowState == 2) {
-                    if (k.getKeyCode() == KeyEvent.VK_SPACE) {
+                    if (k.getKeyCode() == KeyEvent.VK_SPACE && k.getID() == KeyEvent.KEY_RELEASED) {
                         String user = JOptionPane.showInputDialog(null, "Enter a username to search for.", "Search", JOptionPane.PLAIN_MESSAGE);
                         searchScores(user);
                     }
                 }
-                if (k.getKeyCode() == KeyEvent.VK_ESCAPE && windowState != 0) { // following input can happen at any time except main menu
+                if (k.getKeyCode() == KeyEvent.VK_ESCAPE && windowState != 0 && !player.isDying()) { // following input can happen at any time except main menu
                     if (windowState == 1) {
                         clip.stop();
                         playAudio("title"); // plays the title music again only if coming from main game
@@ -155,8 +157,8 @@ public class DrawingSurface extends JPanel {
             g2d.setFont(new Font("Arial", Font.BOLD, 16));
 
             g2d.drawString("© 2020 DKP Studios", 370, 650);
-            g2d.fillPolygon(new int[] {350, 350, 360}, new int[] {selectedYPos, selectedYPos + 20, selectedYPos + 10}, 3);
-            g2d.drawImage(menuImg,112,100,848,252,0,0,368,76,null);
+            g2d.fillPolygon(new int[]{350, 350, 360}, new int[]{selectedYPos, selectedYPos + 20, selectedYPos + 10}, 3);
+            g2d.drawImage(menuImg, 112, 100, 848, 252, 0, 0, 368, 76, null);
         } else if (windowState == 1) { // main game
             if (player.getLives() < 1) {
                 g2d.drawString("Press ESC to return to the menu", 300, 500);
@@ -211,7 +213,7 @@ public class DrawingSurface extends JPanel {
                 }
             }
         } else if (windowState == 2) { // high scores
-
+            g2d.drawString("Press SPACE to search for a high score", 260, 650);
             g2d.setFont(new Font("Arial", Font.BOLD, 32));
             g2d.drawString("High Scores", 380, 100);
             g2d.setFont(new Font("Monospaced", Font.BOLD, 24));
@@ -269,10 +271,13 @@ public class DrawingSurface extends JPanel {
             playingLevel = false;
             powerUpList = new ArrayList();
             bombs = 1;
+            maxBombs = 1;
             length = 1;
             player.setSpeed(2);
             firePass = false;
             addedScore = false;
+            bombPass = false;
+            wallPass = false;
             player.setLives(3);
             score = 0;
         } else if (selectedYPos == 431) {
@@ -367,20 +372,18 @@ public class DrawingSurface extends JPanel {
         Ghost g = new Ghost(0, 0, 0);
         g.loadImages();
         g = null;
+        try {
+            bombHud = ImageIO.read(getClass().getResource("/bomberbrad/sprites/tile/power/1.png"));
+            lengthHud = ImageIO.read(getClass().getResource("/bomberbrad/sprites/tile/power/2.png"));
+            speedHud = ImageIO.read(getClass().getResource("/bomberbrad/sprites/tile/power/3.png"));
+            wallHud = ImageIO.read(getClass().getResource("/bomberbrad/sprites/tile/power/4.png"));
+            fireHud = ImageIO.read(getClass().getResource("/bomberbrad/sprites/tile/power/5.png"));
+            bombpassHud = ImageIO.read(getClass().getResource("/bomberbrad/sprites/tile/power/6.png"));
+        } catch (IOException error) {
+        }
     }
 
     private void mainGame(Graphics2D g2d) {
-        /*BufferedImage bombHud = null, lengthHud = null, speedHud = null, detonateHud = null, wallHud = null, fireHud = null;
-        try {
-            bombHud = ImageIO.read(getClass().getResource("/bomberbrad/sprites/tile/power/1.png"));
-            lengthHud = ImageIO.read(getClass().getResource("/bomberbrad/sprites/tile/power/1.png"));
-            speedHud = ImageIO.read(getClass().getResource("/bomberbrad/sprites/tile/power/1.png"));
-            firePassHud = ImageIO.read(getClass().getResource("/bomberbrad/sprites/tile/power/1.png"));
-            wallHud = ImageIO.read(getClass().getResource("/bomberbrad/sprites/tile/power/1.png"));
-            fireHud = ImageIO.read(getClass().getResource("/bomberbrad/sprites/tile/power/1.png"));
-        } catch (IOException e) {
-            g2d.drawString("Error: " + e, 10, 10);
-        } powerup hud stuff*/
         player.setMoving(false);
         if (moveUp || moveDown || moveLeft || moveRight) {
             if (moveDown) {
@@ -400,10 +403,24 @@ public class DrawingSurface extends JPanel {
                 board[o][i].update(this);
                 board[o][i].draw(board, g2d);
                 g2d.setColor(Color.WHITE);
-                g2d.drawString("LEVEL: " + level + "   LIVES: " + player.getLives() + "   SCORE: " + score, 40, 745);
-                //if (firePass) g2d.drawImage(detonateHud, 496, 720, 528, 752, 0, 0, 16, 16, null); powerup hud stuff -- come back to later
             }
         }
+        g2d.drawString("LEVEL: " + level + "   LIVES: " + player.getLives() + "   SCORE: " + score, 40, 745);
+        if (firePass) {
+            g2d.drawImage(fireHud, 496, 720, 528, 752, 0, 0, 16, 16, null);
+        }
+        if (player.getSpeed() == 4) {
+            g2d.drawImage(speedHud, 536, 720, 568, 752, 0, 0, 16, 16, null);
+        }
+        if (bombPass) {
+            g2d.drawImage(bombpassHud, 576, 720, 608, 752, 0, 0, 16, 16, null);
+        }
+        if (wallPass) {
+            g2d.drawImage(wallHud, 616, 720, 648, 752, 0, 0, 16, 16, null);
+        }
+        g2d.drawImage(bombHud, 696, 720, 728, 752, 0, 0, 16, 16, null);
+        g2d.drawImage(lengthHud, 816, 720, 848, 752, 0, 0, 16, 16, null);
+        g2d.drawString("x " + maxBombs + "             x " + length, 737, 745);
         player.draw(g2d);
 
         for (Enemy e : enemiesList) {
@@ -412,7 +429,9 @@ public class DrawingSurface extends JPanel {
         }
         bonusCounter++;
         if (bonusCounter >= 20) {
-            if (timeBonus > 0) timeBonus--;
+            if (timeBonus > 0) {
+                timeBonus--;
+            }
             bonusCounter = 0;
         }
 
@@ -453,8 +472,8 @@ public class DrawingSurface extends JPanel {
                 board[i][o] = new Tile(i, o, new Block(i, o, null, false));
             }
         }
-        board[1][3] = new Tile(1,3,new Block(1,3,null,true));
-        board[3][1] = new Tile(3,1,new Block(3,1,null,true));
+        board[1][3] = new Tile(1, 3, new Block(1, 3, null, true));
+        board[3][1] = new Tile(3, 1, new Block(3, 1, null, true));
         //creating random variable to choose random positions
         int random;
         //creating arraylist of possible positions for breakable blocks, 
@@ -564,6 +583,7 @@ public class DrawingSurface extends JPanel {
 
     public void restartLevel() {
 
+        bombs = maxBombs;
         enemiesList = new ArrayList();
         //windowState = 0;
         timeBonus = 240;
@@ -625,36 +645,35 @@ public class DrawingSurface extends JPanel {
     }
 
     public void score() {
-            File f = new File(System.getProperty("user.home") + "/Documents/BomberBrad");
-            File file = new File(System.getProperty("user.home") + "/Documents/BomberBrad/scores.txt");
-            String userName;
-            int userAmount;
+        File f = new File(System.getProperty("user.home") + "/Documents/BomberBrad");
+        File file = new File(System.getProperty("user.home") + "/Documents/BomberBrad/scores.txt");
+        String userName;
+        int userAmount;
         try {
             Scanner s = new Scanner(file);
             while (s.hasNextLine()) {
                 userName = s.nextLine();
                 userAmount = Integer.parseInt(s.nextLine());
-                scores.add(new Score(userAmount,userName));
+                scores.add(new Score(userAmount, userName));
             }
-            
 
         } catch (FileNotFoundException e) {
             try {
-               f.mkdirs();
-               file.createNewFile();
+                f.mkdirs();
+                file.createNewFile();
                 PrintWriter writer = new PrintWriter(file);
-                scores.add(new Score(3000,"jsk"));
-                scores.add(new Score(2000,"ree"));
-                scores.add(new Score(1000,"rwd"));
-                for (Score s: scores) {
-                writer.println(s.getName());
-                writer.println(s.getAmount());
-                
-            }
+                scores.add(new Score(3000, "jsk"));
+                scores.add(new Score(2000, "ree"));
+                scores.add(new Score(1000, "rwd"));
+                for (Score s : scores) {
+                    writer.println(s.getName());
+                    writer.println(s.getAmount());
+
+                }
                 writer.close();
             } catch (FileNotFoundException u) {
                 System.out.println(u);
-            
+
             } catch (IOException o) {
                 System.out.println(o);
             }
@@ -665,15 +684,15 @@ public class DrawingSurface extends JPanel {
     public void drawScores(Graphics2D g2d) {
         g2d.setColor(Color.white);
         if (scores.size() < 5) {
-        for (int i = 0; i < scores.size(); i++) {
-            g2d.drawString((i + 1) + "     " + scores.get(i).getName() + "      " + scores.get(i).getAmount(), 330, 250 + (50 * i));
-        }
+            for (int i = 0; i < scores.size(); i++) {
+                g2d.drawString((i + 1) + "     " + scores.get(i).getName() + "      " + scores.get(i).getAmount(), 330, 250 + (50 * i));
+            }
         } else {
-           for (int i = 0; i < 5; i++) {
-            g2d.drawString((i + 1) + "     " + scores.get(i).getName() + "      " + scores.get(i).getAmount(), 330, 250 + (50 * i));
-        } 
+            for (int i = 0; i < 5; i++) {
+                g2d.drawString((i + 1) + "     " + scores.get(i).getName() + "      " + scores.get(i).getAmount(), 330, 250 + (50 * i));
+            }
         }
-        
+
     }
 
     public void addScores() {
@@ -686,21 +705,21 @@ public class DrawingSurface extends JPanel {
         File f = new File(System.getProperty("user.home") + "/Documents/BomberBrad");
         File file = new File(System.getProperty("user.home") + "/Documents/BomberBrad/scores.txt");
         Score[] sorting = new Score[scores.size()];
-        for (int i = 0; i < scores.size(); i ++) {
-            sorting[i] = new Score(scores.get(i).getAmount(),scores.get(i).getName());
+        for (int i = 0; i < scores.size(); i++) {
+            sorting[i] = new Score(scores.get(i).getAmount(), scores.get(i).getName());
         }
-        mergeSort(sorting,0,sorting.length - 1);
+        mergeSort(sorting, 0, sorting.length - 1);
         scores.clear();
-        for (int i = 0; i < sorting.length; i ++) {
+        for (int i = 0; i < sorting.length; i++) {
             scores.add(sorting[i]);
         }
-        
+
         try {
 
             PrintWriter writer = new PrintWriter(file);
-            
-            for (Score s: scores) {
-                
+
+            for (Score s : scores) {
+
                 writer.println(s.getName());
                 writer.println(s.getAmount());
             }
@@ -709,17 +728,17 @@ public class DrawingSurface extends JPanel {
         } catch (FileNotFoundException e) {
             try {
                 f.mkdirs();
-               file.createNewFile();
+                file.createNewFile();
                 PrintWriter writer = new PrintWriter(file);
-                for (Score s: scores) {
-                writer.println(s.getName());
-                writer.println(s.getAmount());
-                
-            }
+                for (Score s : scores) {
+                    writer.println(s.getName());
+                    writer.println(s.getAmount());
+
+                }
                 writer.close();
             } catch (FileNotFoundException u) {
                 System.out.println(u);
-            
+
             } catch (IOException o) {
                 System.out.println(o);
             }
@@ -727,9 +746,10 @@ public class DrawingSurface extends JPanel {
         }
 
     }
+
     public void searchScores(String name) {
         boolean found = false;
-        for (int i = 0; i < scores.size(); i ++) {
+        for (int i = 0; i < scores.size(); i++) {
             if (scores.get(i).getName().equals(name)) {
                 JOptionPane.showMessageDialog(null, name + " is first found in position " + (i + 1) + " with a score of " + scores.get(i).getAmount() + ".", "Search Results", JOptionPane.PLAIN_MESSAGE);
                 i = scores.size() + 1;
@@ -737,7 +757,7 @@ public class DrawingSurface extends JPanel {
             }
         }
         if (!found) {
-            JOptionPane.showMessageDialog(null,"Name not found.", "Search Results", JOptionPane.PLAIN_MESSAGE);
+            JOptionPane.showMessageDialog(null, "Name not found.", "Search Results", JOptionPane.PLAIN_MESSAGE);
         }
     }
 
@@ -771,6 +791,7 @@ public class DrawingSurface extends JPanel {
 
     public void setBombs(int bombs) {
         this.bombs = bombs;
+        maxBombs = bombs;
     }
 
     public Player getPlayer() {
@@ -793,10 +814,27 @@ public class DrawingSurface extends JPanel {
         return timeBonus;
     }
 
+    public boolean isBombPass() {
+        return bombPass;
+    }
+
+    public void setBombPass(boolean bombPass) {
+        this.bombPass = bombPass;
+    }
+
+    public boolean isWallPass() {
+        return wallPass;
+    }
+
+    public void setWallPass(boolean wallPass) {
+        this.wallPass = wallPass;
+    }
+
     public void setTimeBonus(int timeBonus) {
         this.timeBonus = timeBonus;
     }
-     public static void merge(Score nums[], int l, int m, int r) {
+
+    public static void merge(Score nums[], int l, int m, int r) {
         int i, j, k;
         int n1 = m - l + 1;
         int n2 = r - m;
@@ -832,12 +870,13 @@ public class DrawingSurface extends JPanel {
             k++;
         }
     }
-    public static void mergeSort(Score nums[],int l, int r) {
+
+    public static void mergeSort(Score nums[], int l, int r) {
         if (l < r) {
-            int m = (l+r) / 2;
-            mergeSort(nums,l,m);
-            mergeSort(nums,m + 1, r);
-            merge(nums,l,m,r);
+            int m = (l + r) / 2;
+            mergeSort(nums, l, m);
+            mergeSort(nums, m + 1, r);
+            merge(nums, l, m, r);
         }
     }
 
