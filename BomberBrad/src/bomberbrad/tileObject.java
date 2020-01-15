@@ -12,7 +12,11 @@ import java.awt.Graphics2D;
 public abstract class tileObject {
     protected int xPos;
     protected int yPos;
-    
+    /**
+     * Constructor, accepts x and y locations
+     * @param xLoc x location
+     * @param yLoc y location
+     */
     public tileObject(int xLoc, int yLoc) {
         xPos = xLoc;
         yPos = yLoc;
@@ -46,5 +50,9 @@ public abstract class tileObject {
     public void setyPos(int yPos) {
         this.yPos = yPos;
     }
+    /**
+     * Abstract draw method, all tile objects need a draw method
+     * @param g2d 2d graphics object to draw with
+     */
     abstract public void draw(Graphics2D g2d);
 }
