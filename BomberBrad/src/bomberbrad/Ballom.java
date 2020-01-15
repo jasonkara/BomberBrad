@@ -1,7 +1,7 @@
 /**
  * DKP Studios 
  * 2020-01-14
- * Class that represents the Balloom
+ * Class that represents the Ballom
  */
 package bomberbrad;
 
@@ -9,7 +9,6 @@ import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import javax.imageio.ImageIO;
-import javax.swing.JOptionPane;
 
 public class Ballom extends Enemy {
 
@@ -18,7 +17,6 @@ public class Ballom extends Enemy {
 
     /**
      * Constructor, accepts x and y position and direction
-     *
      * @param xPos x position
      * @param yPos y position
      * @param direction direction the ballom is facing
@@ -41,29 +39,29 @@ public class Ballom extends Enemy {
         if (direction <= 2) {
             //if frame counter is less than 2
             if (frameCounter < 2) {
-                //show appropriate sprite
+                //show first sprite in animation cycle
                 shown = sprites[3];
                 //else if frame counter is between 6 and an 3
             } else if (frameCounter < 6 && frameCounter > 3) {
-                //display second sprite in animation
+               //display third sprite in animation cycle
                 shown = sprites[5];
             } else {
-                //else show final sprite in animation
+                //else show second/fourth sprite in animation cycle
                 shown = sprites[4];
             }
             //else direction must be down or left
         } else {
             //if first two frames
             if (frameCounter < 2) {
-                //display appropriate sprite
+                //show first sprite in animation cycle
                 shown = sprites[0];
                 //else if frame counter between 3 and 6
             } else if (frameCounter < 6 && frameCounter > 3) {
-                //display second sprite in animation
+                //display third sprite in animation cycle
                 shown = sprites[2];
                 //else if frame count is more than 6
             } else {
-                //display third sprite in animation
+                //else show second/fourth sprite in animation cycle
                 shown = sprites[1];
             }
         }
@@ -95,7 +93,7 @@ public class Ballom extends Enemy {
             sprites[8] = ImageIO.read(getClass().getResource("/bomberbrad/sprites/entity/enemy/ballom/die3.png"));
             sprites[9] = ImageIO.read(getClass().getResource("/bomberbrad/sprites/entity/enemy/ballom/die4.png"));
             sprites[10] = ImageIO.read(getClass().getResource("/bomberbrad/sprites/entity/enemy/ballom/die5.png"));
-            //if IOException is throw, print it.
+            //if IOException is thrown, print it.
         } catch (IOException e) {
             System.out.println("error: " + e);
         }

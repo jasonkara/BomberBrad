@@ -1,6 +1,7 @@
 /**
- * DKP Studios (Jason)
- * JPanel that displays game graphics
+ * DKP Studios 
+ * 2020-01-14
+ * JPanel that displays game graphics, contains most game logic
  */
 package bomberbrad;
 
@@ -58,64 +59,70 @@ public class DrawingSurface extends JPanel {
     UIManager ui = new UIManager();
     BufferedImage bombHud = null, lengthHud = null, speedHud = null, bombpassHud = null, wallHud = null, fireHud = null;
 
+    /**
+     * constructor for DrawingSurface - things that happen when program is started
+     */
     public DrawingSurface() {
 
         ActionListener al = new ActionListener() {
-            public void actionPerformed(ActionEvent ae) {
-                repaint();
+            public void actionPerformed(ActionEvent ae) { 
+                repaint(); // sets up ActionListener to redraw the screen along with the timer
             }
         };
-        windowState = 0;
-        selectedYPos = 381;
-        KeyboardFocusManager.getCurrentKeyboardFocusManager().addKeyEventDispatcher(new KeyEventDispatcher() {
+        windowState = 0; // sets default window state (main menu)
+        selectedYPos = 381; // sets default position for cursor on main menu (next to "Start Game")
+        KeyboardFocusManager.getCurrentKeyboardFocusManager().addKeyEventDispatcher(new KeyEventDispatcher() { // manager for keyboard input
             @Override
             public boolean dispatchKeyEvent(KeyEvent k) {
                 if (windowState == 0) { // keyboard inputs for main menu
-                    if (k.getID() == KeyEvent.KEY_PRESSED) { // stuff that happens when a key is pressed
-                        if (k.getKeyCode() == KeyEvent.VK_W) {
-                            updateMenuSelectedYPos(-1);
-                        } else if (k.getKeyCode() == KeyEvent.VK_S) {
-                            updateMenuSelectedYPos(1);
-                        } else if (k.getKeyCode() == KeyEvent.VK_ENTER) {
-                            getSelected();
+                    if (k.getID() == KeyEvent.KEY_PRESSED) { // if a key is pressed...
+                        if (k.getKeyCode() == KeyEvent.VK_W) { // if the key pressed is W...
+                            updateMenuSelectedYPos(-1); // move the cursor up one selection
+                        } else if (k.getKeyCode() == KeyEvent.VK_S) { // if the key pressed is S...
+                            updateMenuSelectedYPos(1); // move the cursor down one selection
+                        } else if (k.getKeyCode() == KeyEvent.VK_ENTER) { // if the key pressed is enter...
+                            getSelected(); // select the chosen option
                         }
                     }
-                } else if (windowState == 1) { // main game
-                    if (k.getID() == KeyEvent.KEY_PRESSED) { // stuff that happens when a key is pressed
-                        if (k.getKeyCode() == KeyEvent.VK_W) {
-                            moveUp = true;
-                        } else if (k.getKeyCode() == KeyEvent.VK_S) {
-                            moveDown = true;
-                        } else if (k.getKeyCode() == KeyEvent.VK_A) {
-                            moveLeft = true;
-                        } else if (k.getKeyCode() == KeyEvent.VK_D) {
-                            moveRight = true;
-                        } else if (k.getKeyCode() == KeyEvent.VK_SPACE) {
+                } else if (windowState == 1) { // keyboard inputs for main game
+                    if (k.getID() == KeyEvent.KEY_PRESSED) { // if a key is pressed...
+                        if (k.getKeyCode() == KeyEvent.VK_W) { // if the key is W...
+                            moveUp = true; // start moving the player up
+                        } else if (k.getKeyCode() == KeyEvent.VK_S) { // if the key is S...
+                            moveDown = true; // start moving the player down
+                        } else if (k.getKeyCode() == KeyEvent.VK_A) { // if the key is A...
+                            moveLeft = true; // start moving the player left
+                        } else if (k.getKeyCode() == KeyEvent.VK_D) { // if the key is D...
+                            moveRight = true; // start moving the player right
+                        } else if (k.getKeyCode() == KeyEvent.VK_SPACE) { // if the key is space...
+                            // if the player has bombs left to place, is not dying, and is on an empty space...
                             if (bombs >= 1 && !player.isDying() && board[(player.getXPos() + 8) / 16][(player.getYPos() + 8) / 16].getOnTile() == null) {
-                                bombs--;
+                                bombs--; // decrement no. of bombs left to place
                                 playSE("placebomb"); // plays sound effect for placing a bomb
+                                // place a bomb on the tile where the player is standing
                                 board[(player.getXPos() + 8) / 16][(player.getYPos() + 8) / 16].setOnTile(new Bomb((player.getXPos() + 8) / 16, (player.getYPos() + 8) / 16));
                             }
                         }
-                    } else if (k.getID() == KeyEvent.KEY_RELEASED) { // stuff that happens when a key is released
-                        if (k.getKeyCode() == KeyEvent.VK_W) {
-                            moveUp = false;
-                        } else if (k.getKeyCode() == KeyEvent.VK_S) {
-                            moveDown = false;
-                        } else if (k.getKeyCode() == KeyEvent.VK_A) {
-                            moveLeft = false;
-                        } else if (k.getKeyCode() == KeyEvent.VK_D) {
-                            moveRight = false;
+                    } else if (k.getID() == KeyEvent.KEY_RELEASED) { // if a key is released...
+                        if (k.getKeyCode() == KeyEvent.VK_W) { // if the key is W...
+                            moveUp = false; // stop moving the player up
+                        } else if (k.getKeyCode() == KeyEvent.VK_S) { // if the key is A...
+                            moveDown = false; // stop moving the player down
+                        } else if (k.getKeyCode() == KeyEvent.VK_A) { // if the key is S...
+                            moveLeft = false; // stop moving the player left
+                        } else if (k.getKeyCode() == KeyEvent.VK_D) { // if the key is D...
+                            moveRight = false; // stop moving the player right
                         }
                     }
-                } else if (windowState == 2) {
-                    if (k.getKeyCode() == KeyEvent.VK_SPACE && k.getID() == KeyEvent.KEY_RELEASED) {
+                } else if (windowState == 2) { // keyboard inputs for high scores menu
+                    if (k.getKeyCode() == KeyEvent.VK_SPACE && k.getID() == KeyEvent.KEY_RELEASED) { // if the space key is released...
+                        // prompt user for username to search for
                         String user = JOptionPane.showInputDialog(null, "Enter a username to search for.", "Search", JOptionPane.PLAIN_MESSAGE);
-                        searchScores(user);
+                        searchScores(user); // search the scores for that user and display the result
                     }
                 }
                 if (k.getKeyCode() == KeyEvent.VK_ESCAPE && windowState != 0 && !player.isDying()) { // following input can happen at any time except main menu
-                    if (windowState == 1) {
+                    if (windowState == 1) { // if the user is in the main game...
                         clip.stop(); // stops other background music
                         playAudio("title"); // plays the title music again only if coming from main game
                     }
@@ -125,80 +132,82 @@ public class DrawingSurface extends JPanel {
             }
         });
 
-        //printBoard(board);
         ui.put("OptionPane.background", Color.BLACK);
         ui.put("Panel.background", Color.BLACK);
-        ui.put("OptionPane.messageForeground", Color.white);
-        score();
-        timer = new Timer(50, al);
-        timer.start();
+        ui.put("OptionPane.messageForeground", Color.white); // adjusts visuals of JOptionPane popups to better match the program
+        score(); // sets up/accesses data file containing high scores
+        timer = new Timer(50, al); 
+        timer.start(); // instantiates and starts a timer that ticks every 50 milliseconds (goes along with above ActionListener that redraws game screen)
         playAudio("title"); // plays title music for main menu
-        loadSprites();
+        loadSprites(); // loads all sprites
     }
 
+    /**
+     * method that is called every frame to update what is on screen
+     * @param g graphics object used to draw the screen
+     */
     private void doDrawing(Graphics g) {
+        // following things are drawn regardless of which part of the program you're in (main menu, game, high scores, credits)
         Graphics2D g2d = (Graphics2D) g;
         g2d.setColor(Color.BLACK);
-        g2d.fillRect(0, 0, 960, 776);
+        g2d.fillRect(0, 0, 960, 776); // black rectangle covering entire screen to serve as background
         g2d.setColor(Color.WHITE);
-        g2d.setFont(new Font("Arial", Font.BOLD, 24));
+        g2d.setFont(new Font("Arial", Font.BOLD, 24)); // standard white font to be used for text throughout the program
         BufferedImage menuImg = null, lifeSprite = null;
-        try {
+        try { // tries to load images to use on main menu and level introduction
             menuImg = ImageIO.read(getClass().getResource("/bomberbrad/menulogo.png"));
             lifeSprite = ImageIO.read(getClass().getResource("/bomberbrad/sprites/entity/player/r1.png"));
-        } catch (IOException e) {
-            g2d.drawString("Error: " + e, 10, 10);
+        } catch (IOException e) { // if the files for the images aren't found...
+            g2d.drawString("Error: " + e, 10, 10); // display error message
         }
         if (windowState == 0) { // main menu
             g2d.drawString("Start Game", 370, 400);
             g2d.drawString("High Scores", 370, 450);
             g2d.drawString("Credits", 370, 500);
-            g2d.drawString("Exit", 370, 550);
+            g2d.drawString("Exit", 370, 550); // draws selectable options
             g2d.setFont(new Font("Arial", Font.BOLD, 16));
-
-            g2d.drawString("© 2020 DKP Studios", 370, 650);
+            g2d.drawString("© 2020 DKP Studios", 370, 650); // draws copyright information in smaller text
+            // draws triangle to represent cursor next to currently selected options
             g2d.fillPolygon(new int[]{350, 350, 360}, new int[]{selectedYPos, selectedYPos + 20, selectedYPos + 10}, 3);
-            g2d.drawImage(menuImg, 112, 100, 848, 252, 0, 0, 368, 76, null);
+            g2d.drawImage(menuImg, 112, 100, 848, 252, 0, 0, 368, 76, null); // draws game logo at top of screen
         } else if (windowState == 1) { // main game
-            if (player.getLives() < 1) {
-                g2d.drawString("Press ESC to return to the menu", 300, 500);
+            if (player.getLives() < 1) { // if the player has run out of lives...
+                g2d.drawString("Press ESC to return to the menu", 300, 500); // draws prompt to return to main menu
                 g2d.setFont(new Font("Arial", Font.BOLD, 64));
                 g2d.setColor(Color.RED);
-                g2d.drawString("Game Over!", 300, 300);
-                if (addedScore == false) {
-                    addedScore = true;
-                    addScores();
-
+                g2d.drawString("Game Over!", 300, 300); // draws "game over" text in larger red font
+                if (addedScore == false) { // if the player's score has not yet been added to the scores data file...
+                    addedScore = true; // prevent this input from reappearing
+                    addScores(); // display popup to input user's username and save high score
                 }
-                if (frameCounter == 0) {
+                if (frameCounter == 0) { // if this is the first frame that the game over screen has appeared in...
                     clip.stop(); // stops other background music
                     playAudio("gameover"); // plays game over music
-                    frameCounter = 1;
+                    frameCounter = 1; // stops music from replaying every frame
                 }
-            } else {
-                if (level == 11) {
-                    if (frameCounter == 0) {
+            } else { // if the player still has lives left...
+                if (level == 11) { // if the player has beat all 10 levels...
+                    if (frameCounter == 0) { // if this is the first frame that the ending screen has appeared...
                         clip.stop(); // stops other background music
                         playAudio("ending"); // plays game over music
-                        frameCounter = 1;
-                        addScores();
+                        frameCounter = 1; // prevents this section from replaying every frame
+                        addScores(); // display popup to input user's username and save high score
                     }
                     g2d.drawString("You have recovered the tests from the evil Schaeffer", 180, 100);
                     g2d.drawString("Report cards can go out on time", 290, 150);
                     g2d.drawString("Your job is saved", 375, 200);
                     g2d.drawString("Press ESC to return to the menu", 300, 650);
                     g2d.setFont(new Font("Arial", Font.BOLD, 64));
-                    g2d.drawString("You Win!", 340, 400);
-                    //g2d.setFont
-                } else {
-                    if (playingLevel) {
-                        mainGame(g2d);
-                    } else {
-                        if (frameCounter == 0) {
+                    g2d.drawString("You Win!", 340, 400); // display congratulatory message
+                } else { // if the player has not yet beat all 10 levels...
+                    if (playingLevel) { // if the players is currently playing a level...
+                        mainGame(g2d); // draw the main game
+                    } else { // if the player is watching the introduction to a level...
+                        if (frameCounter == 0) { // if this is the first frame that the introduction has been shown...
                             g2d.drawString("Level " + level, 400, 340);
-                            g2d.drawString("Lives: " + player.getLives(), 420, 410);
-                            g2d.drawImage(lifeSprite, 370, 385, 402, 417, 0, 0, 16, 16, null);
-                            frameCounter = 1;
+                            g2d.drawString("Lives: " + player.getLives(), 420, 410); // display level and no. of lives remaining
+                            g2d.drawImage(lifeSprite, 370, 385, 402, 417, 0, 0, 16, 16, null); // draws a sprite of the character next to life counter
+                            frameCounter = 1; // stops music clip from replaying every frame
                             clip.stop(); // stops other background music
                             playAudio("stagestart"); // plays stage starting music
                         } else {
@@ -207,7 +216,7 @@ public class DrawingSurface extends JPanel {
                             clip.stop(); // stops other background music
                             playAudio("stage"); // plays main stage music
                             clip.loop(clip.LOOP_CONTINUOUSLY); // loops main stage music continuously
-                            playingLevel = true;
+                            playingLevel = true; // begins playing the elvel
                         }
                     }
                 }
@@ -215,19 +224,19 @@ public class DrawingSurface extends JPanel {
         } else if (windowState == 2) { // high scores
             g2d.drawString("Press SPACE to search for a high score", 260, 650);
             g2d.setFont(new Font("Arial", Font.BOLD, 32));
-            g2d.drawString("High Scores", 380, 100);
+            g2d.drawString("High Scores", 380, 100); // draws title of section and prompt to search for scores
             g2d.setFont(new Font("Monospaced", Font.BOLD, 24));
-            g2d.drawString("No.  Name   Score", 330, 200);
+            g2d.drawString("No.  Name   Score", 330, 200); // draws header for high scores table
             drawScores(g2d);
         } else if (windowState == 3) { // credits
-            g2d.drawImage(menuImg, 150, 75, 518, 151, 0, 0, 368, 76, null);
+            g2d.drawImage(menuImg, 150, 75, 518, 151, 0, 0, 368, 76, null); // draws the game logo
             g2d.drawString("was created by:", 550, 122);
             g2d.drawString("RILEY DECONKEY - Systems Analyst", 200, 300);
             g2d.drawString("JASON KARAPOSTOLAKIS - Technical Writer", 200, 400);
             g2d.drawString("REEGAL PANCHAL - Project Manager", 200, 500);
             g2d.drawString("Special thanks to TOMMY JOHNSTON", 200, 600);
             g2d.setFont(new Font("Arial", Font.BOLD, 16));
-            g2d.drawString("© 2020 DKP Studios", 370, 650);
+            g2d.drawString("© 2020 DKP Studios", 370, 650); // draws credits and copyright info
         }
 
     }
@@ -260,97 +269,155 @@ public class DrawingSurface extends JPanel {
         clipSE.start(); // starts playing file
     }
 
+    /**
+     * method to update selected option on main menu
+     * @param i integer that hold which direction to move (-1 for up, 1 for down)
+     */
     private void updateMenuSelectedYPos(int i) {
-        if (i == -1 && selectedYPos >= 431) {
-            selectedYPos -= 50;
-        } else if (i == 1 && selectedYPos <= 481) {
-            selectedYPos += 50;
+        if (i == -1 && selectedYPos >= 431) { // if the cursor is to move up and is not already at the topmost selection...
+            selectedYPos -= 50; // move cursor to next selection upward
+        } else if (i == 1 && selectedYPos <= 481) { // if the cursor is to move down and is not already at the bottommost selection...
+            selectedYPos += 50; // move cursor to next selection downward
         }
     }
 
+    /**
+     * method called when selecting an option on main menu
+     */
     private void getSelected() {
-        if (selectedYPos == 381) {
+        if (selectedYPos == 381) { // if the cursor is next to "start game"...
             windowState = 1; // go to main game
             difficulty = 1;
-            level = 1;
-            restartLevel();
-            playingLevel = false;
-            powerUpList = new ArrayList();
+            level = 1; // reset difficulty and level variables to default values
+            restartLevel(); // creates new level
+            playingLevel = false; // plays level intro screen
+            powerUpList = new ArrayList(); // resets power-ups
             bombs = 1;
             maxBombs = 1;
-            length = 1;
+            length = 1; 
             player.setSpeed(2);
             firePass = false;
             addedScore = false;
             bombPass = false;
-            wallPass = false;
+            wallPass = false; // removes all player's upgrades
             player.setLives(3);
-            score = 0;
-        } else if (selectedYPos == 431) {
+            score = 0; // reset no. of lives and score to default values
+        } else if (selectedYPos == 431) { // if the cursor is next to "high scores"...
             windowState = 2; // go to high scores
-        } else if (selectedYPos == 481) {
+        } else if (selectedYPos == 481) { // if the cursor is next to "credits"...
             windowState = 3; // go to credits
-        } else {
-            System.exit(0);
+        } else { // if the cursor is next to "exit"...
+            System.exit(0); // exit the program
         }
     }
 
+    /**
+     * accessor for bomb length
+     * @return bomb length (in tiles)
+     */
     public int getLength() {
         return length;
     }
 
+    /**
+     * mutator for bomb length
+     * @param length new bomb length (in tiles)
+     */
     public void setLength(int length) {
         this.length = length;
     }
 
+    /**
+     * accessor for ArrayList of powerups
+     * @return ArrayList of powerups
+     */
     public ArrayList<Integer> getPowerUpList() {
         return powerUpList;
     }
 
+    /**
+     * method called every frame to redraw screen
+     * @param g graphics object used to draw
+     */
     @Override
     public void paintComponent(Graphics g) {
 
         super.paintComponent(g);
-        doDrawing(g);
+        doDrawing(g); // calls doDrawing to redraw screen
     }
 
+    /**
+     * method to determine if two things are intersecting
+     * @param x1 x coordinate of top left corner of first object
+     * @param y1 y coordinate of top left corner of first object
+     * @param x2 x coordinate of top left corner of second object
+     * @param y2 y coordinate of top left corner of second object
+     * @return whether or not they are intersecting
+     */
     public boolean intersecting(int x1, int y1, int x2, int y2) {
 
         boolean xOverlap, yOverlap;
-        xOverlap = (Math.abs(x1 - x2) < 16);
-        yOverlap = (Math.abs(y1 - y2) < 16);
-        return (xOverlap && yOverlap);
+        xOverlap = (Math.abs(x1 - x2) < 16); // the two objects are overlapping in the x axis if the difference in their coordinates is less than 16
+        yOverlap = (Math.abs(y1 - y2) < 16); // the two objects are overlapping in the y axis if the difference in their coordinates is less than 16
+        return (xOverlap && yOverlap); // return true only if the objects are overlapping in both the x and y axes
     }
 
+    /**
+     * accessor for list of enemies
+     * @return ArrayList of enemies
+     */
     public ArrayList<Enemy> getEnemiesList() {
         return enemiesList;
     }
 
+    /**
+     * mutator for list of enemies
+     * @param enemiesList new list of enemies
+     */
     public void setEnemiesList(ArrayList<Enemy> enemiesList) {
         this.enemiesList = enemiesList;
     }
 
+    /**
+     * accessor for game board
+     * @return game board (two-dimensional array of Tiles)
+     */
     public Tile[][] getBoard() {
         return board;
     }
 
+    /**
+     * mutator for game board
+     * @param board new game board
+     */
     public void setBoard(Tile[][] board) {
         this.board = board;
     }
 
+    /**
+     * accessor for whether or not the player has fire pass powerup
+     * @return whether or not the player has fire pass powerup
+     */
     public boolean hasFirePass() {
         return firePass;
     }
 
+    /**
+     * mutator for whether or not the player has fire pass powerup
+     * @param firePass new value for whether or not the player has fire pass powerup
+     */
     public void setFirePass(boolean firePass) {
         this.firePass = firePass;
     }
 
+    /**
+     * loads sprites for all entities and tiles
+     */
     private void loadSprites() {
-        Ballom b = new Ballom(0, 0, 0);
-        b.loadImages();
-        b = null;
-        Dahl d = new Dahl(0, 0, 0);
+        Ballom b = new Ballom(0, 0, 0); // creates new ballom enemy in corner of screen
+        b.loadImages(); // loads images for ballom class (loadImages is a static method in Ballom)
+        b = null; // deletes loaded enemy
+        Dahl d = new Dahl(0, 0, 0); // repeats that process for each enemy and tile
         d.loadImages();
         d = null;
         Onil o = new Onil(0, 0, 0);
@@ -378,7 +445,7 @@ public class DrawingSurface extends JPanel {
         Ghost g = new Ghost(0, 0, 0);
         g.loadImages();
         g = null;
-        try {
+        try { // tries to load images to represent powerups on hud
             bombHud = ImageIO.read(getClass().getResource("/bomberbrad/sprites/tile/power/1.png"));
             lengthHud = ImageIO.read(getClass().getResource("/bomberbrad/sprites/tile/power/2.png"));
             speedHud = ImageIO.read(getClass().getResource("/bomberbrad/sprites/tile/power/3.png"));
@@ -441,14 +508,6 @@ public class DrawingSurface extends JPanel {
             bonusCounter = 0;
         }
 
-    }
-
-    private boolean overlapping(Tile t, Entity e) {
-        int tX = t.getxPos() * 16, tY = t.getyPos() * 16, eX = e.getXPos(), eY = e.getYPos();
-        boolean xOverlap = false, yOverlap = false;
-        xOverlap = ((tX <= eX && tX + 16 > eX) || (tX > eX && eX + 12 > tX));
-        yOverlap = ((tY <= eY && tY + 16 > eY) || (tY > eY && eY + 12 > tY));
-        return (xOverlap && yOverlap);
     }
 
     private Tile[][] levelRandomizer(int difficulty) {
@@ -608,42 +667,6 @@ public class DrawingSurface extends JPanel {
             difficulty = 4;
         }
         board = levelRandomizer(difficulty);
-    }
-
-    private void printBoard(Tile[][] board) {
-        String print = "";
-        Block unbreak = new Block(0, 0, null, false);
-        Block breaka = new Block(0, 0, null, true);
-        boolean foundGuy = false;
-        for (int i = 0; i < 11; i++) {
-            for (int o = 0; o < 15; o++) {
-                for (int p = 0; p < enemiesList.size(); p++) {
-                    if (o == enemiesList.get(p).getXPos() / 16 && i == enemiesList.get(p).getYPos() / 16) {
-                        foundGuy = true;
-                    }
-                }
-                if (foundGuy) {
-                    print += "E\t";
-                } else if (board[o][i].getOnTile() == null) {
-                    print += "T\t";
-                } else if (((Block) (board[o][i].getOnTile())).equals(unbreak)) {
-                    if (((Block) (board[o][i].getOnTile())).getPU() == null) {
-                        print += "UB\t";
-                    }
-                } else if (((Block) (board[o][i].getOnTile())).equals(breaka)) {
-                    if (((Block) (board[o][i].getOnTile())).getPU() == null) {
-                        print += "BB\t";
-                    } else if ((board[o][i].getOnTile()) instanceof Exit) {
-                        print += "EX\t";
-                    } else {
-                        print += "PU\t";
-                    }
-                }
-                foundGuy = false;
-            }
-            print += "\n";
-        }
-        System.out.println(print);
     }
 
     public void updateGameScreen(Tile[][] board) {

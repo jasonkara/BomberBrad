@@ -1,6 +1,5 @@
 package bomberbrad;
 
-import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
@@ -180,29 +179,32 @@ public class Player extends Entity {
     }
     
     
-
+    /**
+     * method to draw the player
+     * @param g2d 
+     */
     public void draw(Graphics2D g2d){
         BufferedImage shown = null;
-        if (dying) {
-            if (frameCounter < 14) {
-                shown = sprites[12 + frameCounter / 2];
+        if (dying) { // if the player is dying...
+            if (frameCounter < 14) { // if less than 14 frames have passed...
+                shown = sprites[12 + frameCounter / 2]; // play each dying sprite for two frames
             }
-            frameCounter ++;
-        } else {
-            int add = (direction - 1) * 3;
-            if (frameCounter < 2) {
-                shown = sprites[0 + add];
-            } else if (frameCounter < 6 && frameCounter > 3) {
-                shown = sprites[2 + add];
-            } else {
-                shown = sprites[1 + add];
+            frameCounter ++; // increment frame counter
+        } else { // if the player is not dying...
+            int add = (direction - 1) * 3; // determine amount to add to sprite no. to get right direction
+            if (frameCounter < 2) { // if in the first two frames of the animation...
+                shown = sprites[0 + add]; // show the first sprite of the animation cycle
+            } else if (frameCounter < 6 && frameCounter > 3) { // if in the 5th or 6th frame of animation...
+                shown = sprites[2 + add]; // show the third sprite of the animation cycle
+            } else { // if in the 3rd, 4th, 7th, or 8th frame of animation
+                shown = sprites[1 + add]; // show the second/fourht sprite of the animation cycle (same sprite)
             }
-            if (moving) frameCounter ++;
-            if (frameCounter >= 8) {
-                frameCounter = 0;
+            if (moving) frameCounter ++; // if the player is moving, increment frame counter
+            if (frameCounter >= 8) { // if the framecounter reaches 8 (end of animation)
+                frameCounter = 0; // return to 0 (restart animation)
             }
         }
-        g2d.drawImage(shown,xPos*4,yPos*4,xPos*4+64,yPos*4+64,0,0,16,16,null);
+        g2d.drawImage(shown,xPos*4,yPos*4,xPos*4+64,yPos*4+64,0,0,16,16,null); // draw the player
     }
     
     public void loadImages() {
@@ -225,9 +227,9 @@ public class Player extends Entity {
             sprites[15] = ImageIO.read(getClass().getResource("/bomberbrad/sprites/entity/player/die4.png"));
             sprites[16] = ImageIO.read(getClass().getResource("/bomberbrad/sprites/entity/player/die5.png"));
             sprites[17] = ImageIO.read(getClass().getResource("/bomberbrad/sprites/entity/player/die6.png"));
-            sprites[18] = ImageIO.read(getClass().getResource("/bomberbrad/sprites/entity/player/die7.png"));
+            sprites[18] = ImageIO.read(getClass().getResource("/bomberbrad/sprites/entity/player/die7.png")); // add images to arraylist
         } catch (IOException e) {
-            System.out.println("error: " + e);
+            System.out.println("error: " + e); // if IOexception, print error message
         }
     }
     

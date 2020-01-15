@@ -6,8 +6,6 @@
 package bomberbrad;
 
 import java.awt.Graphics2D;
-import java.awt.image.BufferedImage;
-import java.util.ArrayList;
 
 public abstract class Enemy extends Entity {
 

@@ -1,7 +1,7 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
+/**
+ * DKP Studios
+ * 2020-01-14
+ * Class that represents the Ghost
  */
 package bomberbrad;
 
@@ -10,47 +10,58 @@ import java.awt.image.BufferedImage;
 import java.io.IOException;
 import javax.imageio.ImageIO;
 
-/**
- *
- * @author Reegal
- */
 public class Ghost extends Enemy {
     
     private static BufferedImage[] sprites = new BufferedImage[11];
     private int frameCounter;
     
+    /**
+     * Constructor, same as enemy but with frame counter set to 0
+     *
+     * @param xPos x position
+     * @param yPos y position
+     * @param direction direction the enemy is facing
+     */
     public Ghost(int xPos, int yPos, int direction){
-        super( xPos,  yPos,  1,  direction, 4);
-        frameCounter = 0;
-        walkable.add(Block.class);
+        super( xPos,  yPos,  1,  direction, 4); //super constructor call, all ghosts have 1 health and 4 speed
+        frameCounter = 0; //set frame counter to 0
+        walkable.add(Block.class); // add block to walkable arraylist so they can walk over breakable blocks
     }
     
+    /**
+     * Draw method, draws the ghost
+     *
+     * @param g2d graphics 2d object to draw with
+     */
     public void draw(Graphics2D g2d){
         BufferedImage shown;
-        if (direction <= 2) {
-            if (frameCounter < 2) {
-                shown = sprites[3];
-            } else if (frameCounter < 6 && frameCounter > 3) {
-                shown = sprites[5];
+        if (direction <= 2) { //if direction is up or right
+            if (frameCounter < 2) { //if frame counter is less than 2
+                shown = sprites[3]; //show first sprite in animation cycle
+            } else if (frameCounter < 6 && frameCounter > 3) { //else if frame counter is between 6 and 3
+                shown = sprites[5]; //display third sprite in animation cycle
             } else {
-                shown = sprites[4];
+                shown = sprites[4]; //else show second/fourth sprite in animation cycle
             }
-        } else {
-            if (frameCounter < 2) {
-                shown = sprites[0];
-            } else if (frameCounter < 6 && frameCounter > 3) {
-                shown = sprites[2];
+        } else { //else direction must be down or left
+            if (frameCounter < 2) { //if first two frames
+                shown = sprites[0]; //show first sprite in animation cycle
+            } else if (frameCounter < 6 && frameCounter > 3) { //else if frame counter between 3 and 6
+                shown = sprites[2]; //display third sprite in animation cycle
             } else {
-                shown = sprites[1];
+                shown = sprites[1]; //else show second/fourth sprite in animation cycle
             }
         }
-        g2d.drawImage(shown,xPos*4,yPos*4,xPos*4+64,yPos*4+64,0,0,16,16,null);
-        frameCounter ++;
-        if (frameCounter == 8) {
+        g2d.drawImage(shown,xPos*4,yPos*4,xPos*4+64,yPos*4+64,0,0,16,16,null); //display ghost
+        frameCounter ++; //add to frame counter
+        if (frameCounter == 8) { //if frame counter is 8, set it to zero to restart animation
             frameCounter = 0;
         }
     }
     
+    /**
+     * method to load all sprites
+     */
     public void loadImages() {
         try {    
             sprites[0] = ImageIO.read(getClass().getResource("/bomberbrad/sprites/entity/enemy/ghost/l1.png"));
@@ -63,9 +74,9 @@ public class Ghost extends Enemy {
             sprites[7] = ImageIO.read(getClass().getResource("/bomberbrad/sprites/entity/enemy/ghost/die2.png"));
             sprites[8] = ImageIO.read(getClass().getResource("/bomberbrad/sprites/entity/enemy/ghost/die3.png"));
             sprites[9] = ImageIO.read(getClass().getResource("/bomberbrad/sprites/entity/enemy/ghost/die4.png"));
-            sprites[10] = ImageIO.read(getClass().getResource("/bomberbrad/sprites/entity/enemy/ghost/die5.png"));
+            sprites[10] = ImageIO.read(getClass().getResource("/bomberbrad/sprites/entity/enemy/ghost/die5.png")); //load sprites into array
         } catch (IOException e) {
-            System.out.println("error: " + e);
+            System.out.println("error: " + e); //if IOException is thrown, print it.
         }
     }
     

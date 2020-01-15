@@ -1,5 +1,6 @@
 /**
- * DKP Studios (Jason)
+ * DKP Studios 
+ * 2020-01-14
  * JFrame window that contains DrawingSurface JPanel
  */
 
