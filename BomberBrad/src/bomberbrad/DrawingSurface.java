@@ -1,5 +1,5 @@
 /**
- * DKP Studios 
+ * DKP Studios
  * 2020-01-14
  * JPanel that displays game graphics, contains most game logic
  */
@@ -60,12 +60,13 @@ public class DrawingSurface extends JPanel {
     BufferedImage bombHud = null, lengthHud = null, speedHud = null, bombpassHud = null, wallHud = null, fireHud = null;
 
     /**
-     * constructor for DrawingSurface - things that happen when program is started
+     * constructor for DrawingSurface - things that happen when program is
+     * started
      */
     public DrawingSurface() {
 
         ActionListener al = new ActionListener() {
-            public void actionPerformed(ActionEvent ae) { 
+            public void actionPerformed(ActionEvent ae) {
                 repaint(); // sets up ActionListener to redraw the screen along with the timer
             }
         };
@@ -136,7 +137,7 @@ public class DrawingSurface extends JPanel {
         ui.put("Panel.background", Color.BLACK);
         ui.put("OptionPane.messageForeground", Color.white); // adjusts visuals of JOptionPane popups to better match the program
         score(); // sets up/accesses data file containing high scores
-        timer = new Timer(50, al); 
+        timer = new Timer(50, al);
         timer.start(); // instantiates and starts a timer that ticks every 50 milliseconds (goes along with above ActionListener that redraws game screen)
         playAudio("title"); // plays title music for main menu
         loadSprites(); // loads all sprites
@@ -144,6 +145,7 @@ public class DrawingSurface extends JPanel {
 
     /**
      * method that is called every frame to update what is on screen
+     *
      * @param g graphics object used to draw the screen
      */
     private void doDrawing(Graphics g) {
@@ -243,6 +245,7 @@ public class DrawingSurface extends JPanel {
 
     /**
      * plays background music
+     *
      * @param sound name of music track to be played
      */
     public void playAudio(String sound) {
@@ -257,6 +260,7 @@ public class DrawingSurface extends JPanel {
 
     /**
      * plays sound effect
+     *
      * @param sound name of music track to be played
      */
     public void playSE(String sound) {
@@ -271,7 +275,9 @@ public class DrawingSurface extends JPanel {
 
     /**
      * method to update selected option on main menu
-     * @param i integer that hold which direction to move (-1 for up, 1 for down)
+     *
+     * @param i integer that hold which direction to move (-1 for up, 1 for
+     * down)
      */
     private void updateMenuSelectedYPos(int i) {
         if (i == -1 && selectedYPos >= 431) { // if the cursor is to move up and is not already at the topmost selection...
@@ -294,7 +300,7 @@ public class DrawingSurface extends JPanel {
             powerUpList = new ArrayList(); // resets power-ups
             bombs = 1;
             maxBombs = 1;
-            length = 1; 
+            length = 1;
             player.setSpeed(2);
             firePass = false;
             addedScore = false;
@@ -313,6 +319,7 @@ public class DrawingSurface extends JPanel {
 
     /**
      * accessor for bomb length
+     *
      * @return bomb length (in tiles)
      */
     public int getLength() {
@@ -321,6 +328,7 @@ public class DrawingSurface extends JPanel {
 
     /**
      * mutator for bomb length
+     *
      * @param length new bomb length (in tiles)
      */
     public void setLength(int length) {
@@ -329,6 +337,7 @@ public class DrawingSurface extends JPanel {
 
     /**
      * accessor for ArrayList of powerups
+     *
      * @return ArrayList of powerups
      */
     public ArrayList<Integer> getPowerUpList() {
@@ -337,6 +346,7 @@ public class DrawingSurface extends JPanel {
 
     /**
      * method called every frame to redraw screen
+     *
      * @param g graphics object used to draw
      */
     @Override
@@ -348,6 +358,7 @@ public class DrawingSurface extends JPanel {
 
     /**
      * method to determine if two things are intersecting
+     *
      * @param x1 x coordinate of top left corner of first object
      * @param y1 y coordinate of top left corner of first object
      * @param x2 x coordinate of top left corner of second object
@@ -364,6 +375,7 @@ public class DrawingSurface extends JPanel {
 
     /**
      * accessor for list of enemies
+     *
      * @return ArrayList of enemies
      */
     public ArrayList<Enemy> getEnemiesList() {
@@ -372,6 +384,7 @@ public class DrawingSurface extends JPanel {
 
     /**
      * mutator for list of enemies
+     *
      * @param enemiesList new list of enemies
      */
     public void setEnemiesList(ArrayList<Enemy> enemiesList) {
@@ -380,6 +393,7 @@ public class DrawingSurface extends JPanel {
 
     /**
      * accessor for game board
+     *
      * @return game board (two-dimensional array of Tiles)
      */
     public Tile[][] getBoard() {
@@ -388,6 +402,7 @@ public class DrawingSurface extends JPanel {
 
     /**
      * mutator for game board
+     *
      * @param board new game board
      */
     public void setBoard(Tile[][] board) {
@@ -396,6 +411,7 @@ public class DrawingSurface extends JPanel {
 
     /**
      * accessor for whether or not the player has fire pass powerup
+     *
      * @return whether or not the player has fire pass powerup
      */
     public boolean hasFirePass() {
@@ -404,7 +420,9 @@ public class DrawingSurface extends JPanel {
 
     /**
      * mutator for whether or not the player has fire pass powerup
-     * @param firePass new value for whether or not the player has fire pass powerup
+     *
+     * @param firePass new value for whether or not the player has fire pass
+     * powerup
      */
     public void setFirePass(boolean firePass) {
         this.firePass = firePass;
@@ -456,8 +474,15 @@ public class DrawingSurface extends JPanel {
         }
     }
 
+    /**
+     * Main game function, draws all components for the main game
+     *
+     * @param g2d graphics 2d window to draw with
+     */
     private void mainGame(Graphics2D g2d) {
+        //sets player moving to false
         player.setMoving(false);
+        //checks if any movement keys are currently pressed and sets appropriate direction
         if (moveUp || moveDown || moveLeft || moveRight) {
             if (moveDown) {
                 player.setDirection(3);
@@ -468,17 +493,24 @@ public class DrawingSurface extends JPanel {
             } else {
                 player.setDirection(1);
             }
+            //moves player
             player.setMoving(true);
         }
+        //updates player
         player.action(this, g2d);
+        //draws board
         for (int i = 0; i < 11; i++) {
             for (int o = 0; o < 15; o++) {
+                //updates all tiles
                 board[o][i].update(this);
+                //draws all tiles
                 board[o][i].draw(board, g2d);
                 g2d.setColor(Color.WHITE);
             }
         }
+        //draws level, lives, and score on hud
         g2d.drawString("LEVEL: " + level + "   LIVES: " + player.getLives() + "   SCORE: " + score, 40, 745);
+        //draws all powerups on hud
         if (firePass) {
             g2d.drawImage(fireHud, 496, 720, 528, 752, 0, 0, 16, 16, null);
         }
@@ -494,14 +526,17 @@ public class DrawingSurface extends JPanel {
         g2d.drawImage(bombHud, 696, 720, 728, 752, 0, 0, 16, 16, null);
         g2d.drawImage(lengthHud, 816, 720, 848, 752, 0, 0, 16, 16, null);
         g2d.drawString("x " + maxBombs + "             x " + length, 737, 745);
+        //draws player
         player.draw(g2d);
-
+        //updates all enemies and draws them
         for (Enemy e : enemiesList) {
             e.action(board);
             e.draw(g2d);
         }
+        //counts every 20 frames
         bonusCounter++;
         if (bonusCounter >= 20) {
+            //every 20 frames (1 sec) the time bonus is reduced
             if (timeBonus > 0) {
                 timeBonus--;
             }
@@ -510,7 +545,14 @@ public class DrawingSurface extends JPanel {
 
     }
 
+    /**
+     * Level randomizer function, creates a random level
+     *
+     * @param difficulty the difficulty of the level to be generated
+     * @return
+     */
     private Tile[][] levelRandomizer(int difficulty) {
+        //variables for how many enemies, blocks, and powerups
         int enemies = 5;
         int breakableBlocks = 25;
         int powerups = 2;
@@ -537,6 +579,7 @@ public class DrawingSurface extends JPanel {
                 board[i][o] = new Tile(i, o, new Block(i, o, null, false));
             }
         }
+        //putting blocks at 3,1 and 1,3 to make sure player doesnt get instantly killed
         board[1][3] = new Tile(1, 3, new Block(1, 3, null, true));
         board[3][1] = new Tile(3, 1, new Block(3, 1, null, true));
         //creating random variable to choose random positions
@@ -564,9 +607,12 @@ public class DrawingSurface extends JPanel {
             //subtracting from number of remaining blocks to be placed
             breakableBlocks--;
         }
+        //generating powerups
         while (powerups > 0) {
+            //random placement
             random = (int) (Math.random() * possible.size());
             int puType;
+            //depending on difficulty different powerups are available
             switch (difficulty) {
                 case 1:
                     puType = (int) (Math.random() * 2) + 1;
@@ -577,28 +623,37 @@ public class DrawingSurface extends JPanel {
                 default:
                     puType = (int) (Math.random() * 6) + 1;
             }
+            //generate breakable block with powerup underneath
             (possible.get(random)).setOnTile(new Block(possible.get(random).getxPos(), possible.get(random).getyPos(), new PowerUp(possible.get(random).getxPos(), possible.get(random).getyPos(), puType), true));
+            //subtract from number of powerups and remove space from possible placements
             powerups--;
             possible.remove(random);
         }
+        //generates exit using same tactic as powerups and blocks
         random = (int) (Math.random() * possible.size());
         (possible.get(random)).setOnTile(new Block(possible.get(random).getxPos(), possible.get(random).getyPos(), new Exit(possible.get(random).getxPos(), possible.get(random).getyPos()), true));
         exitX = possible.get(random).getxPos();
         exitY = possible.get(random).getyPos();
-        //exitX = 1;
-        //exitY = 2;
+
         possible.remove(random);
         int enemyType;
+
         while (enemies > 0) {
+            //get random placement for enemies
             random = (int) (Math.random() * possible.size());
+            //depending on difficulty, different enemies will spawn
             switch (difficulty) {
                 case 1:
+                    //create enemies
                     enemiesList.add(new Ballom(possible.get(random).getxPos() * 16, possible.get(random).getyPos() * 16, Enemy.rndNum(1, 4)));
+                    //subtract from enemies
                     enemies--;
                     break;
                 case 2:
+                    //random int to decide which enemy to spawn
                     enemyType = (int) (Math.random() * 3) + 1;
                     switch (enemyType) {
+                        //decide which enemy to spawn depending on enemytype int
                         case 1:
                             enemiesList.add(new Ballom(possible.get(random).getxPos() * 16, possible.get(random).getyPos() * 16, Enemy.rndNum(1, 4)));
                             break;
@@ -635,28 +690,39 @@ public class DrawingSurface extends JPanel {
             }
 
         }
-        System.out.println(enemiesList);
-        System.out.println(enemiesList.size());
+        //returns 2d array of the tile board
         return board;
     }
 
+    /**
+     * Death function, used when player dies
+     */
     public void death() {
+        //subtract one life
         player.setLives(player.getLives() - 1);
+        //restart level function
         restartLevel();
 
     }
 
+    /**
+     * Restart level function to be called whenever the level restarts
+     */
     public void restartLevel() {
-
+        //set bomb count to max
         bombs = maxBombs;
+        //reset enemieslist
         enemiesList = new ArrayList();
-        //windowState = 0;
+        //reset time bonus and bonus counter
         timeBonus = 240;
         bonusCounter = 0;
+        //set playing level to false
         playingLevel = false;
+        //reset player position
         player.setxPos(16);
         player.setyPos(16);
         frameCounter = 0;
+        //check which level the player is on to decide difficulty
         if (level < 4) {
             difficulty = 1;
         } else if (level < 7) {
@@ -666,40 +732,51 @@ public class DrawingSurface extends JPanel {
         } else {
             difficulty = 4;
         }
+        //create board
         board = levelRandomizer(difficulty);
     }
 
-    public void updateGameScreen(Tile[][] board) {
-
-    }
-
+    /**
+     * Score function, called when the program starts to get scores from data
+     * file
+     */
     public void score() {
+        //creating file objects
         File f = new File(System.getProperty("user.home") + "/Documents/BomberBrad");
         File file = new File(System.getProperty("user.home") + "/Documents/BomberBrad/scores.txt");
+
         String userName;
         int userAmount;
+        //first try to find the file and read from it
         try {
             Scanner s = new Scanner(file);
             while (s.hasNextLine()) {
+                //add scores to score arraylist
                 userName = s.nextLine();
                 userAmount = Integer.parseInt(s.nextLine());
                 scores.add(new Score(userAmount, userName));
             }
 
         } catch (FileNotFoundException e) {
+            //if file not found
             try {
+                //create directory and file
                 f.mkdirs();
                 file.createNewFile();
+                //create deafult scores
                 PrintWriter writer = new PrintWriter(file);
                 scores.add(new Score(3000, "jsk"));
                 scores.add(new Score(2000, "ree"));
                 scores.add(new Score(1000, "rwd"));
+                //add to score arraylist
                 for (Score s : scores) {
                     writer.println(s.getName());
                     writer.println(s.getAmount());
 
                 }
+                //close writer stream
                 writer.close();
+                //catch exceptions and print them
             } catch (FileNotFoundException u) {
                 System.out.println(u);
 
@@ -710,13 +787,22 @@ public class DrawingSurface extends JPanel {
 
     }
 
+    /**
+     * draws the top 5 scores on the high scores menu
+     *
+     * @param g2d graphics 2d object to draw with
+     */
     public void drawScores(Graphics2D g2d) {
+        //set text colour to white
         g2d.setColor(Color.white);
+        //if theres less than 6 scores
         if (scores.size() < 5) {
+            //draw all scores
             for (int i = 0; i < scores.size(); i++) {
                 g2d.drawString((i + 1) + "     " + scores.get(i).getName() + "      " + scores.get(i).getAmount(), 330, 250 + (50 * i));
             }
         } else {
+            //otherwise draw only top 5 scores
             for (int i = 0; i < 5; i++) {
                 g2d.drawString((i + 1) + "     " + scores.get(i).getName() + "      " + scores.get(i).getAmount(), 330, 250 + (50 * i));
             }
@@ -724,27 +810,37 @@ public class DrawingSurface extends JPanel {
 
     }
 
+    /**
+     * Add scores function, writes a new score to the data file
+     */
     public void addScores() {
+        //get username from user
         String userName;
         userName = JOptionPane.showInputDialog(null, "Enter 3 characters to represent you.", "Submit Score", JOptionPane.PLAIN_MESSAGE);
+        //maximum of 3 characters
         while (userName.length() > 3) {
             userName = JOptionPane.showInputDialog(null, "Invalid entry, please enter a maximum of 3 characters.\nEnter 3 characters to represent you.", "ERROR", JOptionPane.PLAIN_MESSAGE);
         }
+        //add score to arraylist
         scores.add(new Score(score, userName));
+        //create file objects
         File f = new File(System.getProperty("user.home") + "/Documents/BomberBrad");
         File file = new File(System.getProperty("user.home") + "/Documents/BomberBrad/scores.txt");
+        //create and fill array to be merge sorted
         Score[] sorting = new Score[scores.size()];
         for (int i = 0; i < scores.size(); i++) {
             sorting[i] = new Score(scores.get(i).getAmount(), scores.get(i).getName());
         }
+        //sort array
         mergeSort(sorting, 0, sorting.length - 1);
+        //refill acores arraylist using sorted array
         scores.clear();
         for (int i = 0; i < sorting.length; i++) {
             scores.add(sorting[i]);
         }
 
         try {
-
+            //try to write scores to datafile
             PrintWriter writer = new PrintWriter(file);
 
             for (Score s : scores) {
@@ -753,18 +849,21 @@ public class DrawingSurface extends JPanel {
                 writer.println(s.getAmount());
             }
             writer.close();
-
+            //if file isnt there
         } catch (FileNotFoundException e) {
             try {
+                //create files
                 f.mkdirs();
                 file.createNewFile();
                 PrintWriter writer = new PrintWriter(file);
+                //write scores to data file
                 for (Score s : scores) {
                     writer.println(s.getName());
                     writer.println(s.getAmount());
 
                 }
                 writer.close();
+                //catch and print exceptions
             } catch (FileNotFoundException u) {
                 System.out.println(u);
 
@@ -776,8 +875,15 @@ public class DrawingSurface extends JPanel {
 
     }
 
+    /**
+     * allows the user to search for a high score that is less than top 5
+     *
+     * @param name the username they used for the score
+     */
     public void searchScores(String name) {
+
         boolean found = false;
+        //loop through all scores, if found, tell user where it was found first
         for (int i = 0; i < scores.size(); i++) {
             if (scores.get(i).getName().equals(name)) {
                 JOptionPane.showMessageDialog(null, name + " is first found in position " + (i + 1) + " with a score of " + scores.get(i).getAmount() + ".", "Search Results", JOptionPane.PLAIN_MESSAGE);
@@ -785,101 +891,207 @@ public class DrawingSurface extends JPanel {
                 found = true;
             }
         }
+        //if name wasn't found, tell user that
         if (!found) {
             JOptionPane.showMessageDialog(null, "Name not found.", "Search Results", JOptionPane.PLAIN_MESSAGE);
         }
     }
 
+    /**
+     * Accessor method for exitX
+     *
+     * @return the x position of the exit
+     */
     public int getExitX() {
         return exitX;
     }
 
+    /**
+     * Mutator method for exit x
+     *
+     * @param exitX the new x position of the exit
+     */
     public void setExitX(int exitX) {
         this.exitX = exitX;
     }
 
+    /**
+     * Accessor method for the y position of the exit
+     *
+     * @return the y position if the exit
+     */
     public int getExitY() {
         return exitY;
     }
 
+    /**
+     * Mutator method for y position
+     *
+     * @param exitY the new y position of the exit
+     */
     public void setExitY(int exitY) {
         this.exitY = exitY;
     }
 
+    /**
+     * Accessor method for the level
+     *
+     * @return the current level
+     */
     public int getLevel() {
         return level;
     }
 
+    /**
+     * Mutator method for level
+     *
+     * @param level the new level
+     */
     public void setLevel(int level) {
         this.level = level;
     }
 
+    /**
+     * Accessor method for bombs
+     *
+     * @return bomb count
+     */
     public int getBombs() {
         return bombs;
     }
 
+    /**
+     * Mutator method for bombs
+     *
+     * @param bombs new amount of bombs
+     */
     public void setBombs(int bombs) {
         this.bombs = bombs;
         maxBombs = bombs;
     }
 
+    /**
+     * Accessor method for player
+     *
+     * @return the player
+     */
     public Player getPlayer() {
         return player;
     }
 
+    /**
+     * Mutator method for player
+     *
+     * @param player the new player
+     */
     public void setPlayer(Player player) {
         this.player = player;
     }
 
+    /**
+     * Accessor method for score
+     *
+     * @return the current score
+     */
     public int getScore() {
         return score;
     }
 
+    /**
+     * Mutator method for score
+     *
+     * @param score the new score
+     */
     public void setScore(int score) {
         this.score = score;
     }
 
+    /**
+     * Accessor method for time bonus
+     *
+     * @return the time bonus
+     */
     public int getTimeBonus() {
         return timeBonus;
     }
 
+    /**
+     * Accessor method for bombpass
+     *
+     * @return if the player has bombpass
+     */
     public boolean isBombPass() {
         return bombPass;
     }
 
+    /**
+     * mutator method for bombpass
+     *
+     * @param bombPass the new state of bombpass
+     */
     public void setBombPass(boolean bombPass) {
         this.bombPass = bombPass;
     }
 
+    /**
+     * Accessor method for wallpass
+     *
+     * @return if the player has wallpass
+     */
     public boolean isWallPass() {
         return wallPass;
     }
 
+    /**
+     * Mutator method for wallpass
+     *
+     * @param wallPass the new state of wallpass
+     */
     public void setWallPass(boolean wallPass) {
         this.wallPass = wallPass;
     }
 
+    /**
+     * Mutator method for time bonus
+     *
+     * @param timeBonus the new timebonus
+     */
     public void setTimeBonus(int timeBonus) {
         this.timeBonus = timeBonus;
     }
 
+    /**
+     * Merges two arrays together
+     *
+     * @param nums array of scores to be merged
+     * @param l farthest left position of the array
+     * @param m middle of the array
+     * @param r farthest right position of the array
+     */
     public static void merge(Score nums[], int l, int m, int r) {
         int i, j, k;
+        //ize variables for the two arrays
         int n1 = m - l + 1;
         int n2 = r - m;
+        //create two arrays for each side
         Score L[] = new Score[n1];
         Score R[] = new Score[n2];
+        //fill the arrays
         for (i = 0; i < n1; i++) {
             L[i] = nums[l + i];
         }
         for (j = 0; j < n2; j++) {
             R[j] = nums[m + 1 + j];
         }
+        //reset variables
         i = 0;
         j = 0;
         k = l;
+        //while neither array has completely been looked through
         while (i < n1 && j < n2) {
+            //check which array has the highest score, add that score to main array and advance in the array
             if (L[i].getAmount() >= R[j].getAmount()) {
+
                 nums[k] = L[i];
                 i++;
             } else {
@@ -888,6 +1100,7 @@ public class DrawingSurface extends JPanel {
             }
             k++;
         }
+        //add remaining scores in whichever array wasn't completely used
         while (i < n1) {
             nums[k] = L[i];
             i++;
@@ -900,11 +1113,22 @@ public class DrawingSurface extends JPanel {
         }
     }
 
+    /**
+     * Merge sort function, sorts an array
+     *
+     * @param nums array of scores
+     * @param l far left position in array
+     * @param r far right position in array
+     */
     public static void mergeSort(Score nums[], int l, int r) {
+        //escape condition
         if (l < r) {
+            //find middle
             int m = (l + r) / 2;
+            //call merge sort for both sides of array
             mergeSort(nums, l, m);
             mergeSort(nums, m + 1, r);
+            //merge both sides
             merge(nums, l, m, r);
         }
     }
