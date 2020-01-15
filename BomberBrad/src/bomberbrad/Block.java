@@ -1,7 +1,7 @@
 /**
  * DKP Studios
  * 2020-01-14
- * The block class the extends tileObject and has the potential to carry a power up
+ * The block class extends tileObject and has the potential to carry a power up
  */
 package bomberbrad;
 
@@ -115,6 +115,11 @@ public class Block extends tileObject {
         this.breakable = breakable;
     }
 
+    /**
+     * Equals method to check if 2 blocks are the same
+     * @param b the other block
+     * @return boolean whether the blocks are the same
+     */
     public boolean equals(Block b) {
         if (b.isBreakable() == this.isBreakable()) {
             return true;
@@ -123,32 +128,44 @@ public class Block extends tileObject {
         }
     }
 
+    /**
+     * Draw method for the blokc
+     * @param g2d the g2d being used to draw them
+     */
     public void draw(Graphics2D g2d) {
-
+        //draw the tile behind it
         g2d.setColor(new Color(62, 120, 19));
         g2d.fillRect(xPos * 64, yPos * 64, 64, 64);
         BufferedImage shown;
 
+        //if the tile is breakabkle
         if (breakable) {
-            if (breaking) {
-                shown = sprites[time / 2 + 2];
+            if (breaking) {//and the tile is breaking
+                shown = sprites[time / 2 + 2];//show the broken tiles
 
-            } else {
-                shown = sprites[1];
+            } else {//if it's not breaking
+                shown = sprites[1];//show the breakable blokc
             }
 
-        } else {
-            shown = sprites[0];
+        } else {//otherwise
+            shown = sprites[0];//show the unbreakable block
         }
 
         g2d.drawImage(shown, xPos * 64, yPos * 64, (xPos + 1) * 64, (yPos + 1) * 64, 0, 0, 16, 16, null);
 
     }
 
+    /**
+     * A method to begin breaking the block
+     */
     public void startBreak() {
         breaking = true;
     }
 
+    /**
+     * To string method for the block
+     * @return 
+     */
     public String toString() {
         return "Block\n"
                 + "Breakable: " + breakable;

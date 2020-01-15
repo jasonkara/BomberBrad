@@ -1,7 +1,8 @@
-//Riley DeConkey
-//01//06//2020
-//Class to represent one of 6 types of powerups
-/*
+/**
+ * DKP Studios
+ * 2020-01-15
+ * Powerup Class that extends tile object
+
 
 1 extra bomb 
 2 bigger bomb explosion
@@ -18,13 +19,11 @@ import java.awt.image.BufferedImage;
 import java.io.IOException;
 import javax.imageio.ImageIO;
 
-/**
- *
- * @author ridec8459
- */
+
 public class PowerUp extends tileObject {
     private int type;
     private static BufferedImage[] sprites = new BufferedImage[6];
+    
     /**
      * Load images method, loads all sprites into the sprites array
      */
@@ -71,8 +70,9 @@ public class PowerUp extends tileObject {
      * @param g2d the graphics 2d window to draw with
      */
     public void draw(Graphics2D g2d) {
+        //the type of the power up is always 1 greater than the reference to array
         BufferedImage shown = sprites[type - 1];
-        
+        //draw the image
         g2d.drawImage(shown,xPos*64,yPos*64,(xPos + 1)*64,(yPos + 1)*64,0,0,16,16,null);
     }
 }

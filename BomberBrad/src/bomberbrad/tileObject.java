@@ -1,17 +1,16 @@
-//Riley DeConkey
-//12/19/2019
-//Object on tile abstract class
+/**
+ * DKP Studios
+ * 2020-01-15
+ * An abstract class that extends to blocks powerups and the exits
+ */
 package bomberbrad;
 
 import java.awt.Graphics2D;
 
-/**
- *
- * @author ridec8459
- */
 public abstract class tileObject {
     protected int xPos;
     protected int yPos;
+    
     /**
      * Constructor, accepts x and y locations
      * @param xLoc x location
