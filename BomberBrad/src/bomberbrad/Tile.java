@@ -213,45 +213,45 @@ public class Tile {
                 }
             }
 
-            
         }
-        
-        if(onTile instanceof PowerUp){//if there is a power up on the tile
-            if (ds.intersecting(xPos * 16, yPos * 16, ds.getPlayer().getXPos(),ds.getPlayer().getYPos())) {//and the player is intersecting it
+
+        if (onTile instanceof PowerUp) {//if there is a power up on the tile
+            if (ds.intersecting(xPos * 16, yPos * 16, ds.getPlayer().getXPos(), ds.getPlayer().getYPos())) {//and the player is intersecting it
                 ds.playSE("powerup");//play the audio
                 ds.setScore(ds.getScore() + 200);//add the powerup score
-                ds.getPowerUpList().add(((PowerUp)(onTile)).getType());
-                switch(((PowerUp)(onTile)).getType()){//switch based on the type
-            case 1:
-                ds.setBombs(ds.getBombs() + 1);
-                //more bombs
-                
-                break;
-            case 2:
-                ds.setLength(ds.getLength() + 1);
-                //bigger bomb explosion
-                break;
-            case 3:
-                ds.getPlayer().setSpeed(4);
-                //speed
-                break;
-            case 4:
-                ds.getPlayer().addWalkable(Block.class);
-                //go through walls
-                ds.setWallPass(true);
-                break;
-            case 5:
-                ds.setFirePass(true);
-                //firePass
-            case 6:
-                ds.getPlayer().addWalkable(Bomb.class);
-                //walk through bombs
-                ds.setBombPass(true);
+                ds.getPowerUpList().add(((PowerUp) (onTile)).getType());
+                switch (((PowerUp) (onTile)).getType()) {//switch based on the type
+                    case 1:
+                        ds.setBombs(ds.getBombs() + 1);
+                        //more bombs
+
+                        break;
+                    case 2:
+                        ds.setLength(ds.getLength() + 1);
+                        //bigger bomb explosion
+                        break;
+                    case 3:
+                        ds.getPlayer().setSpeed(4);
+                        //speed
+                        break;
+                    case 4:
+                        ds.getPlayer().addWalkable(Block.class);
+                        //go through walls
+                        ds.setWallPass(true);
+                        break;
+                    case 5:
+                        ds.setFirePass(true);
+                    //firePass
+                    case 6:
+                        ds.getPlayer().addWalkable(Bomb.class);
+                        //walk through bombs
+                        ds.setBombPass(true);
+
+                }
+                onTile = null;
+
+            }
 
         }
-
-        
-
     }
-
 }
